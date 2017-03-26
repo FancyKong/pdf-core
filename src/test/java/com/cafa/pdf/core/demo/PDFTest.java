@@ -6,6 +6,7 @@ import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.SimpleBookmark;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import org.apache.tika.Tika;
 
 import java.io.*;
@@ -14,12 +15,21 @@ import java.util.*;
 public class PDFTest {
     static PdfReader reader;
     public static void main(String[] args) throws Exception {
-        /*Tika tika = new Tika();
-        System.out.println(tika.parseToString(new File("D:s.doc")));*/
         List<Chapter> pageNumber = new ArrayList<>();
-        reader = new PdfReader("D:b.pdf");
-        List list = SimpleBookmark.getBookmark(reader);
-        for (Object aList : list) {
+        reader = new PdfReader("E:c.pdf");
+        long start = System.currentTimeMillis();
+        int pages = reader.getNumberOfPages();
+
+        for (int i = 1; i < pages-1; i++) {
+            split(i,i+1,new FileOutputStream("E:/test/"+i+".pdf"),null);
+            System.out.println(PdfTextExtractor.getTextFromPage(reader,i));
+        }
+        System.out.println("页数:"+pages+" 耗时:"+(System.currentTimeMillis()-start));
+        /*List list = SimpleBookmark.getBookmark(reader);
+        for(Object o : list){
+            showBookmark((Map) o);
+        }*/
+        /*for (Object aList : list) {
             getPageNumbers((Map) aList, pageNumber);
         }
         System.out.println(pageNumber);
@@ -33,6 +43,7 @@ public class PDFTest {
         }
         int end = reader.getNumberOfPages();
         split(pageNumber.get(pageNumber.size() - 1).beginPage, end + 1, new FileOutputStream("D:b_last.pdf"), new FileInputStream("D:b.pdf"));
+    */
     }
 
 
@@ -49,7 +60,7 @@ public class PDFTest {
     }
 
     private static void showBookmark(Map bookmark) throws IOException {
-        System.out.println(bookmark.get("Title") + "-" + bookmark.get("Page"));
+        System.out.println(bookmark.get("Page"));
         ArrayList kids = (ArrayList) bookmark.get("Kids");
 
         if (kids == null)

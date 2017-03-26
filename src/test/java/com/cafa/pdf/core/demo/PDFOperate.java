@@ -19,7 +19,7 @@ public class PDFOperate {
 //            String savepath = "C:\\temp.pdf";
 //            mergePdfFiles(files, savepath);
 
-        partitionPdfFile("F:\\TOMCAT.pdf");
+        partitionPdfFile("E:\\jsds.pdf");
     }
 
     public static void mergePdfFiles(String[] files, String savepath) {
