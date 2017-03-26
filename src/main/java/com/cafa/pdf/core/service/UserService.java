@@ -6,7 +6,7 @@ import com.cafa.pdf.core.dal.request.BasicSearchReq;
 import com.cafa.pdf.core.dal.request.user.UserSaveReq;
 import com.cafa.pdf.core.dal.request.user.UserSearchReq;
 import com.cafa.pdf.core.dal.request.user.UserUpdateReq;
-import com.cafa.pdf.core.extra.shiro.CryptographyUtil;
+import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.repository.IBaseDAO;
 import com.cafa.pdf.core.repository.UserDAO;
 import com.cafa.pdf.core.util.ObjectConvertUtil;

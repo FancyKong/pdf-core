@@ -1,8 +1,8 @@
 package com.cafa.pdf.core.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
-import com.cafa.pdf.core.extra.shiro.MShiroFilterFactoryBean;
-import com.cafa.pdf.core.extra.shiro.MShiroRealm;
+import com.cafa.pdf.core.commom.shiro.MShiroFilterFactoryBean;
+import com.cafa.pdf.core.commom.shiro.MShiroRealm;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -38,7 +38,7 @@ public class ShiroConfiguration {
     }
 
     /**
-     * @see com.cafa.pdf.core.extra.shiro.MShiroRealm
+     * @see com.cafa.pdf.core.commom.shiro.MShiroRealm
      * need cacheManager 缓存管理器
      * @return MShiroRealm
      */

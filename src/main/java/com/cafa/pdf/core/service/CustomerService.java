@@ -5,7 +5,7 @@ import com.cafa.pdf.core.dal.entity.Customer;
 import com.cafa.pdf.core.dal.request.BasicSearchReq;
 import com.cafa.pdf.core.dal.request.customer.CustomerReq;
 import com.cafa.pdf.core.dal.request.customer.CustomerSearchReq;
-import com.cafa.pdf.core.extra.shiro.CryptographyUtil;
+import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.repository.CustomerDAO;
 import com.cafa.pdf.core.repository.IBaseDAO;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
