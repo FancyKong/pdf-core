@@ -1,8 +1,8 @@
 package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.dal.request.user.UserLoginReq;
-import com.cafa.pdf.core.extra.shiro.CryptographyUtil;
-import com.cafa.pdf.core.extra.shiro.ShiroUserUtil;
+import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
+import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.service.UserService;
 import com.cafa.pdf.core.util.ValidateCode;
 import org.apache.commons.io.FileUtils;
