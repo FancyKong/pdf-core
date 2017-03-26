@@ -1,5 +1,9 @@
 package com.cafa.pdf.core;
 
+import com.cafa.pdf.core.dal.solr.document.Article;
+import com.cafa.pdf.core.dal.solr.repository.ArticleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -10,7 +14,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 @SpringBootApplication
-public class PdfCoreApplication extends SpringBootServletInitializer {
+public class PdfCoreApplication extends SpringBootServletInitializer{
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -30,6 +34,5 @@ public class PdfCoreApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(PdfCoreApplication.class, args);
 	}
-
 
 }

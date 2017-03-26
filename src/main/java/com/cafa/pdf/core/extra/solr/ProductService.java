@@ -26,14 +26,14 @@ public class ProductService {
         category.add("testCategory");
         Point point = new Point( 1 , 2);
         // insert some products
-        this.repository.save(new Product("1", "Nintendo Entertainment System",0.0,category,point,"描述"));
-        this.repository.save(new Product("2", "Sega Megadrive",5.0,category,point,"描述2"));
-        this.repository.save(new Product("3", "Sony Playstation",6.6,category,point,"描述3"));
+        this.repository.save(new Article("1", "Nintendo Entertainment System",0.0,category,point,"描述"));
+        this.repository.save(new Article("2", "Sega Megadrive",5.0,category,point,"描述2"));
+        this.repository.save(new Article("3", "Sony Playstation",6.6,category,point,"描述3"));
 
         // fetch all
         System.out.println("Products found by findAll():");
         System.out.println("----------------------------");
-        for (Product product : this.repository.findAll()) {
+        for (Article product : this.repository.findAll()) {
             System.out.println(product);
         }
         System.out.println();
@@ -41,7 +41,7 @@ public class ProductService {
         // fetch a single product
         System.out.println("Products found with findByNameStartingWith('So'):");
         System.out.println("--------------------------------");
-        for (Product product : this.repository.findByNameStartingWith("So")) {
+        for (Article product : this.repository.findByNameStartingWith("So")) {
             System.out.println(product);
         }
         System.out.println();

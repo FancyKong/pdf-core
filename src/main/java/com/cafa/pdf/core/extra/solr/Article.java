@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SolrDocument(solrCoreName = "collection1")
-public class Product implements java.io.Serializable {
+public class Article implements java.io.Serializable {
 
     @Id
     @Field

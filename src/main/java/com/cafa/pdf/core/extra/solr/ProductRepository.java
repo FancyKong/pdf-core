@@ -12,20 +12,20 @@ import java.util.List;
 /**
  * Created by Cherish on 2017/1/6.
  */
-public interface ProductRepository extends SolrCrudRepository<Product, String> {
+public interface ProductRepository extends SolrCrudRepository<Article, String> {
 
-    List<Product> findByNameStartingWith(String name);
+    List<Article> findByNameStartingWith(String name);
 
-    Page<Product> findByPrice(Double price, Pageable page);
+    Page<Article> findByPrice(Double price, Pageable page);
 
-    Page<Product> findByNameOrDescription(@Boost(2) String name, String description, Pageable page);
+    Page<Article> findByNameOrDescription(@Boost(2) String name, String description, Pageable page);
 
     @Highlight(prefix = "<b>", postfix = "</b>")
-    HighlightPage<Product> findByNameIn(Collection<String> name, Pageable page);
+    HighlightPage<Article> findByNameIn(Collection<String> name, Pageable page);
 
     @Query(value = "name:?0")
     @Facet(fields = { "cat" }, limit=20)
-    FacetPage<Product> findByNameAndFacetOnCategory(String name, Pageable page);
+    FacetPage<Article> findByNameAndFacetOnCategory(String name, Pageable page);
 
 
 }
