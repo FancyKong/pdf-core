@@ -31,7 +31,7 @@ public class PdfCoreApplicationTests {
 
     @Test
     public void query(){
-        HighlightPage<Article> articles = repository.findByContentOrderById("交换机",new SolrPageRequest(0,3));
+        HighlightPage<Article> articles = repository.findByContentOrderById("命名",new SolrPageRequest(0,3));
         List<HighlightEntry<Article>> hs = articles.getHighlighted();
         for (HighlightEntry<Article> p : hs) {
             System.out.println(p.getEntity().getId());
