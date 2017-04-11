@@ -25,8 +25,8 @@ public class PdfCoreApplication extends SpringBootServletInitializer{
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		super.onStartup(servletContext);
         /*
-         * 为了方便 RequestHolder 获取 request response session application 四大web对象
-         * @see cn.cherish.mboot.util.RequestHolder
+         * 为了方便 RequestHolder 获取 request response session application 四大对象
+         * @see org.springframework.web.context.request.RequestContextHolder
          */
 		servletContext.addListener(new RequestContextListener());
 	}
