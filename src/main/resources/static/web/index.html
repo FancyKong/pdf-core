@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Uimaker-专注UI设计</title>
+<title>广东科技著作出版服务平台</title>
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <link href="css/index.css" rel="stylesheet" type="text/css" />
 </head>
@@ -35,15 +35,14 @@
                 </ul>
             </div>-->
             <div class="inputArea">
-            	<input type="text" class="searchInput" />
+            	<input type="text" class="searchInput" placeholder="默认为全文关键字检索"/>
                 <input type="button" class="searchButton" value="搜索" onclick="javascript:window.location='result.html'" />
                 <a class="advanced" href="advanced.html">高级搜索</a>
                 <ul class="dataList">
                 	<li>标题</li>
                     <li>作者</li>
-                    <li>关键字</li>
                     <li>出版社</li>
-                    <li>类别</li>
+                    <li>简介</li>
                 </ul>
             </div>
             
@@ -88,7 +87,15 @@
 	$('.searchInput').on('focus', function(){
 		$('.dataList').show()
     });
-	
+
+    // 联想下拉显示隐藏
+    $('.searchInput').on('click', function(){
+        var text = $('.searchInput').val();
+        if(text == ""){
+            $('.dataList').show()
+        }
+    });
+
 	// 联想下拉点击
 	$('.dataList').on('click', 'li', function(){
 		var text = $(this).text()+":";
