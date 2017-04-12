@@ -1,0 +1,415 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>查询结果</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/result.css" rel="stylesheet" type="text/css" />
+    <style>
+        .resultSearch{
+            height: 25px;
+        }
+        .again{
+            background: #8ecab1;
+            border: 0;
+            text-align: center;
+            color: #fff;
+            font-size: 12px;
+            height: 26px;
+            line-height: 22px;
+            padding: 2px 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+	<div id="hd" class="ue-clear">
+    	<div class="logo"></div>
+        <div class="inputArea">
+        	<input type="text" class="searchInput" />
+            <input type="button" class="searchButton" value="搜索"/>
+            <a class="advanced" href="advanced.html">高级搜索</a>
+        </div>
+    </div>
+    <div class="nav">
+        <input type="text" placeholder="作者" class="resultSearch" style="width: 55px"/> &nbsp;
+        <input type="text" placeholder="标题" class="resultSearch" /> &nbsp;
+        <input type="text" placeholder="起始年"class="resultSearch" style="width: 55px"/> - <input type="text" placeholder="结束年"class="resultSearch" style="width: 55px"/> &nbsp;
+        <input type="button" class="again" value="在结果中搜索" onclick="alert('shabi')"/>
+    </div>
+	<div id="bd" class="ue-clear">
+        <div id="main">
+        	<div class="sideBar">
+            	<div class="subfield">专著分类</div>
+                <ul class="subfieldContext">
+                	<li>
+                    	<span class="name">后台界面</span>
+                        <span class="unit">(9862)</span>
+                    </li>
+                    <li>
+                    	<span class="name">图标</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                    	<span class="name">自定义</span>
+                        <span class="unit">(1564)</span>
+                    </li>
+                    <li>
+                    	<span class="name">UI设计</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                    	<span class="name">游戏界面</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">游戏界面</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">游戏界面</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">游戏界面</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">游戏界面</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">游戏界面</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">游戏界面</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">游戏界面</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li class="more">
+                    	<a href="javascript:;">
+                        	<span class="text">更多</span>
+                        	<i class="moreIcon"></i>
+                        </a>
+                    </li>
+                </ul>
+                <!--<div class="subfield">发布时间</div>
+                <ul class="subfieldContext">
+                	<li>
+                    	<span class="name">2013年</span>
+                        <span class="unit">(9862)</span>
+                    </li>
+                    <li>
+                    	<span class="name">2012年</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                    	<span class="name">2011年</span>
+                        <span class="unit">(1564)</span>
+                    </li>
+                    <li>
+                    	<input type="text" />
+                        <span class="divsion">-</span>
+                        <input type="text" />
+                    </li>
+                    <li class="more define">
+                    	<a href="javascript:;">
+                        	<span class="text">自定义</span>
+                        </a>
+                    </li>
+                    
+                </ul>-->
+                <!--<div class="subfield">搜索引擎</div>
+                <ul class="subfieldContext">
+                	<li>
+                    	<span class="name">百度搜索</span>
+                    </li>
+                    <li>
+                    	<span class="name">Google</span>
+                    </li>
+                    <li>
+                    	<span class="name">360搜索</span>
+                    </li>
+                    <li>
+                    	<span class="name">搜搜</span>
+                    </li>
+                    <li class="more">
+                    	<a href="javascript:;">
+                        	<span class="text">更多</span>
+                        	<i class="moreIcon"></i>
+                        </a>
+                    </li>
+                </ul>-->
+                <!--
+                <div class="subfield">您是不是要找</div>
+                <ul class="subfieldContext">
+                	<li>
+                    	<span class="name">UI作者</span>
+                    </li>
+                    <li>
+                    	<span class="name">界面作品</span>
+                    </li>
+                </ul>
+                
+                <a href="javascript:;" class="reset">重置搜索选项</a>
+                -->
+                <div class="sideBarShowHide">
+                	<a href="javascript:;" class="icon"></a>
+                </div>
+            </div>
+            <div class="resultArea">
+            	<p class="resultTotal">
+                    <span class="orderOpt">
+                    	<a href="javascript:;" class="byTime">按时间排序</a>
+                        <a href="javascript:;" class="byDependence">按相关度排序</a>
+                    </span>
+                </p>
+                <div class="resultList">
+                	<div class="resultItem">
+                    	<div class="itemHead">
+                        	<a href="http://www.uimaker.com"  target="_blank" class="title"><span class="keyWord">数据挖掘</span>章标题 - 数据挖掘专著四</a>
+                            <span class="divsion">-</span>
+                            <span class="fileType">
+                            	<span class="label">专著分类：</span>
+                                <span class="value">信息安全</span>
+                            </span>
+                            <!--<span class="dependValue">
+                            	<span class="label">相关度：</span>
+                                <span class="value">91.78%</span>
+                            </span>-->
+                        </div>
+                        <div class="itemBody">
+                        	<span class="keyWord">数据挖掘</span>针对煤矿企业未对安全信息进行深入挖掘的问题,设计了煤矿安全信息管理系统,利用数据仓库和数据挖掘技术对井下实时安全信息进行深入分析,以关联规则为例对煤矿监测数据进行挖掘,分析挖掘结果表明安全参数之间存在紧密联系,由此得到对隐患预测...
+                        </div>
+                        <div class="itemFoot">
+                        	<span class="info">
+                            	<label>作者：</label>
+                                <span class="value">江佳泽</span>
+                            </span>
+                            <!--<span class="info">
+                            	<label>搜索引擎：</label>
+                                <span class="value">百度搜索</span>
+                            </span>-->
+                            <span class="info">
+                            	<label>发布时间：</label>
+                                <span class="value">2013-12-12 12:12</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="resultItem">
+                    	<div class="itemHead">
+                        	<a href="http://www.uimaker.com"  target="_blank" class="title"><span class="keyWord">数据挖掘</span>章标题一 - 数据挖掘专著二</a>
+                            <span class="divsion">-</span>
+                            <span class="fileType">
+                            	<span class="label">专著分类：</span>
+                                <span class="value">信息计算</span>
+                            </span>
+                            <!--<span class="dependValue">
+                            	<span class="label">相关度：</span>
+                                <span class="value">91.78%</span>
+                            </span>-->
+                        </div>
+                        <div class="itemBody">
+                        	不管这个<span class="keyWord">数据挖掘</span>通过对电子商务和移动电商的内涵分析，结合当下移动电商的发展情况，本文认为可以通过精准定位客户、寻找相关APP软件进行合作、充分利用现有各种社交软件、多渠道跨界挖掘数据等方式，从而有利的推动移动电商的推广。
+                        </div>
+                        <div class="itemFoot">
+                        	<span class="info">
+                            	<label>作者：</label>
+                                <span class="value">何松云</span>
+                            </span>
+                            <!--<span class="info">
+                            	<label>搜索引擎：</label>
+                                <span class="value">Google</span>
+                            </span>-->
+                            <span class="info">
+                            	<label>发布时间：</label>
+                                <span class="value">2013-12-12 12:12</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="resultItem">
+                    	<div class="itemHead">
+                        	<a href="http://www.uimaker.com"  target="_blank" class="title"><span class="keyWord">数据挖掘</span>标题二 - 数据挖掘专著一</a>
+                            <span class="divsion">-</span>
+                            <span class="fileType">
+                            	<span class="label">专著分类：</span>
+                                <span class="value">应用数学</span>
+                            </span>
+                            <!--<span class="dependValue">
+                            	<span class="label">相关度：</span>
+                                <span class="value">91.78%</span>
+                            </span>-->
+                        </div>
+                        <div class="itemBody">
+                            从工具选择、数据采集、数据预处理、数据挖掘、结果翻译5个方面对中医病案数据挖掘研究现状进行概述,发现中医病案数据挖掘的信息主要包括症状、证型、方剂等,涉及的挖掘方法有关联规则、复杂网络、聚类、分类等.本研究可为中医临床数据挖掘...
+                        </div>
+                        <div class="itemFoot">
+                        	<span class="info">
+                            	<label>作者：</label>
+                                <span class="value">FancyKong</span>
+                            </span>
+                            <!--<span class="info">
+                            	<label>搜索引擎：</label>
+                                <span class="value">360搜索</span>
+                            </span>-->
+                            <span class="info">
+                            	<label>发布时间：</label>
+                                <span class="value">2013-12-13 14:50</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="resultItem">
+                    	<div class="itemHead">
+                        	<a href="http://www.uimaker.com"  target="_blank" class="title"><span class="keyWord">数据挖掘</span>章标题 - 数据挖掘专著一
+</a>
+                            <span class="divsion">-</span>
+                            <span class="fileType">
+                            	<span class="label">专著分类：</span>
+                                <span class="value">统计学</span>
+                            </span>
+                            <!--<span class="dependValue">
+                            	<span class="label">相关度：</span>
+                                <span class="value">91.78%</span>
+                            </span>-->
+                        </div>
+                        <div class="itemBody">
+                        	不管这个<span class="keyWord">数据挖掘</span>摘要：针对网络热点事件舆论分析的需求,研究了开放式、参与式的网络信息扩散模式下,网络中用户之间的新型互动行为及其在热点事件传播过程中的时空特征.利用网络数据挖掘技术,通过对网络热点事件评论的挖掘,提取关注热点事件的时空信息.通过网络热点
+                        </div>
+                        <div class="itemFoot">
+                        	<span class="info">
+                            	<label>作者：</label>
+                                <span class="value">蔡鸿文</span>
+                            </span>
+                            <!--<span class="info">
+                            	<label>搜索引擎：</label>
+                                <span class="value">百度搜索</span>
+                            </span>-->
+                            <span class="info">
+                            	<label>发布时间：</label>
+                                <span class="value">2013-12-12 12:12</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 分页 -->
+                <div class="pagination ue-clear"></div>
+                <!-- 相关搜索 -->
+                <!--<div class="dependSearch ue-clear">
+                    <h6>相关搜索</h6>
+                    <div class="searchList">
+                        <p>
+                            <a href="javascript:;">UI设计</a>
+                            <a href="javascript:;">UI作者</a>
+                            <a href="javascript:;">图标设计</a>
+                            <a href="javascript:;">作者</a>
+                        </p>
+                        <p>
+                            <a href="javascript:;">后台界面</a>
+                            <a href="javascript:;">管理系统界面</a>
+                            <a href="javascript:;">界面欣赏</a>
+                            <a href="javascript:;">交互设计</a>
+                        </p>
+                    </div>
+                </div>-->
+                
+            </div>
+            <div class="historyArea">
+            	<div class="hotSearch">
+                	<h6>专著下载热度排行榜</h6>
+                    <ul class="historyList">
+                    	<li><a href="javascript:;">Artificial Intelligence: A Modern Approach</a></li>
+                        <li><a href="javascript:;">界面设计</a></li>
+                        <li><a href="javascript:;">手机界面</a></li>
+                        <li><a href="javascript:;">交互</a></li>
+                        <li><a href="javascript:;">图标</a></li>
+                        <li><a href="javascript:;">UI素材</a></li>
+                        <li><a href="javascript:;">教程</a></li>
+                    </ul>
+                </div>
+                <div class="mySearch">
+                	<h6>专著阅读热度排行榜</h6>
+                    <ul class="historyList">
+                    	<li><a href="javascript:;">专注界面设计网站</a></li>
+                        <li><a href="javascript:;">用户体验</a></li>
+                        <li><a href="javascript:;">互联网</a></li>
+                        <li><a href="javascript:;">UI作者</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div><!-- End of main -->
+    </div><!--End of bd-->
+</div>
+
+<div id="foot">Copyright &copy;cafa.com 版权所有  </div>
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/pagination.js"></script>
+<script type="text/javascript">
+	$('.searchList').on('click', '.searchItem', function(){
+		$('.searchList .searchItem').removeClass('current');
+		$(this).addClass('current');	
+	});
+	
+	
+	
+	$.each($('.subfieldContext'), function(i, item){
+		$(this).find('li:gt(2)').hide().end().find('li:last').show();		
+	});
+	
+	$('.subfieldContext .more').click(function(e){
+		var $more = $(this).parent('.subfieldContext').find('.more');
+		if($more.hasClass('show')){
+			
+			if($(this).hasClass('define')){
+				$(this).parent('.subfieldContext').find('.more').removeClass('show').find('.text').text('自定义');
+			}else{
+				$(this).parent('.subfieldContext').find('.more').removeClass('show').find('.text').text('更多');	
+			}
+			$(this).parent('.subfieldContext').find('li:gt(2)').hide().end().find('li:last').show();
+	    }else{
+			$(this).parent('.subfieldContext').find('.more').addClass('show').find('.text').text('收起');
+			$(this).parent('.subfieldContext').find('li:gt(2)').show();	
+		}
+		
+	});
+	
+	$('.sideBarShowHide a').click(function(e) {
+		if($('#main').hasClass('sideBarHide')){
+			$('#main').removeClass('sideBarHide');
+			$('#container').removeClass('sideBarHide');
+		}else{
+			$('#main').addClass('sideBarHide');	
+			$('#container').addClass('sideBarHide');
+		}
+        
+    });
+	
+	//分页
+	$(".pagination").pagination(500, {
+		current_page :0, //当前页码
+		items_per_page :9,
+		display_msg :true,
+		callback :pageselectCallback
+	});
+	function pageselectCallback(page_id, jq) {
+		alert("当前页id(由0开始)：" + page_id + "，\n每页显示：" + this.items_per_page + "条数据");
+	}
+	
+	setHeight();
+	$(window).resize(function(){
+		setHeight();	
+	});
+	
+	function setHeight(){
+		if($('#container').outerHeight() < $(window).height()){
+			$('#container').height($(window).height()-33);
+		}	
+	}
+</script>
+</html>
