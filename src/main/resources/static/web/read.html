@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>查询结果</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="css/read.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="container">
+    <div id="hd" class="ue-clear">
+        <div class="logo"></div>
+        <div class="inputArea">
+            <input type="text" class="searchInput"/>
+            <input type="button" class="searchButton" value="搜索"/>
+            <a class="advanced" href="advanced.html">高级搜索</a>
+        </div>
+    </div>
+    <div class="nav">
+        <br/>
+    </div>
+    <div id="bd" class="ue-clear">
+        <div id="main">
+            <div class="sideBar">
+                <div class="subfield">专著分类</div>
+                <ul class="subfieldContext">
+                    <li>
+                        <span class="name">数据挖掘</span>
+                        <span class="unit">(9862)</span>
+                    </li>
+                    <li>
+                        <span class="name">后台开发</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">前端开发</span>
+                        <span class="unit">(1564)</span>
+                    </li>
+                    <li>
+                        <span class="name">机器学习</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">神经网络</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">信息计算</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">信息安全</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">游戏开发</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">数据挖掘</span>
+                        <span class="unit">(9862)</span>
+                    </li>
+                    <li>
+                        <span class="name">后台开发</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">前端开发</span>
+                        <span class="unit">(1564)</span>
+                    </li>
+                    <li>
+                        <span class="name">机器学习</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li class="more">
+                        <span class="text">更多</span>
+                        <i class="moreIcon"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div class="sideBarShowHide">
+                    <a href="javascript:;" class="icon"></a>
+                </div>
+            </div>
+            <div class="historyArea">
+                <div class="hotSearch">
+                    <h6>专著下载热度排行榜</h6>
+                    <ul class="historyList">
+                        <li><a href="javascript:;">矩阵数学</a></li>
+                        <li><a href="javascript:;">机器学习</a></li>
+                        <li><a href="javascript:;">概率论与数理统计</a></li>
+                        <li><a href="javascript:;">离散数学</a></li>
+                        <li><a href="javascript:;">线性代数</a></li>
+                        <li><a href="javascript:;">计算机视觉</a></li>
+                        <li><a href="javascript:;">机器学习</a></li>
+                    </ul>
+                </div>
+                <div class="mySearch">
+                    <h6>专著阅读热度排行榜</h6>
+                    <ul class="historyList">
+                        <li><a href="javascript:;">矩阵数学</a></li>
+                        <li><a href="javascript:;">机器学习</a></li>
+                        <li><a href="javascript:;">概率论与数理统计</a></li>
+                        <li><a href="javascript:;">离散数学</a></li>
+                        <li><a href="javascript:;">线性代数</a></li>
+                        <li><a href="javascript:;">计算机视觉</a></li>
+                        <li><a href="javascript:;">机器学习</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="title">
+                数据挖掘技术在移动电商推广中的应用
+            </div>
+            <br>
+            <div class="read">
+                <input type="button" value="上一章" class="operator"/>
+                <input type="button" value="上一页" class="operator"/>
+                <input type="text" style="height: 30px;width: 60px; text-align: center;border-color: #579bf1;" value="55" />
+                &nbsp;
+                <input type="button" value="下一页" class="operator"/>
+                <input type="button" value="下一章" class="operator"/>
+            </div>
+            <div class="pdf">
+                <iframe src="img/7.pdf" width="98%" height="1200px"></iframe>
+            </div>
+
+            <div class="read">
+                <input type="button" value="上一页" class="operator"/>
+                <input type="button" value="下一页" class="operator"/>
+            </div>
+
+        </div><!-- End of main -->
+    </div><!--End of bd-->
+</div>
+
+<div id="foot">Copyright &copy;cafa.com 版权所有</div>
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/pagination.js"></script>
+<script type="text/javascript">
+    $('.searchList').on('click', '.searchItem', function () {
+        $('.searchList .searchItem').removeClass('current');
+        $(this).addClass('current');
+    });
+
+
+    $.each($('.subfieldContext'), function (i, item) {
+        $(this).find('li:gt(9)').hide().end().find('li:last').show();
+    });
+
+    $('.subfieldContext .more').click(function (e) {
+        var $more = $(this).parent('.subfieldContext').find('.more');
+        if ($more.hasClass('show')) {
+
+            if ($(this).hasClass('define')) {
+                $(this).parent('.subfieldContext').find('.more').removeClass('show').find('.text').text('自定义');
+            } else {
+                $(this).parent('.subfieldContext').find('.more').removeClass('show').find('.text').text('更多');
+            }
+            $(this).parent('.subfieldContext').find('li:gt(9)').hide().end().find('li:last').show();
+        } else {
+            $(this).parent('.subfieldContext').find('.more').addClass('show').find('.text').text('收起');
+            $(this).parent('.subfieldContext').find('li:gt(9)').show();
+        }
+
+    });
+
+    $('.sideBarShowHide a').click(function (e) {
+        if ($('#main').hasClass('sideBarHide')) {
+            $('#main').removeClass('sideBarHide');
+            $('#container').removeClass('sideBarHide');
+        } else {
+            $('#main').addClass('sideBarHide');
+            $('#container').addClass('sideBarHide');
+        }
+
+    });
+
+    //分页
+    $(".pagination").pagination(500, {
+        current_page: 0, //当前页码
+        items_per_page: 9,
+        display_msg: true,
+        callback: pageselectCallback
+    });
+    function pageselectCallback(page_id, jq) {
+        alert("当前页id(由0开始)：" + page_id + "，\n每页显示：" + this.items_per_page + "条数据");
+    }
+
+    setHeight();
+    $(window).resize(function () {
+        setHeight();
+    });
+
+    function setHeight() {
+        if ($('#container').outerHeight() < $(window).height()) {
+            $('#container').height($(window).height() - 33);
+        }
+    }
+</script>
+</html>
