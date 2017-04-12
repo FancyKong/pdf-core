@@ -38,12 +38,12 @@
 
         <!--logo and iconic logo start-->
         <div class="logo">
-            <a th:href="@{/}"><img th:src="@{/image/logo.svg}" alt="LOGO"></a>
+            <a th:href="@{/}"><img th:src="@{/images/logo32.jpg}" alt="LOGO"></a>
             <label>著作管理系统</label>
         </div>
 
         <div class="logo-icon text-center">
-            <a th:href="@{/}"><img th:src="@{/image/logo.svg}" alt="LOGO"></a>
+            <a th:href="@{/}"><img th:src="@{/images/logo32.jpg}" alt="LOGO"></a>
         </div>
         <!--logo and iconic logo end-->
 
@@ -52,7 +52,7 @@
             <!-- visible to small devices only 只在小型设备手机端显示-->
             <div class="visible-xs hidden-sm hidden-md hidden-lg">
                 <div class="media logged-user">
-                    <img alt="头像" th:src="@{/image/user-avatar.png}" class="media-object">
+                    <img alt="头像" th:src="@{/images/user-avatar.png}" class="media-object">
                     <div class="media-body">
                         <h4>
                             <a href="#"><span th:text="${#session.getAttribute('nickname')}"></span></a>
@@ -151,7 +151,7 @@
 
                     <li><a href="#" class="btn btn-default dropdown-toggle"
                            data-toggle="dropdown"> <img
-                            th:src="@{/image/user-avatar.png}" alt="" /> <span th:text="${#session.getAttribute('nickname')}"></span> <span class="caret"></span>
+                            th:src="@{/images/user-avatar.png}" alt="" /> <span th:text="${#session.getAttribute('nickname')}"></span> <span class="caret"></span>
                     </a>
                         <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
                             <li><a th:href="@{/user/profile}"><i class="fa fa-user"></i> 个人信息</a></li>
