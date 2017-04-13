@@ -140,7 +140,7 @@ public class CustomerController extends ABaseController {
      */
     @PostMapping("/save")
     public ModelAndView save(@Validated CustomerReq customerReq, BindingResult bindingResult){
-
+        LOGGER.info("start to handle save param = {}",customerReq);
         ModelAndView mv = new ModelAndView("admin/customer/add");
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);
