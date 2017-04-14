@@ -1,10 +1,9 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.web.request.user.UserLoginReq;
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
-import com.cafa.pdf.core.service.UserService;
 import com.cafa.pdf.core.util.ValidateCode;
+import com.cafa.pdf.core.web.request.user.UserLoginReq;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -12,7 +11,6 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,10 +38,7 @@ import java.util.Map;
 @Controller
 public class BasicController extends ABaseController {
 
-	@Autowired
-	private UserService userService;
-
-    /**
+	/**
      * 首页
      */
     @GetMapping(value = {"/","/index"})
@@ -188,7 +183,7 @@ public class BasicController extends ABaseController {
 						+ request.getContextPath() + "/";
 				url = basePath + "imageDownload?filename=" + newFIleName;
 			} catch (IOException e) {
-				
+				log.error("上传错误 {}", e.getMessage());
 			}
 
 		} // end if
@@ -205,23 +200,6 @@ public class BasicController extends ABaseController {
 		return new ResponseEntity<byte[]>(
 				FileUtils.readFileToByteArray(file),
 				headers, HttpStatus.OK);
-        /*byte[] b = null;
-        response.setContentType("image/png");
-
-        try (FileInputStream fis = new FileInputStream(file);
-            OutputStream out = response.getOutputStream();){
-
-            b = new byte[2048];
-            int len = 0;
-            while ((len = fis.read(b)) > 0){
-                out.write(b);
-            }
-            out.flush();
-        } catch (Exception e) {
-            
-        } finally {
-
-        }*/
 	}
 	
 }

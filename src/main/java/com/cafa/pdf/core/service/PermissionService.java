@@ -1,14 +1,13 @@
 package com.cafa.pdf.core.service;
 
 import com.cafa.pdf.core.commom.dto.PermissionDTO;
+import com.cafa.pdf.core.dal.dao.IBaseDAO;
+import com.cafa.pdf.core.dal.dao.PermissionDAO;
 import com.cafa.pdf.core.dal.entity.Permission;
+import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.permission.PermissionSaveReq;
 import com.cafa.pdf.core.web.request.permission.PermissionUpdateReq;
-import com.cafa.pdf.core.dal.dao.IBaseDAO;
-import com.cafa.pdf.core.dal.dao.PermissionDAO;
-import com.cafa.pdf.core.util.ObjectConvertUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -16,13 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class PermissionService extends ABaseService<Permission, Long> {
 
+    private final PermissionDAO permissionDAO;
+
     @Autowired
-    private PermissionDAO permissionDAO;
+    public PermissionService(PermissionDAO permissionDAO) {
+        this.permissionDAO = permissionDAO;
+    }
 
     @Override
     protected IBaseDAO<Permission, Long> getEntityDAO() {
@@ -34,15 +36,12 @@ public class PermissionService extends ABaseService<Permission, Long> {
         int pageNumber = basicSearchReq.getStartIndex() / basicSearchReq.getPageSize() + 1;
         Page<Permission> permissionPage = this.findAll(pageNumber, basicSearchReq.getPageSize());
 
-        return permissionPage.map(source -> {
-            PermissionDTO roleDTO = new PermissionDTO();
-            ObjectConvertUtil.objectCopy(roleDTO, source);
-            return roleDTO;
-        });
+        return permissionPage.map(this::getPermissionDTO);
     }
 
+
     @Transactional
-    public void updateByReq(PermissionUpdateReq permissionUpdateReq) {
+    public void update(PermissionUpdateReq permissionUpdateReq) {
 
         Permission permission = this.findById(permissionUpdateReq.getId());
         ObjectConvertUtil.objectCopy(permission, permissionUpdateReq);
@@ -54,7 +53,7 @@ public class PermissionService extends ABaseService<Permission, Long> {
     }
 
     @Transactional
-    public void saveByReq(PermissionSaveReq permissionSaveReq) {
+    public void save(PermissionSaveReq permissionSaveReq) {
 
         Permission permission = new Permission();
         ObjectConvertUtil.objectCopy(permission, permissionSaveReq);
@@ -73,6 +72,12 @@ public class PermissionService extends ABaseService<Permission, Long> {
         //再删除permission
         permissionDAO.delete(permissionId);
     }*/
+
+    private PermissionDTO getPermissionDTO(Permission source) {
+        PermissionDTO roleDTO = new PermissionDTO();
+        ObjectConvertUtil.objectCopy(roleDTO, source);
+        return roleDTO;
+    }
 
 
 }

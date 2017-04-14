@@ -95,8 +95,8 @@
                     </li>
                 </p>
 
-                <p shiro:hasAnyPermissions="info:show">
-                    <li id="pdf"><a th:href="@{/treatise}"><i class="fa fa-home"></i> <span> 专著管理</span></a></li>
+                <p shiro:hasAnyPermissions="treatise:show">
+                    <li id="pdfLi"><a th:href="@{/treatise}"><i class="fa fa-book"></i> <span> 专著管理</span></a></li>
                 </p>
 
                 <p shiro:hasAnyPermissions="info:show">

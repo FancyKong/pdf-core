@@ -1,15 +1,30 @@
+/**
+ * JDKCC.com
+ * Copyright (c) 2011-2017 All Rights Reserved.
+ */
 package com.cafa.pdf.core.web.request.treatise;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+/**
+ * @author FancyKong
+ * @file Treatise.java
+ * @date 2017/4/13 13:35
+ * @since 0.0.1
+ */
 @Data
-public class TreatiseSearchReq implements java.io.Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+public class TreatiseUpdateReq implements java.io.Serializable {
 
-    private static final long serialVersionUID = -5113264073253603846L;
+    private static final long serialVersionUID = 624547075791028856L;
 
+    private Long id;
     private String ISBN;
     private String bookName;
     private String author;
@@ -22,6 +37,5 @@ public class TreatiseSearchReq implements java.io.Serializable {
     private String language;
     private String revision;
     private String description;
-
 
 }

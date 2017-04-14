@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 用户控制器
  * Created by Cherish on 2017/1/6.
  */
 @Controller
@@ -33,8 +34,12 @@ import java.util.Map;
 @RequiresAuthentication
 public class UserController extends ABaseController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     @RequiresPermissions("user:show")
@@ -92,13 +97,10 @@ public class UserController extends ABaseController {
     @GetMapping("/page")
     @ResponseBody
     public Response toPage(BasicSearchReq basicSearchReq, UserSearchReq userSearchReq){
-
         try {
             Page<UserDTO> page = userService.findAll(userSearchReq, basicSearchReq);
-
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
-            
             log.error("获取用户列表失败: {}", e.getMessage());
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
@@ -115,10 +117,8 @@ public class UserController extends ABaseController {
     public Response delete(@PathVariable("userId") Long userId){
         try {
             userService.delete(userId);
-
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
-            
             log.error("删除失败:{}", e.getMessage());
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
@@ -145,20 +145,16 @@ public class UserController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("user", userUpdateReq);
-
         }else {
             try {
                 userService.updateByReq(userUpdateReq);
-
                 mv.addObject("user", userService.findById(userUpdateReq.getId()));
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
-                
                 errorMap.put("msg", "系统繁忙");
                 log.error("修改用户错误:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 
@@ -178,7 +174,6 @@ public class UserController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("user", userSaveReq);
-
         }else {
             try {
                 if (userService.exist(userSaveReq.getUsername())){
@@ -188,14 +183,11 @@ public class UserController extends ABaseController {
                     userService.saveByReq(userSaveReq);
                     errorMap.put("msg", "添加成功");
                 }
-
             } catch (Exception e) {
-                
                 errorMap.put("msg", "系统繁忙");
                 log.error("添加用户失败:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 
@@ -217,7 +209,6 @@ public class UserController extends ABaseController {
         //表单验证是否通过
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
-
         }else {
             if (StringUtils.isBlank(modifyPasswordReq.getPassword())
                     || StringUtils.isBlank(modifyPasswordReq.getRepeatPassword())
@@ -235,17 +226,13 @@ public class UserController extends ABaseController {
                 }else {
                     user.setPassword(CryptographyUtil.cherishSha1(modifyPasswordReq.getPassword()));
                     userService.update(user);
-
                     errorMap.put("msg" ,"更改成功");
                 }
-
             } catch (Exception e) {
-                
                 log.error("修改密码失败:{}", e.getMessage());
                 errorMap.put("msg", BUSY_MSG);
             }
         }
-
         return mv;
     }
 

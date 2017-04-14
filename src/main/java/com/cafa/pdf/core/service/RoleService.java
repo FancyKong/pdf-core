@@ -1,14 +1,13 @@
 package com.cafa.pdf.core.service;
 
 import com.cafa.pdf.core.commom.dto.RoleDTO;
+import com.cafa.pdf.core.dal.dao.IBaseDAO;
+import com.cafa.pdf.core.dal.dao.RoleDAO;
 import com.cafa.pdf.core.dal.entity.Role;
+import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.role.RoleSaveReq;
 import com.cafa.pdf.core.web.request.role.RoleUpdateReq;
-import com.cafa.pdf.core.dal.dao.IBaseDAO;
-import com.cafa.pdf.core.dal.dao.RoleDAO;
-import com.cafa.pdf.core.util.ObjectConvertUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -16,13 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class RoleService extends ABaseService<Role, Long> {
 
+    private final RoleDAO roleDAO;
+
     @Autowired
-    private RoleDAO roleDAO;
+    public RoleService(RoleDAO roleDAO) {
+        this.roleDAO = roleDAO;
+    }
 
     @Override
     protected IBaseDAO<Role, Long> getEntityDAO() {
@@ -34,15 +36,13 @@ public class RoleService extends ABaseService<Role, Long> {
         int pageNumber = basicSearchReq.getStartIndex() / basicSearchReq.getPageSize() + 1;
         Page<Role> rolePage = this.findAll(pageNumber, basicSearchReq.getPageSize());
 
-        return rolePage.map(source -> {
-            RoleDTO roleDTO = new RoleDTO();
-            ObjectConvertUtil.objectCopy(roleDTO, source);
-            return roleDTO;
-        });
+        return rolePage.map(this::getRoleDTO);
     }
 
+
+
     @Transactional
-    public void updateByReq(RoleUpdateReq roleUpdateReq) {
+    public void update(RoleUpdateReq roleUpdateReq) {
         Role role = this.findById(roleUpdateReq.getId());
         ObjectConvertUtil.objectCopy(role, roleUpdateReq);
         this.update(role);
@@ -53,7 +53,7 @@ public class RoleService extends ABaseService<Role, Long> {
     }
 
     @Transactional
-    public void saveByReq(RoleSaveReq roleSaveReq) {
+    public void save(RoleSaveReq roleSaveReq) {
         Role role = new Role();
         ObjectConvertUtil.objectCopy(role, roleSaveReq);
         this.save(role);
@@ -71,5 +71,16 @@ public class RoleService extends ABaseService<Role, Long> {
         //再删除role
         roleDAO.delete(roleId);
     }*/
+
+    /**
+     * 转为DTO
+     * @param source Role
+     * @return RoleDTO
+     */
+    private RoleDTO getRoleDTO(Role source) {
+        RoleDTO roleDTO = new RoleDTO();
+        ObjectConvertUtil.objectCopy(roleDTO, source);
+        return roleDTO;
+    }
 
 }

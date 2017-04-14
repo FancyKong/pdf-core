@@ -5,13 +5,19 @@
 package com.cafa.pdf.core.service;
 
 import com.cafa.pdf.core.commom.dto.TreatiseDTO;
-import com.cafa.pdf.core.dal.entity.Treatise;
-import com.cafa.pdf.core.web.request.BasicSearchReq;
-import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.dal.dao.IBaseDAO;
+import com.cafa.pdf.core.dal.dao.TreatiseDAO;
+import com.cafa.pdf.core.dal.entity.Treatise;
+import com.cafa.pdf.core.util.ObjectConvertUtil;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.treatise.TreatiseSaveReq;
+import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
+import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author FancyKong
@@ -20,17 +26,54 @@ import org.springframework.stereotype.Service;
  * @since 0.0.1
  */
 @Service
-public class TreatiseService extends ABaseService<Treatise,Long>{
+@Transactional(readOnly = true)
+public class TreatiseService extends ABaseService<Treatise, Long> {
 
-    public Page<TreatiseDTO> findAll(TreatiseSearchReq userSearchReq, BasicSearchReq basicSearchReq) {
-        int pageNumber = basicSearchReq.getStartIndex() / basicSearchReq.getPageSize() + 1;
-        PageRequest pageRequest = super.buildPageRequest(pageNumber, basicSearchReq.getPageSize());
+    private final TreatiseDAO treatiseDAO;
 
-        return null;
+    @Autowired
+    public TreatiseService(TreatiseDAO treatiseDAO) {
+        this.treatiseDAO = treatiseDAO;
     }
 
     @Override
     protected IBaseDAO<Treatise, Long> getEntityDAO() {
-        return null;
+        return treatiseDAO;
     }
+
+    public Page<TreatiseDTO> findAll(TreatiseSearchReq treatiseSearchReq, BasicSearchReq basicSearchReq) {
+        int pageNumber = basicSearchReq.getStartIndex() / basicSearchReq.getPageSize() + 1;
+        PageRequest pageRequest = super.buildPageRequest(pageNumber, basicSearchReq.getPageSize());
+
+        //有了其它搜索条件
+        Page<Treatise> treatisePage = super.findAllBySearchParams(
+                buildSearchParams(treatiseSearchReq), pageNumber, basicSearchReq.getPageSize());
+
+        return treatisePage.map(source -> {
+            TreatiseDTO treatiseDTO = new TreatiseDTO();
+            ObjectConvertUtil.objectCopy(treatiseDTO, source);
+            return treatiseDTO;
+        });
+    }
+
+    public Long getCount() {
+        log.debug("countAllUser没有缓存");
+        return treatiseDAO.count();
+    }
+
+    @Transactional
+    public void update(TreatiseUpdateReq treatiseUpdateReq) {
+        Treatise treatise = findById(treatiseUpdateReq.getId());
+        ObjectConvertUtil.objectCopy(treatise, treatiseUpdateReq);
+        update(treatise);
+    }
+
+    @Transactional
+    public void save(TreatiseSaveReq treatiseSaveReq) {
+
+        Treatise user = new Treatise();
+        ObjectConvertUtil.objectCopy(user, treatiseSaveReq);
+        save(user);
+    }
+
 }

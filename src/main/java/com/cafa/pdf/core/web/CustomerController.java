@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 会员控制器
  * Created by Cherish on 2017/1/6.
  */
 @Controller
@@ -27,8 +28,12 @@ import java.util.Map;
 @RequiresRoles("admin")
 public class CustomerController extends ABaseController {
 
+    private final CustomerService customerService;
+
     @Autowired
-    private CustomerService customerService;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @GetMapping
     public ModelAndView index(){
@@ -65,13 +70,10 @@ public class CustomerController extends ABaseController {
     @GetMapping("/page")
     @ResponseBody
     public Response toPage(BasicSearchReq basicSearchReq, CustomerSearchReq customerSearchReq){
-
         try {
             Page<CustomerDTO> page = customerService.findAll(basicSearchReq, customerSearchReq);
-
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
-            
             log.error("获取列表失败: {}", e.getMessage());
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
@@ -85,12 +87,10 @@ public class CustomerController extends ABaseController {
     @DeleteMapping("/{customerId}/delete")
     @ResponseBody
     public Response delete(@PathVariable("customerId") Long customerId){
-
         try {
             customerService.delete(customerId);
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
-            
             log.error("删除失败:{}", e.getMessage());
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
@@ -116,20 +116,16 @@ public class CustomerController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("customer", customerReq);
-
         }else {
             try {
-                customerService.updateByReq(customerReq);
-
+                customerService.update(customerReq);
                 mv.addObject("customer", customerService.findById(customerReq.getId()));
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
-                
                 errorMap.put("msg", "系统繁忙");
                 log.error("修改错误:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 
@@ -148,19 +144,15 @@ public class CustomerController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("customer", customerReq);
-
         }else {
             try {
-                customerService.saveByReq(customerReq);
+                customerService.save(customerReq);
                 errorMap.put("msg", "添加成功");
-
             } catch (Exception e) {
-                
                 errorMap.put("msg", "系统繁忙");
                 log.error("添加失败:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 

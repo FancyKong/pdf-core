@@ -1,15 +1,15 @@
 package com.cafa.pdf.core.service;
 
 import com.cafa.pdf.core.commom.dto.CustomerDTO;
-import com.cafa.pdf.core.dal.entity.Customer;
-import com.cafa.pdf.core.web.request.BasicSearchReq;
-import com.cafa.pdf.core.web.request.customer.CustomerReq;
-import com.cafa.pdf.core.web.request.customer.CustomerSearchReq;
+import com.cafa.pdf.core.commom.enums.ActiveEnum;
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.dal.dao.CustomerDAO;
 import com.cafa.pdf.core.dal.dao.IBaseDAO;
+import com.cafa.pdf.core.dal.entity.Customer;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
-import lombok.extern.slf4j.Slf4j;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.customer.CustomerReq;
+import com.cafa.pdf.core.web.request.customer.CustomerSearchReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,17 +21,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class CustomerService extends ABaseService<Customer, Long> {
 
-    @Autowired
-    private CustomerDAO customerDAO;
+    private final CustomerDAO customerDAO;
 
-    private static final String UNKNOW = "未知";
-    private static final String AC = "激活";
-    private static final String UN = "冻结";
+    @Autowired
+    public CustomerService(CustomerDAO customerDAO) {
+        this.customerDAO = customerDAO;
+    }
 
     @Override
     protected IBaseDAO<Customer, Long> getEntityDAO() {
@@ -40,7 +39,7 @@ public class CustomerService extends ABaseService<Customer, Long> {
 
     public CustomerDTO findOne(Long CustomerId) {
         Customer customer = customerDAO.findOne(CustomerId);
-        return customer == null ? null : ObjectConvertUtil.objectCopy(new CustomerDTO(), customer);
+        return customer != null ? getCustomerDTO(customer) : null;
     }
 
     public boolean exist(String telephone) {
@@ -64,12 +63,7 @@ public class CustomerService extends ABaseService<Customer, Long> {
         if (ObjectConvertUtil.objectFieldIsBlank(customerSearchReq)){
             log.debug("没有特定搜索条件的");
             List<Customer> customerList = customerDAO.listAllPaged(pageRequest);
-            List<CustomerDTO> CustomerDTOList = customerList.stream().map(source -> {
-                CustomerDTO customerDTO = new CustomerDTO();
-                ObjectConvertUtil.objectCopy(customerDTO, source);
-                customerDTO.setActiveStr(source.getActive() == null ? UNKNOW : source.getActive() == 1 ? AC : UN);
-                return customerDTO;
-            }).collect(Collectors.toList());
+            List<CustomerDTO> CustomerDTOList = customerList.stream().map(this::getCustomerDTO).collect(Collectors.toList());
 
             //为了计算总数使用缓存，加快搜索速度
             Long count = getCount();
@@ -80,16 +74,11 @@ public class CustomerService extends ABaseService<Customer, Long> {
         Page<Customer> userPage = super.findAllBySearchParams(
                 buildSearchParams(customerSearchReq), pageNumber, basicSearchReq.getPageSize());
 
-        return userPage.map(source -> {
-            CustomerDTO customerDTO = new CustomerDTO();
-            ObjectConvertUtil.objectCopy(customerDTO, source);
-            customerDTO.setActiveStr(source.getActive() == null ? UNKNOW : source.getActive() == 1 ? AC : UN);
-            return customerDTO;
-        });
+        return userPage.map(this::getCustomerDTO);
     }
 
     @Transactional
-    public void updateByReq(CustomerReq customerReq) {
+    public void update(CustomerReq customerReq) {
         Customer customer = this.findById(customerReq.getId());
         if (customer == null) return;
 
@@ -100,15 +89,26 @@ public class CustomerService extends ABaseService<Customer, Long> {
     }
 
     @Transactional
-    public Customer saveByReq(CustomerReq customerReq) {
+    public Customer save(CustomerReq customerReq) {
         Customer customer = new Customer();
         ObjectConvertUtil.objectCopy(customer, customerReq);
         customer.setPassword(CryptographyUtil.cherishSha1(customer.getPassword()));
         customer.setCreatedTime(new Date());
         customer.setModifiedTime(new Date());
 
-
         return this.save(customer);
+    }
+
+    /**
+     * 把实体类转换成DTO
+     * @param source Customer
+     * @return CustomerDTO
+     */
+    private CustomerDTO getCustomerDTO(Customer source) {
+        CustomerDTO customerDTO = new CustomerDTO();
+        ObjectConvertUtil.objectCopy(customerDTO, source);
+        customerDTO.setActiveStr(ActiveEnum.getDesc(source.getActive()));
+        return customerDTO;
     }
 
 

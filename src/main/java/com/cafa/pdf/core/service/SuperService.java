@@ -5,16 +5,15 @@ import com.cafa.pdf.core.commom.dto.su.SuperPermissionDTO;
 import com.cafa.pdf.core.commom.dto.su.SuperRoleDTO;
 import com.cafa.pdf.core.commom.dto.su.SuperRolePermissionDTO;
 import com.cafa.pdf.core.commom.dto.su.SuperUserRoleDTO;
-import com.cafa.pdf.core.dal.entity.Permission;
-import com.cafa.pdf.core.dal.entity.Role;
-import com.cafa.pdf.core.dal.entity.User;
-import com.cafa.pdf.core.web.request.su.SuperRolePermissionReq;
-import com.cafa.pdf.core.web.request.su.SuperUserRoleReq;
 import com.cafa.pdf.core.dal.dao.PermissionDAO;
 import com.cafa.pdf.core.dal.dao.RoleDAO;
 import com.cafa.pdf.core.dal.dao.UserDAO;
+import com.cafa.pdf.core.dal.entity.Permission;
+import com.cafa.pdf.core.dal.entity.Role;
+import com.cafa.pdf.core.dal.entity.User;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
-import lombok.extern.slf4j.Slf4j;
+import com.cafa.pdf.core.web.request.su.SuperRolePermissionReq;
+import com.cafa.pdf.core.web.request.su.SuperUserRoleReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,17 +22,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class SuperService {
 
+    private final RoleDAO roleDAO;
+    private final UserDAO userDAO;
+    private final PermissionDAO permissionDAO;
+
     @Autowired
-    private RoleDAO roleDAO;
-    @Autowired
-    private UserDAO userDAO;
-    @Autowired
-    private PermissionDAO permissionDAO;
+    public SuperService(RoleDAO roleDAO, UserDAO userDAO, PermissionDAO permissionDAO) {
+        this.roleDAO = roleDAO;
+        this.userDAO = userDAO;
+        this.permissionDAO = permissionDAO;
+    }
 
     public List<RoleDTO> listAllRole() {
         return roleDAO.findAll().stream().map(role -> {

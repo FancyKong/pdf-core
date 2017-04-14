@@ -61,8 +61,8 @@ public abstract class ABaseService<E, PK extends Serializable> {
     }
 
     @Transactional(readOnly = false)
-    public void update(E entity) {
-        getEntityDAO().save(entity);
+    public E update(E entity) {
+        return getEntityDAO().save(entity);
     }
 
     public E findById(PK id) {

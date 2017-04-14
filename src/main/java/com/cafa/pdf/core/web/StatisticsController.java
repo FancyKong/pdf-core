@@ -2,7 +2,7 @@
  * JDKCC.com
  * Copyright (c) 2011-2017 All Rights Reserved.
  */
-package com.cafa.pdf.core.web.aop;
+package com.cafa.pdf.core.web;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

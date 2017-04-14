@@ -24,16 +24,16 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="input-group">
-										<span class="input-group-addon"> <label for="tel">编号：</label>
-										</span> <input name="telephone" id="tel" type="number"
-                                                       class="form-control" placeholder="编号">
+										<span class="input-group-addon"> <label for="ISBN">编号：</label>
+										</span> <input name="ISBN" id="ISBN" type="text"
+                                                       class="form-control" placeholder="ISBN编号">
                             </div>
                             <!-- /input-group -->
                         </div>
                         <div class="col-sm-3">
                             <div class="input-group">
-										<span class="input-group-addon"> <label for="nick">专著名：</label>
-										</span> <input name="nickname" id="nick" type="text"
+										<span class="input-group-addon"> <label for="bookName">专著名：</label>
+										</span> <input name="bookName" id="bookName" type="text"
                                                        class="form-control" placeholder="专著名">
                             </div>
                             <!-- /input-group -->
@@ -111,13 +111,15 @@
                             </tfoot>
                             <tbody>
                             <tr>
-                                <td>序号</td>
-                                <td>姓名</td>
-                                <td>手机号码</td>
-                                <th>职位</th>
-                                <th>入职时间</th>
-                                <td>登陆账号</td>
-                                <th>状态</th>
+                                <th>编号</th>
+                                <th>专著名称</th>
+                                <th>作者</th>
+                                <th>类别</th>
+                                <th>出版社</th>
+                                <th>出版地</th>
+                                <th>出版日期</th>
+                                <th>页码</th>
+                                <th>语种</th>
                                 <th>操作</th>
                             </tr>
                             </tbody>
@@ -140,13 +142,13 @@
             //菜单的active
             $('.custom-nav .nav-active').removeClass('nav-active');
             $('.custom-nav .active').removeClass('active');
-            $("#userMenu").addClass("nav-active");
-            $("#userLi").addClass("active");
+            $("#pdfLi").addClass("active");
+
         });
 
     </script>
     <script src="/js/admin/dataTableConstant.js" type="text/javascript"></script>
-    <script src="/js/admin/userManage.js" type="text/javascript"></script>
+    <script src="/js/admin/treatiseManage.js" type="text/javascript"></script>
 </div>
 
 </body>
