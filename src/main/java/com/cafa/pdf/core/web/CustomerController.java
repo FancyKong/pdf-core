@@ -1,11 +1,11 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.dal.MResponse;
-import com.cafa.pdf.core.dal.dto.CustomerDTO;
+import com.cafa.pdf.core.web.response.Response;
+import com.cafa.pdf.core.commom.dto.CustomerDTO;
 import com.cafa.pdf.core.dal.entity.Customer;
-import com.cafa.pdf.core.dal.request.BasicSearchReq;
-import com.cafa.pdf.core.dal.request.customer.CustomerReq;
-import com.cafa.pdf.core.dal.request.customer.CustomerSearchReq;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.customer.CustomerReq;
+import com.cafa.pdf.core.web.request.customer.CustomerSearchReq;
 import com.cafa.pdf.core.service.CustomerService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class CustomerController extends ABaseController {
      */
     @GetMapping("/page")
     @ResponseBody
-    public MResponse toPage(BasicSearchReq basicSearchReq, CustomerSearchReq customerSearchReq){
+    public Response toPage(BasicSearchReq basicSearchReq, CustomerSearchReq customerSearchReq){
 
         try {
             Page<CustomerDTO> page = customerService.findAll(basicSearchReq, customerSearchReq);
@@ -84,7 +84,7 @@ public class CustomerController extends ABaseController {
      */
     @DeleteMapping("/{customerId}/delete")
     @ResponseBody
-    public MResponse delete(@PathVariable("customerId") Long customerId){
+    public Response delete(@PathVariable("customerId") Long customerId){
 
         try {
             customerService.delete(customerId);

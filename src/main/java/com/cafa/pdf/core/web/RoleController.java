@@ -1,11 +1,11 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.dal.MResponse;
-import com.cafa.pdf.core.dal.dto.RoleDTO;
+import com.cafa.pdf.core.web.response.Response;
+import com.cafa.pdf.core.commom.dto.RoleDTO;
 import com.cafa.pdf.core.dal.entity.Role;
-import com.cafa.pdf.core.dal.request.BasicSearchReq;
-import com.cafa.pdf.core.dal.request.role.RoleSaveReq;
-import com.cafa.pdf.core.dal.request.role.RoleUpdateReq;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.role.RoleSaveReq;
+import com.cafa.pdf.core.web.request.role.RoleUpdateReq;
 import com.cafa.pdf.core.service.RoleService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class RoleController extends ABaseController {
      */
     @GetMapping("/page")
     @ResponseBody
-    public MResponse toPage(BasicSearchReq basicSearchReq){
+    public Response toPage(BasicSearchReq basicSearchReq){
 
         try {
             Page<RoleDTO> page = roleService.findAll(basicSearchReq);
@@ -84,7 +84,7 @@ public class RoleController extends ABaseController {
      */
     @DeleteMapping("/{roleId}/delete")
     @ResponseBody
-    public MResponse delete(@PathVariable("roleId") Long roleId){
+    public Response delete(@PathVariable("roleId") Long roleId){
 
         try {
             roleService.delete(roleId);

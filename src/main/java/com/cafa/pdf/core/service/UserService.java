@@ -1,14 +1,14 @@
 package com.cafa.pdf.core.service;
 
-import com.cafa.pdf.core.dal.dto.UserDTO;
+import com.cafa.pdf.core.commom.dto.UserDTO;
 import com.cafa.pdf.core.dal.entity.User;
-import com.cafa.pdf.core.dal.request.BasicSearchReq;
-import com.cafa.pdf.core.dal.request.user.UserSaveReq;
-import com.cafa.pdf.core.dal.request.user.UserSearchReq;
-import com.cafa.pdf.core.dal.request.user.UserUpdateReq;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.user.UserSaveReq;
+import com.cafa.pdf.core.web.request.user.UserSearchReq;
+import com.cafa.pdf.core.web.request.user.UserUpdateReq;
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
-import com.cafa.pdf.core.repository.IBaseDAO;
-import com.cafa.pdf.core.repository.UserDAO;
+import com.cafa.pdf.core.dal.dao.IBaseDAO;
+import com.cafa.pdf.core.dal.dao.UserDAO;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

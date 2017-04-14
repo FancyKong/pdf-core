@@ -1,7 +1,7 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.dal.request.su.SuperRolePermissionReq;
-import com.cafa.pdf.core.dal.request.su.SuperUserRoleReq;
+import com.cafa.pdf.core.web.request.su.SuperRolePermissionReq;
+import com.cafa.pdf.core.web.request.su.SuperUserRoleReq;
 import com.cafa.pdf.core.service.SuperService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;

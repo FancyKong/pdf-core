@@ -1,11 +1,11 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.dal.MResponse;
-import com.cafa.pdf.core.dal.dto.PermissionDTO;
+import com.cafa.pdf.core.web.response.Response;
+import com.cafa.pdf.core.commom.dto.PermissionDTO;
 import com.cafa.pdf.core.dal.entity.Permission;
-import com.cafa.pdf.core.dal.request.BasicSearchReq;
-import com.cafa.pdf.core.dal.request.permission.PermissionSaveReq;
-import com.cafa.pdf.core.dal.request.permission.PermissionUpdateReq;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.permission.PermissionSaveReq;
+import com.cafa.pdf.core.web.request.permission.PermissionUpdateReq;
 import com.cafa.pdf.core.service.PermissionService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class PermissionController extends ABaseController {
      */
     @GetMapping("/page")
     @ResponseBody
-    public MResponse toPage(BasicSearchReq basicSearchReq){
+    public Response toPage(BasicSearchReq basicSearchReq){
 
         try {
             Page<PermissionDTO> page = permissionService.findAll(basicSearchReq);
@@ -84,7 +84,7 @@ public class PermissionController extends ABaseController {
      */
     @DeleteMapping("/{permissionId}/delete")
     @ResponseBody
-    public MResponse delpermission(@PathVariable("permissionId") Long permissionId){
+    public Response delpermission(@PathVariable("permissionId") Long permissionId){
 
         try {
             permissionService.delete(permissionId);

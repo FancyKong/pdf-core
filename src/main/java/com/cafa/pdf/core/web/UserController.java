@@ -1,13 +1,13 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.dal.MResponse;
-import com.cafa.pdf.core.dal.dto.UserDTO;
+import com.cafa.pdf.core.web.response.Response;
+import com.cafa.pdf.core.commom.dto.UserDTO;
 import com.cafa.pdf.core.dal.entity.User;
-import com.cafa.pdf.core.dal.request.BasicSearchReq;
-import com.cafa.pdf.core.dal.request.user.UserModifyPasswordReq;
-import com.cafa.pdf.core.dal.request.user.UserSaveReq;
-import com.cafa.pdf.core.dal.request.user.UserSearchReq;
-import com.cafa.pdf.core.dal.request.user.UserUpdateReq;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.user.UserModifyPasswordReq;
+import com.cafa.pdf.core.web.request.user.UserSaveReq;
+import com.cafa.pdf.core.web.request.user.UserSearchReq;
+import com.cafa.pdf.core.web.request.user.UserUpdateReq;
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.service.UserService;
@@ -91,7 +91,7 @@ public class UserController extends ABaseController {
      */
     @GetMapping("/page")
     @ResponseBody
-    public MResponse toPage(BasicSearchReq basicSearchReq, UserSearchReq userSearchReq){
+    public Response toPage(BasicSearchReq basicSearchReq, UserSearchReq userSearchReq){
 
         try {
             Page<UserDTO> page = userService.findAll(userSearchReq, basicSearchReq);
@@ -112,7 +112,7 @@ public class UserController extends ABaseController {
     @DeleteMapping("/{userId}/delete")
     @ResponseBody
     @RequiresPermissions("user:delete")
-    public MResponse delete(@PathVariable("userId") Long userId){
+    public Response delete(@PathVariable("userId") Long userId){
         try {
             userService.delete(userId);
 

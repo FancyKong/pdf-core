@@ -1,12 +1,12 @@
 package com.cafa.pdf.core.service;
 
-import com.cafa.pdf.core.dal.dto.PermissionDTO;
+import com.cafa.pdf.core.commom.dto.PermissionDTO;
 import com.cafa.pdf.core.dal.entity.Permission;
-import com.cafa.pdf.core.dal.request.BasicSearchReq;
-import com.cafa.pdf.core.dal.request.permission.PermissionSaveReq;
-import com.cafa.pdf.core.dal.request.permission.PermissionUpdateReq;
-import com.cafa.pdf.core.repository.IBaseDAO;
-import com.cafa.pdf.core.repository.PermissionDAO;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.permission.PermissionSaveReq;
+import com.cafa.pdf.core.web.request.permission.PermissionUpdateReq;
+import com.cafa.pdf.core.dal.dao.IBaseDAO;
+import com.cafa.pdf.core.dal.dao.PermissionDAO;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
