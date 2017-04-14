@@ -82,7 +82,7 @@ public class BasicController extends ABaseController {
 		String submitCode = WebUtils.getCleanParam(request, "validateCode");
 		//判断验证码
 		if (StringUtils.isBlank(submitCode) || !StringUtils.equalsIgnoreCase(code,submitCode.toLowerCase())) {
-			LOGGER.debug("验证码不正确");
+			log.debug("验证码不正确");
             errorMap.put("validateCodeError", "验证码不正确");
             //添加上表单输入数据返回给页面
             modelAndView.addObject("usernameInput", loginReq.getUsername());
@@ -114,25 +114,25 @@ public class BasicController extends ABaseController {
 				session.setAttribute("nickname", ShiroUserUtil.getNickname());
 
 			} catch (UnknownAccountException uae) {
-				LOGGER.debug("账户不存在!");
+				log.debug("账户不存在!");
 				errorMap.put("username","账户或密码错误，请重新输入");
 			} catch (IncorrectCredentialsException ice) {
 				errorMap.put("username","账户或密码错误，请重新输入");
-				LOGGER.debug("密码不正确!");
+				log.debug("密码不正确!");
 			} catch (LockedAccountException lae) {
-				LOGGER.debug("账户被冻结!");
+				log.debug("账户被冻结!");
 				errorMap.put("username","该账户被冻结");
 			}catch(ExcessiveAttemptsException eae){
-				LOGGER.debug("错误次数过多");
+				log.debug("错误次数过多");
 				errorMap.put("username","密码错误次数过多，请稍后再试");
 			} catch (AuthenticationException ae) {
 				token.clear();
 				errorMap.put("username","系统认证错误");
-				LOGGER.debug("认证错误!");
+				log.debug("认证错误!");
 			}
 
 			if (subject.isAuthenticated()){
-				LOGGER.debug("登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
+				log.debug("登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
 				modelAndView.setViewName("redirect:/admin");
 			}
 		}
@@ -142,7 +142,7 @@ public class BasicController extends ABaseController {
 
 	@GetMapping("/403")
 	public String unauthorizedRole(){
-		LOGGER.debug("------没有权限-------");
+		log.debug("------没有权限-------");
 		return "error/403";
 	}
 	
@@ -188,7 +188,7 @@ public class BasicController extends ABaseController {
 						+ request.getContextPath() + "/";
 				url = basePath + "imageDownload?filename=" + newFIleName;
 			} catch (IOException e) {
-				e.printStackTrace();
+				
 			}
 
 		} // end if
@@ -218,7 +218,7 @@ public class BasicController extends ABaseController {
             }
             out.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            
         } finally {
 
         }*/

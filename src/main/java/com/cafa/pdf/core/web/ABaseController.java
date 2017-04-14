@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class ABaseController {
 
-	protected Logger LOGGER = LoggerFactory.getLogger(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	protected static final Integer PAGE_SIZE = 20;
 	protected static final Integer NOT_LOGIN_CODE = 100;
@@ -45,7 +45,7 @@ public class ABaseController {
 		Map<String, String> map = new HashMap<>();
 		List<FieldError> list = result.getFieldErrors();
 		for (FieldError error : list) {
-			LOGGER.debug("error: {} -> {}", error.getField(), error.getDefaultMessage());
+			log.debug("error: {} -> {}", error.getField(), error.getDefaultMessage());
 			map.put(error.getField(), error.getDefaultMessage());
 		}
 		return map;

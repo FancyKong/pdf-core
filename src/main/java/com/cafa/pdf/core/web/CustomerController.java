@@ -71,8 +71,8 @@ public class CustomerController extends ABaseController {
 
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("获取列表失败: {}", e.getMessage());
+            
+            log.error("获取列表失败: {}", e.getMessage());
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
@@ -90,8 +90,8 @@ public class CustomerController extends ABaseController {
             customerService.delete(customerId);
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("删除失败:{}", e.getMessage());
+            
+            log.error("删除失败:{}", e.getMessage());
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
     }
@@ -124,9 +124,9 @@ public class CustomerController extends ABaseController {
                 mv.addObject("customer", customerService.findById(customerReq.getId()));
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
-                e.printStackTrace();
+                
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", e.getMessage());
             }
         }
 
@@ -140,7 +140,7 @@ public class CustomerController extends ABaseController {
      */
     @PostMapping("/save")
     public ModelAndView save(@Validated CustomerReq customerReq, BindingResult bindingResult){
-        LOGGER.info("start to handle save param = {}",customerReq);
+        log.info("start to handle save param = {}",customerReq);
         ModelAndView mv = new ModelAndView("admin/customer/add");
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);
@@ -155,9 +155,9 @@ public class CustomerController extends ABaseController {
                 errorMap.put("msg", "添加成功");
 
             } catch (Exception e) {
-                e.printStackTrace();
+                
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("添加失败:{}", e.getMessage());
+                log.error("添加失败:{}", e.getMessage());
             }
         }
 

@@ -84,9 +84,9 @@ public class SuperController extends ABaseController {
 
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
-                e.printStackTrace();
+                
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", e.getMessage());
             }
         }
 
@@ -109,7 +109,7 @@ public class SuperController extends ABaseController {
             errorMap.put("msg", "数据错误");
             return mv;
         }
-        LOGGER.debug("superRolePermissionReq = " + superRolePermissionReq);
+        log.debug("superRolePermissionReq = " + superRolePermissionReq);
 
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
@@ -120,9 +120,9 @@ public class SuperController extends ABaseController {
 
                 errorMap.put("msg", "修改角色权限成功");
             } catch (Exception e) {
-                e.printStackTrace();
+                
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", e.getMessage());
             }
         }
 

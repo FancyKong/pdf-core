@@ -72,7 +72,7 @@ public class PermissionController extends ABaseController {
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.error("获取列表失败: {}", e.getMessage());
+            log.error("获取列表失败: {}", e.getMessage());
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
@@ -91,7 +91,7 @@ public class PermissionController extends ABaseController {
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.error("删除失败:{}", e.getMessage());
+            log.error("删除失败:{}", e.getMessage());
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
     }
@@ -124,9 +124,9 @@ public class PermissionController extends ABaseController {
                 mv.addObject("permission", permissionService.findById(permissionUpdateReq.getId()));
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
-                e.printStackTrace();
+                
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", e.getMessage());
             }
         }
 
@@ -162,7 +162,7 @@ public class PermissionController extends ABaseController {
             } catch (Exception e) {
                 e.printStackTrace();
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("添加失败:{}", e.getMessage());
+                log.error("添加失败:{}", e.getMessage());
             }
         }
 

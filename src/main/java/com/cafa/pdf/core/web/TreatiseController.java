@@ -56,8 +56,8 @@ public class TreatiseController extends ABaseController{
 
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("获取用户列表失败: {}", e.getMessage());
+            
+            log.error("获取用户列表失败: {}", e.getMessage());
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
