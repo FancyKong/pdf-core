@@ -59,18 +59,11 @@
                         </h4>
                     </div>
                 </div>
-
-                <h5 class="left-nav-title">用户信息</h5>
-                <ul class="nav nav-pills nav-stacked custom-nav">
-                    <li><a th:href="@{/user/profile}"><i class="fa fa-user"></i> <span>个人信息</span></a></li>
-                    <li><a th:href="@{/user/modifyPassword}"><i class="fa fa-edit"></i> <span>修改密码</span></a></li>
-                    <li><a th:href="@{/logout}"><i class="fa fa-sign-out"></i> <span>登出</span></a></li>
-                </ul>
             </div>
 
             <!--sidebar nav start-->
             <ul class="nav nav-pills nav-stacked custom-nav">
-                <li id="datapanelLi"><a th:href="@{/admin}"><i class="fa fa-home"></i> <span> 数据面板</span></a></li>
+                <li id="introduceLi"><a th:href="@{/admin}"><i class="fa fa-home"></i> <span> 系统介绍</span></a></li>
 
                 <p shiro:hasAnyPermissions="user:show">
                     <li class="menu-list" id="userMenu"><a href=""><i class="fa fa-user"></i>
@@ -99,12 +92,12 @@
                     <li id="pdfLi"><a th:href="@{/treatise}"><i class="fa fa-book"></i> <span> 专著管理</span></a></li>
                 </p>
 
-                <p shiro:hasAnyPermissions="info:show">
-                <li class="menu-list" id="infoMenu"><a href=""><i class="fa fa-area-chart"></i>
-                    <span> 统计</span></a>
-                    <ul class="sub-menu-list">
-                        <li id="focus"><a th:href="@{/statistics}"> 专著点击量</a></li>
-                    </ul></li>
+                <p shiro:hasAnyPermissions="statistics:show">
+                    <li class="menu-list" id="statisticsMenu"><a href=""><i class="fa fa-area-chart"></i>
+                        <span> 统计</span></a>
+                        <ul class="sub-menu-list">
+                            <li id="focusLi"><a th:href="@{/statistics}"> 专著点击量</a></li>
+                        </ul></li>
                 </p>
 
 
@@ -129,32 +122,12 @@
             <div class="menu-right">
                 <ul class="notification-menu">
 
-                        <li><a href="#" class="btn btn-default dropdown-toggle info-number"
-                               data-toggle="dropdown"> <i class="fa fa-bell-o"></i> <span class="badge" id="notification_sum">2</span>
+                    <li><a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <img th:src="@{/images/user-avatar.png}" alt="" />
+                            <span th:text="${#session.getAttribute('nickname')}"></span>
+                            <span class="caret"></span>
                         </a>
-                            <div class="dropdown-menu dropdown-menu-head pull-right">
-                                <h5 class="title">评论通知（待完成）</h5>
-                                <ul class="dropdown-list normal-list" id="notification_ul">
-                                    <li class="new"><a href=""> <span
-                                            class="label label-danger"><i class="fa fa-bolt"></i></span>
-                                        <span class="name">Server #1 overloaded. </span> <em
-                                                class="small">34 mins</em>
-                                    </a></li>
-                                    <li class="new"><a href=""> <span
-                                            class="label label-danger"><i class="fa fa-bolt"></i></span>
-                                        <span class="name">Server #31 overloaded. </span> <em
-                                                class="small">4 hrs</em>
-                                    </a></li>
-                                    <li class="new"><a href="">查看所有通知</a></li>
-                                </ul>
-                            </div></li>
-
-                    <li><a href="#" class="btn btn-default dropdown-toggle"
-                           data-toggle="dropdown"> <img
-                            th:src="@{/images/user-avatar.png}" alt="" /> <span th:text="${#session.getAttribute('nickname')}"></span> <span class="caret"></span>
-                    </a>
                         <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
-                            <li><a th:href="@{/user/profile}"><i class="fa fa-user"></i> 个人信息</a></li>
                             <li><a th:href="@{/user/modifyPassword}"><i class="fa fa-edit"></i> <span>修改密码</span></a></li>
                             <li><a th:href="@{/logout}"><i class="fa fa-sign-out"></i> 登出</a></li>
                         </ul></li>

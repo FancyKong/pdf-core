@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      layout:decorate="layout">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Cherish">
+
+    <title>系统介绍</title>
+
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <!-- page heading start-->
+    <div class="page-heading">
+
+        <div class="state-info">
+            <section class="panel">
+                <div class="panel-body">
+                    <div class="summary">
+                        <span>专著收录量</span>
+                        <h3 class="red-txt">5,600</h3>
+                    </div>
+                    <div id="income" class="chart-bar"></div>
+                </div>
+            </section>
+            <section class="panel">
+                <div class="panel-body">
+                    <div class="summary">
+                        <span>会员注册量</span>
+                        <h3 class="green-txt">45,600</h3>
+                    </div>
+                    <div id="expense" class="chart-bar"></div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page heading end-->
+
+    <!--body wrapper start-->
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>著作管理系统</h1>
+                <h1>广东科技著作出版服务平台</h1>
+                <h2 th:text="'欢迎您，'+${#session.getAttribute('nickname')}"></h2>
+            </div>
+        </div>
+
+    </div>
+    <!--body wrapper end-->
+
+</div>
+
+<!--将被layout引入的js-->
+<div layout:fragment="javascript">
+    <script>
+        $("#introduceLi").addClass("active");
+    </script>
+
+</div>
+
+</body>
+</html>
