@@ -9,7 +9,15 @@
     <meta name="description" content="">
     <meta name="author" content="Cherish">
     <title>专著列表</title>
-
+    <style>
+        .permission-choose{
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .permission-choose li{
+            line-height: 35px;
+        }
+    </style>
 </head>
 <body>
 
@@ -141,7 +149,9 @@
                                 <th>
                                     <div class='btn-group btn-group-sm' role='group' aria-label='操作'>
                                         <a href='#' class='op_edit btn btn-info' role='button'>编辑</a>
-                                        <a href='#' class='op_edit btn btn-warning' role='button'>设置权限</a>
+                                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                                data-target="#permission">设置权限
+                                        </button>
                                         <a href='#' class='op_delete btn btn-danger' role='button'>删除</a>
                                     </div>
                                 </th>
@@ -159,7 +169,9 @@
                                 <th>
                                     <div class='btn-group btn-group-sm' role='group' aria-label='操作'>
                                         <a href='#' class='op_edit btn btn-info' role='button'>编辑</a>
-                                        <a href='#' class='op_edit btn btn-warning' role='button'>设置权限</a>
+                                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                                data-target="#permission">设置权限
+                                        </button>
                                         <a href='#' class='op_delete btn btn-danger' role='button'>删除</a>
                                     </div>
                                 </th>
@@ -177,7 +189,9 @@
                                 <th>
                                     <div class='btn-group btn-group-sm' role='group' aria-label='操作'>
                                         <a href='#' class='op_edit btn btn-info' role='button'>编辑</a>
-                                        <a href='#' class='op_edit btn btn-warning' role='button'>设置权限</a>
+                                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                                data-target="#permission">设置权限
+                                        </button>
                                         <a href='#' class='op_delete btn btn-danger' role='button'>删除</a>
                                     </div>
                                 </th>
@@ -192,8 +206,56 @@
         </div>
     </div>
     <!--body wrapper end-->
-
+    <!-- Modal -->
+    <div class="modal fade" id="permission" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    选择公开的章
+                </div>
+                <div class="modal-body">
+                    <ul class="permission-choose">
+                        <li>
+                            <label>
+                                <input type="checkbox" >
+                            </label>
+                            <span>第一章 - 数理统计基础1</span>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" >
+                            </label>
+                            <span>第二章 - 数理统计基础2</span>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" >
+                            </label>
+                            <span>第三章 - 数理统计进阶1</span>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" >
+                            </label>
+                            <span>第四章 - 数理统计进阶2</span>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" >
+                            </label>
+                            <span>第五章 - 数理统计精通</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <!--将被layout引入的js-->
 <div layout:fragment="javascript">
@@ -208,7 +270,7 @@
 
     </script>
     <script src="/js/admin/dataTableConstant.js" type="text/javascript"></script>
-    <!--<script src="/js/admin/treatiseManage.js" type="text/javascript"></script>-->
+    <script src="/js/admin/treatiseManage.js" type="text/javascript"></script>
 </div>
 
 </body>
