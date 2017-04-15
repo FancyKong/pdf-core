@@ -8,9 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Cherish">
-
-    <title>系统介绍</title>
-
+    <title>管理中心</title>
 </head>
 
 <body>
@@ -18,7 +16,11 @@
 <div layout:fragment="content">
     <!-- page heading start-->
     <div class="page-heading">
-
+        <h3>管理中心</h3>
+        <ul class="breadcrumb">
+            <li><a href="#"></a></li>
+            <li class="active"></li>
+        </ul>
         <div class="state-info">
             <section class="panel">
                 <div class="panel-body">
@@ -45,15 +47,135 @@
     <!--body wrapper start-->
     <div class="wrapper">
         <div class="row">
-            <div class="col-md-12 text-center">
-                <h1>著作管理系统</h1>
-                <h1>广东科技著作出版服务平台</h1>
-                <h2 th:text="'欢迎您，'+${#session.getAttribute('nickname')}"></h2>
-            </div>
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="profile-pic text-center">
+                                    <img alt="个人图像" src="/images/user-avatar.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <ul class="p-info">
+                                    <li>
+                                        <div class="title">呢称</div>
+                                        <div class="desk" th:text="${#session.getAttribute('nickname')}">Cherish</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">性别</div>
+                                        <div class="desk">男</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">职位</div>
+                                        <div class="desk">管理员</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- <div class="col-md-4"> -->
+
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="profile-desk">
+                                    <h1>广东科技著作出版服务平台</h1>
+                                    <span class="designation">著作管理系统</span>
+                                    <p>
+                                        功能介绍功能介绍功能介绍功能介绍功能介绍功能介绍功能介绍
+                                        功能介绍功能介绍功能介绍功能介绍
+                                    </p>
+
+                                    <div class="row">
+                                        <a th:href="@{/treatise}" class="col-xs-6 text-center"
+                                           style="background-color: #6a8abe;color: white;height: 100px;line-height: 100px;">
+                                            <h2 class=""><i class="fa fa-book"></i> 专著管理</h2>
+                                        </a>
+                                        <a th:href="@{/statistics}" class="col-xs-6 text-center"
+                                           style="background-color: #fc8675;color: white;height: 100px;line-height: 100px;">
+                                            <h2 class=""><i class="fa fa-area-chart"></i> 统计量</h2>
+                                        </a>
+
+                                        <a th:href="@{/customer}" class="col-xs-6 text-center"
+                                           style="background-color: #5ab6df;color: white;height: 100px;line-height: 100px;">
+                                            <h2 class=""><i class="fa fa-users"></i> 会员管理</h2>
+                                        </a>
+                                        <a th:href="@{/user}" class="col-xs-6 text-center"
+                                           style="background-color: #4acacb;color: white;height: 100px;line-height: 100px;">
+                                            <h2 class=""><i class="fa fa-user"></i> 管理员</h2>
+                                        </a>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row state-overview">
+                    <div class="col-md-6 col-xs-12 col-sm-6">
+                        <div class="panel purple">
+                            <div class="symbol">
+                                <i class="fa fa-gavel"></i>
+                            </div>
+                            <div class="state-value">
+                                <div class="value">230</div>
+                                <div class="title">New Order</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xs-12 col-sm-6">
+                        <div class="panel red">
+                            <div class="symbol">
+                                <i class="fa fa-tags"></i>
+                            </div>
+                            <div class="state-value">
+                                <div class="value">3490</div>
+                                <div class="title">Copy Sold</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row state-overview">
+                    <div class="col-md-6 col-xs-12 col-sm-6">
+                        <div class="panel blue">
+                            <div class="symbol">
+                                <i class="fa fa-money"></i>
+                            </div>
+                            <div class="state-value">
+                                <div class="value">22014</div>
+                                <div class="title">Total Revenue</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xs-12 col-sm-6">
+                        <div class="panel green">
+                            <div class="symbol">
+                                <i class="fa fa-eye"></i>
+                            </div>
+                            <div class="state-value">
+                                <div class="value">390</div>
+                                <div class="title">Unique Visitors</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- <div class="col-md-8"> -->
+
         </div>
     </div>
     <!--body wrapper end-->
-    <div style="height: 300px;"></div>
+    <div style="height: 100px;"></div>
 
 </div>
 
