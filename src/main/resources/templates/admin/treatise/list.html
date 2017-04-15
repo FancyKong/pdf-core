@@ -60,17 +60,15 @@
                             </div>
 
                             <div class="col-sm-4 form-group">
-                                <div class="input-group">
+                                <div class="btn-group">
                                     <button id="btn_search" type="button" class="btn btn-primary">
                                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                         查询
                                     </button>
-                                    &nbsp;
                                     <button id="btn_reset" type="reset" class="btn btn-warning">
                                         <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
                                         重置
                                     </button>
-                                    &nbsp;
                                     <button id="btn_fresh" type="button" class="btn btn-info">
                                         <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                                         刷新
@@ -102,82 +100,88 @@
                         <!-- table -->
                         <table id="otable" class="table" cellspacing="0" width="100%">
                             <thead>
-                                <tr>
-                                    <th>编号</th>
-                                    <th>专著名称</th>
-                                    <th>作者</th>
-                                    <th>类别</th>
-                                    <th>出版社</th>
-                                    <th>出版地</th>
-                                    <th>出版日期</th>
-                                    <th>页码</th>
-                                    <th>语种</th>
-                                    <th>操作</th>
-                                </tr>
+                            <tr>
+                                <th>编号</th>
+                                <th>专著名称</th>
+                                <th>作者</th>
+                                <th>类别</th>
+                                <th>出版社</th>
+                                <th>出版地</th>
+                                <th>出版日期</th>
+                                <th>页码</th>
+                                <th>语种</th>
+                                <th>操作</th>
+                            </tr>
                             </thead>
                             <tfoot>
-                                <tr>
-                                    <th>编号</th>
-                                    <th>专著名称</th>
-                                    <th>作者</th>
-                                    <th>类别</th>
-                                    <th>出版社</th>
-                                    <th>出版地</th>
-                                    <th>出版日期</th>
-                                    <th>页码</th>
-                                    <th>语种</th>
-                                    <th>操作</th>
-                                </tr>
+                            <tr>
+                                <th>编号</th>
+                                <th>专著名称</th>
+                                <th>作者</th>
+                                <th>类别</th>
+                                <th>出版社</th>
+                                <th>出版地</th>
+                                <th>出版日期</th>
+                                <th>页码</th>
+                                <th>语种</th>
+                                <th>操作</th>
+                            </tr>
                             </tfoot>
                             <tbody>
-                                <tr>
-                                    <th>ISBN</th>
-                                    <th>计算机网络</th>
-                                    <th>谢希仁</th>
-                                    <th>教材</th>
-                                    <th>高等教育出版社</th>
-                                    <th></th>
-                                    <th>2012-12-12</th>
-                                    <th>456</th>
-                                    <th>汉语</th>
-                                    <th>操作</th>
-                                </tr>
-                                <tr>
-                                    <th>ISBN</th>
-                                    <th>数据结构</th>
-                                    <th>xxx</th>
-                                    <th>xxx</th>
-                                    <th>高等教育出版社</th>
-                                    <th></th>
-                                    <th>2012-12-12</th>
-                                    <th>456</th>
-                                    <th>汉语</th>
-                                    <th>操作</th>
-                                </tr>
-                                <tr>
-                                    <th>ISBN</th>
-                                    <th>算法导论</th>
-                                    <th>xxxx</th>
-                                    <th>教材</th>
-                                    <th>机械工业出版社</th>
-                                    <th></th>
-                                    <th>2012-12-12</th>
-                                    <th>888</th>
-                                    <th>汉语</th>
-                                    <th>操作</th>
-                                </tr>
-                                <tr>
-                                    <th>。。。</th>
-                                    <th>。。。</th>
-                                    <th>。。。</th>
-                                    <th>。。。</th>
-                                    <th>。。。</th>
-                                    <th>。。。</th>
-                                    <th>。。。</th>
-                                    <th>。。。</th>
-                                    <th>。。。</th>
-                                    <th>。。。</th>
-                                </tr>
+                            <tr>
+                                <th>ISBN</th>
+                                <th>计算机网络</th>
+                                <th>谢希仁</th>
+                                <th>教材</th>
+                                <th>高等教育出版社</th>
+                                <th>北京</th>
+                                <th>2012-12-12</th>
+                                <th>456</th>
+                                <th>汉语</th>
+                                <th>
+                                    <div class='btn-group btn-group-sm' role='group' aria-label='操作'>
+                                        <a href='#' class='op_edit btn btn-info' role='button'>编辑</a>
+                                        <a href='#' class='op_edit btn btn-warning' role='button'>设置权限</a>
+                                        <a href='#' class='op_delete btn btn-danger' role='button'>删除</a>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>ISBN</th>
+                                <th>数据结构</th>
+                                <th>xxx</th>
+                                <th>xxx</th>
+                                <th>高等教育出版社</th>
+                                <th>北京</th>
+                                <th>2012-12-12</th>
+                                <th>456</th>
+                                <th>汉语</th>
+                                <th>
+                                    <div class='btn-group btn-group-sm' role='group' aria-label='操作'>
+                                        <a href='#' class='op_edit btn btn-info' role='button'>编辑</a>
+                                        <a href='#' class='op_edit btn btn-warning' role='button'>设置权限</a>
+                                        <a href='#' class='op_delete btn btn-danger' role='button'>删除</a>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>ISBN</th>
+                                <th>算法导论</th>
+                                <th>xxxx</th>
+                                <th>教材</th>
+                                <th>机械工业出版社</th>
+                                <th>北京</th>
+                                <th>2012-12-12</th>
+                                <th>888</th>
+                                <th>汉语</th>
+                                <th>
+                                    <div class='btn-group btn-group-sm' role='group' aria-label='操作'>
+                                        <a href='#' class='op_edit btn btn-info' role='button'>编辑</a>
+                                        <a href='#' class='op_edit btn btn-warning' role='button'>设置权限</a>
+                                        <a href='#' class='op_delete btn btn-danger' role='button'>删除</a>
+                                    </div>
+                                </th>
+                            </tr>
                             </tbody>
 
                         </table>

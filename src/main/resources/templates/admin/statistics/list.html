@@ -60,17 +60,15 @@
                             </div>
 
                             <div class="col-sm-4 form-group">
-                                <div class="input-group">
+                                <div class="btn-group">
                                     <button id="btn_search" type="button" class="btn btn-primary">
                                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                         查询
                                     </button>
-                                    &nbsp;
                                     <button id="btn_reset" type="reset" class="btn btn-warning">
                                         <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
                                         重置
                                     </button>
-                                    &nbsp;
                                     <button id="btn_fresh" type="button" class="btn btn-info">
                                         <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                                         刷新
@@ -98,53 +96,75 @@
 							</span>-->
                     </header>
                     <div class="panel-body">
-                        <button type="button" id="otable_new" class="btn btn-primary">添加 <i class="fa fa-plus"></i>
-                        </button>
+                        <div class="btn-group">
+                            <!--<button type="button" class="btn btn-success">日点击量</button>
+                            <button type="button" class="btn btn-info">月点击量</button>
+                            <button type="button" class="btn btn-warning">年点击量</button>
+                            <button type="button" class="btn btn-primary">总点击量</button>-->
+                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                总点击量 <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">日点击量</a></li>
+                                <li><a href="#">月点击量</a></li>
+                                <li><a href="#">年点击量</a></li>
+                                <li><a href="#">总访问量</a></li>
+                            </ul>
+                        </div>
                         <!-- table -->
                         <table id="otable" class="table" cellspacing="0" width="100%">
                             <thead>
-                                <tr>
-                                    <th>编号</th>
-                                    <th>专著名称</th>
-                                    <th>作者</th>
-                                    <th>类别</th>
-                                    <th>出版社</th>
-                                    <th>出版地</th>
-                                    <th>出版日期</th>
-                                    <th>页码</th>
-                                    <th>语种</th>
-                                    <th>操作</th>
-                                </tr>
+                            <tr>
+                                <th>编号</th>
+                                <th>专著名称</th>
+                                <th>作者</th>
+                                <th>类别</th>
+                                <th>点击量</th>
+                            </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>编号</th>
-                                    <th>专著名称</th>
-                                    <th>作者</th>
-                                    <th>类别</th>
-                                    <th>出版社</th>
-                                    <th>出版地</th>
-                                    <th>出版日期</th>
-                                    <th>页码</th>
-                                    <th>语种</th>
-                                    <th>操作</th>
-                                </tr>
-                            </tfoot>
                             <tbody>
-                                <tr>
-                                    <th>编号</th>
-                                    <th>专著名称</th>
-                                    <th>作者</th>
-                                    <th>类别</th>
-                                    <th>出版社</th>
-                                    <th>出版地</th>
-                                    <th>出版日期</th>
-                                    <th>页码</th>
-                                    <th>语种</th>
-                                    <th>操作</th>
-                                </tr>
-                            </tbody>
+                            <tr>
+                                <th>12311</th>
+                                <th>算法导论1</th>
+                                <th>蔡鸿文</th>
+                                <th>计算机</th>
+                                <th>10086</th>
+                            </tr>
 
+                            <tr>
+                                <th>12311</th>
+                                <th>算法导论2</th>
+                                <th>蔡鸿文</th>
+                                <th>计算机</th>
+                                <th>10086</th>
+                            </tr>
+
+                            <tr>
+                                <th>12311</th>
+                                <th>算法导论3</th>
+                                <th>蔡鸿文</th>
+                                <th>计算机</th>
+                                <th>10086</th>
+                            </tr>
+
+                            <tr>
+                                <th>12311</th>
+                                <th>算法导论4</th>
+                                <th>蔡鸿文</th>
+                                <th>计算机</th>
+                                <th>10086</th>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>编号</th>
+                                <th>专著名称</th>
+                                <th>作者</th>
+                                <th>类别</th>
+                                <th>点击量</th>
+                            </tr>
+                            </tfoot>
                         </table>
                         <!-- table end -->
                     </div>
