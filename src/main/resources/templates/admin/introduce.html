@@ -9,11 +9,6 @@
     <meta name="description" content="">
     <meta name="author" content="Cherish">
     <title>管理中心</title>
-    <style>
-        .function {
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body>
@@ -121,52 +116,60 @@
                 </div>
 
                 <div class="row state-overview">
-                    <div class="col-md-6 col-xs-12 col-sm-6">
-                        <div class="panel purple function">
-                            <div class="symbol">
-                                <i class="fa fa-users"></i>
-                            </div>
-                            <div class="state-value">
-                                <div class="value">会员管理</div>
-                                <div class="title">Customer</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xs-12 col-sm-6">
-                        <div class="panel red function">
-                            <div class="symbol">
-                                <i class="fa fa-user"></i>
-                            </div>
-                            <div class="state-value">
-                                <div class="value">管理员</div>
-                                <div class="title">Administrator</div>
+                    <a th:href="@{/customer}" style="color: #fff">
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                            <div class="panel purple">
+                                <div class="symbol">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <div class="state-value">
+                                    <div class="value">会员管理</div>
+                                    <div class="title">Customer</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+                    <a th:href="@{/user}" style="color: #fff">
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                            <div class="panel red">
+                                <div class="symbol">
+                                    <i class="fa fa-user"></i>
+                                </div>
+                                <div class="state-value">
+                                    <div class="value">管理员</div>
+                                    <div class="title">Administrator</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
                 <div class="row state-overview">
-                    <div class="col-md-6 col-xs-12 col-sm-6">
-                        <div class="panel blue function">
-                            <div class="symbol">
-                                <i class="fa fa-book"></i>
-                            </div>
-                            <div class="state-value">
-                                <div class="value">著作管理</div>
-                                <div class="title">Treatise</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xs-12 col-sm-6">
-                        <div class="panel green function">
-                            <div class="symbol">
-                                <i class="fa fa-area-chart"></i>
-                            </div>
-                            <div class="state-value">
-                                <div class="value">专著点击量</div>
-                                <div class="title">Statics</div>
+                    <a th:href="@{/treatise}" style="color: #fff">
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                            <div class="panel blue">
+                                <div class="symbol">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="state-value">
+                                    <div class="value">著作管理</div>
+                                    <div class="title">Treatise</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+                    <a th:href="@{/statistics}" style="color: #fff">
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                            <div class="panel green">
+                                <div class="symbol">
+                                    <i class="fa fa-area-chart"></i>
+                                </div>
+                                <div class="state-value">
+                                    <div class="value">专著点击量</div>
+                                    <div class="title">Statics</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div><!-- <div class="col-md-8"> -->
 
