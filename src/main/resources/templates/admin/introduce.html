@@ -9,6 +9,11 @@
     <meta name="description" content="">
     <meta name="author" content="Cherish">
     <title>管理中心</title>
+    <style>
+        .function {
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,8 +23,7 @@
     <div class="page-heading">
         <h3>管理中心</h3>
         <ul class="breadcrumb">
-            <li><a href="#"></a></li>
-            <li class="active"></li>
+            <li class="active"> </li>
         </ul>
         <div class="state-info">
             <section class="panel">
@@ -75,6 +79,22 @@
                                         <div class="title">职位</div>
                                         <div class="desk">管理员</div>
                                     </li>
+                                    <li>
+                                        <div class="title">生日</div>
+                                        <div class="desk">1970-7-7</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">年龄</div>
+                                        <div class="desk">60</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">政治面貌</div>
+                                        <div class="desk">中共党员</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">著作篇数</div>
+                                        <div class="desk">999</div>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -91,31 +111,9 @@
                                     <h1>广东科技著作出版服务平台</h1>
                                     <span class="designation">著作管理系统</span>
                                     <p>
-                                        功能介绍功能介绍功能介绍功能介绍功能介绍功能介绍功能介绍
-                                        功能介绍功能介绍功能介绍功能介绍
+                                        为贯彻国家科技政策和出版方针，推动我省创新驱动发展战略实施，省科技厅2015年新增了广东科学技术学术专著项目。
+                                        申请的项目获得资助出版后两个月内向广东科技专著出版服务平台提供10本专著和电子版。广东科技专著平台若收集到这些数据，暂时还没有共享资源的平台，为了更好地整合、分析和共享这些数据，我平台将建立一个数据库进行管理。
                                     </p>
-
-                                    <div class="row">
-                                        <a th:href="@{/treatise}" class="col-xs-6 text-center"
-                                           style="background-color: #6a8abe;color: white;height: 100px;line-height: 100px;">
-                                            <h2 class=""><i class="fa fa-book"></i> 专著管理</h2>
-                                        </a>
-                                        <a th:href="@{/statistics}" class="col-xs-6 text-center"
-                                           style="background-color: #fc8675;color: white;height: 100px;line-height: 100px;">
-                                            <h2 class=""><i class="fa fa-area-chart"></i> 统计量</h2>
-                                        </a>
-
-                                        <a th:href="@{/customer}" class="col-xs-6 text-center"
-                                           style="background-color: #5ab6df;color: white;height: 100px;line-height: 100px;">
-                                            <h2 class=""><i class="fa fa-users"></i> 会员管理</h2>
-                                        </a>
-                                        <a th:href="@{/user}" class="col-xs-6 text-center"
-                                           style="background-color: #4acacb;color: white;height: 100px;line-height: 100px;">
-                                            <h2 class=""><i class="fa fa-user"></i> 管理员</h2>
-                                        </a>
-
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
@@ -124,48 +122,48 @@
 
                 <div class="row state-overview">
                     <div class="col-md-6 col-xs-12 col-sm-6">
-                        <div class="panel purple">
+                        <div class="panel purple function">
                             <div class="symbol">
-                                <i class="fa fa-gavel"></i>
+                                <i class="fa fa-users"></i>
                             </div>
                             <div class="state-value">
-                                <div class="value">230</div>
-                                <div class="title">New Order</div>
+                                <div class="value">会员管理</div>
+                                <div class="title">Customer</div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-xs-12 col-sm-6">
-                        <div class="panel red">
+                        <div class="panel red function">
                             <div class="symbol">
-                                <i class="fa fa-tags"></i>
+                                <i class="fa fa-user"></i>
                             </div>
                             <div class="state-value">
-                                <div class="value">3490</div>
-                                <div class="title">Copy Sold</div>
+                                <div class="value">管理员</div>
+                                <div class="title">Administrator</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row state-overview">
                     <div class="col-md-6 col-xs-12 col-sm-6">
-                        <div class="panel blue">
+                        <div class="panel blue function">
                             <div class="symbol">
-                                <i class="fa fa-money"></i>
+                                <i class="fa fa-book"></i>
                             </div>
                             <div class="state-value">
-                                <div class="value">22014</div>
-                                <div class="title">Total Revenue</div>
+                                <div class="value">著作管理</div>
+                                <div class="title">Treatise</div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-xs-12 col-sm-6">
-                        <div class="panel green">
+                        <div class="panel green function">
                             <div class="symbol">
-                                <i class="fa fa-eye"></i>
+                                <i class="fa fa-area-chart"></i>
                             </div>
                             <div class="state-value">
-                                <div class="value">390</div>
-                                <div class="title">Unique Visitors</div>
+                                <div class="value">专著点击量</div>
+                                <div class="title">Statics</div>
                             </div>
                         </div>
                     </div>
