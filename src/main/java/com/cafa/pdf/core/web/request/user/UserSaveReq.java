@@ -3,10 +3,8 @@ package com.cafa.pdf.core.web.request.user;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Pattern;
-import java.util.Date;
 
 @Data
 public class UserSaveReq implements java.io.Serializable {

@@ -48,7 +48,7 @@
 					"data" : 'telephone'
 			    }, {
 					"data" : 'position'
-                }, {
+				}, {
 					"data" : 'username'
 				}, {
 					"data" : 'activeStr'
