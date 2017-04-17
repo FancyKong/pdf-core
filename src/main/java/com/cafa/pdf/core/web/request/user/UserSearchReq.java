@@ -16,9 +16,6 @@ public class UserSearchReq implements java.io.Serializable {
 
     private String position;
 
-    @DateTimeFormat(pattern="yyyy-MM-dd",iso = DateTimeFormat.ISO.DATE)
-    private Date hiredate;
-
     private Integer active;
 
 

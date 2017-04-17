@@ -138,7 +138,6 @@ CREATE TABLE `t_user` (
   `created_time` datetime NOT NULL,
   `description` varchar(1024) NOT NULL DEFAULT '',
   `modified_time` datetime NOT NULL,
-  `hiredate` datetime NOT NULL,
   `nickname` varchar(16) NOT NULL,
   `password` varchar(40) NOT NULL,
   `telephone` varchar(16) NOT NULL,

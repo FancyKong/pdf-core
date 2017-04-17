@@ -45,10 +45,6 @@ public class User implements java.io.Serializable {
     @Column(name = "position", nullable = false, length = 16)
     private String position;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "hiredate", nullable = false, length = 19)
-    private Date hiredate;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_time", nullable = false, length = 19)
     private Date createdTime;
