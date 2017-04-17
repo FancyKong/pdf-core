@@ -22,9 +22,6 @@ public class UserDTO implements java.io.Serializable {
 
     private String position;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="UTC")
-    private Date hiredate;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="UTC")
     private Date createdTime;
 

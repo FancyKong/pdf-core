@@ -3,11 +3,9 @@ package com.cafa.pdf.core.web.request.user;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
-import java.util.Date;
 
 @Data
 public class UserReq implements java.io.Serializable {
@@ -52,10 +50,6 @@ public class UserReq implements java.io.Serializable {
 
     @Length(min = 1 ,max = 32 ,message = "{user.position}")
     private String position;
-
-    @DateTimeFormat(pattern="yyyy-MM-dd",iso = DateTimeFormat.ISO.DATE)
-//    @Past(message = "入职时间该在今天之前")
-    private Date hiredate;
 
     @Range(min = 0, max = 1, message = "{user.active}")
     private Integer active;

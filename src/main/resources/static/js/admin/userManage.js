@@ -48,8 +48,6 @@
 					"data" : 'telephone'
 			    }, {
 					"data" : 'position'
-                }, {
-                    "data" : 'hiredate'
 				}, {
 					"data" : 'username'
 				}, {
