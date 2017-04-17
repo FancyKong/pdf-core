@@ -6,6 +6,8 @@ package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.dto.TreatiseDTO;
 import com.cafa.pdf.core.dal.entity.Treatise;
+import com.cafa.pdf.core.dal.entity.TreatiseCategory;
+import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
@@ -15,11 +17,10 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 /**
  * @author FancyKong
@@ -33,10 +34,22 @@ import org.springframework.web.servlet.ModelAndView;
 public class TreatiseController extends ABaseController{
 
     private final TreatiseService treatiseService;
+    private final TreatiseCategoryService treatiseCategoryService;
 
     @Autowired
-    public TreatiseController(TreatiseService treatiseService) {
+    public TreatiseController(TreatiseService treatiseService,
+                              TreatiseCategoryService treatiseCategoryService) {
         this.treatiseService = treatiseService;
+        this.treatiseCategoryService = treatiseCategoryService;
+    }
+
+    /**
+     * 全局返回著作类别
+     * @return List<TreatiseCategory>
+     */
+    @ModelAttribute("categories")
+    public List<TreatiseCategory> categories(){
+        return treatiseCategoryService.findAll();
     }
 
     @GetMapping
@@ -82,7 +95,7 @@ public class TreatiseController extends ABaseController{
     public ModelAndView updateForm(@PathVariable("treatiseId") Long treatiseId){
         ModelAndView mv = new ModelAndView("admin/treatise/edit");
         Treatise treatise = treatiseService.findById(treatiseId);
-        mv.addObject(treatise);
+        mv.addObject("treatise", treatise);
         return mv;
     }
 

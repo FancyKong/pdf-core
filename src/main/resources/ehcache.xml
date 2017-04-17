@@ -32,5 +32,11 @@
            eternal="true"
            diskPersistent="false"
            overflowToDisk="false"/>
+    <cache name="treatise_category"
+           maxElementsInMemory="1000"
+           memoryStoreEvictionPolicy="LRU"
+           eternal="true"
+           diskPersistent="false"
+           overflowToDisk="false"/>
 
 </ehcache>
