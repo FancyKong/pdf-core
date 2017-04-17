@@ -1,5 +1,6 @@
 package com.cafa.pdf.core.dal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,41 +10,38 @@ import java.util.Date;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+@Entity
+@Table(name = "t_author")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "t_customer")
-public class Customer implements java.io.Serializable {
+public class Author implements java.io.Serializable {
 
-	private static final long serialVersionUID = 2285174464789310329L;
-
-	@Id
+    private static final long serialVersionUID = -2352745039383411872L;
+    @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "nickname", nullable = false, length = 32)
-    private String nickname;
-
-    @Column(name = "telephone", unique = true, nullable = false, length = 11)
-    private String telephone;
-
+    @JsonIgnore
     @Column(name = "password", nullable = false, length = 40)
     private String password;
+
+    @Column(name = "nickname", nullable = false, length = 16)
+    private String nickname;
+
+    @Column(name = "telephone", nullable = false, length = 16)
+    private String telephone;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_time", nullable = false, length = 19)
     private Date createdTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modified_time", length = 19)
+    @Column(name = "modified_time", nullable = false, length = 19)
     private Date modifiedTime;
-    /**
-     * 账户是否激活可用
-     */
-	@Column(name = "is_active", nullable = false)
-	private Integer active;
 
+    @Column(name = "is_active", nullable = false)
+    private Integer active;
 
 }
