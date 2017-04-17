@@ -19,15 +19,18 @@
            timeToLiveSeconds="1800"
            diskPersistent="false"
            overflowToDisk="false"/>
-
     <!--永久缓存-->
-    <!--<cache name="articles"
+    <cache name="roles"
            maxElementsInMemory="1000"
            memoryStoreEvictionPolicy="LRU"
            eternal="true"
-           timeToIdleSeconds="1800"
-           timeToLiveSeconds="1800"
            diskPersistent="false"
-           overflowToDisk="false"/>-->
+           overflowToDisk="false"/>
+    <cache name="permissions"
+           maxElementsInMemory="1000"
+           memoryStoreEvictionPolicy="LRU"
+           eternal="true"
+           diskPersistent="false"
+           overflowToDisk="false"/>
 
 </ehcache>
