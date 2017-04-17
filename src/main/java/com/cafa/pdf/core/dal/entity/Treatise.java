@@ -50,7 +50,7 @@ public class Treatise {
      * 类别
      */
     @Column(name = "category", nullable = false)
-    private String category;
+    private Long category;
     /**
      * 出版社
      */

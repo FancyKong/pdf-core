@@ -30,7 +30,7 @@
             <li>
                 <a href="/treatise">专著管理</a>
             </li>
-            <li class="active"> 新增专著 </li>
+            <li class="active"> 新增专著</li>
         </ul>
     </div>
     <!-- page heading end-->
@@ -44,7 +44,7 @@
                     <div class="panel-body">
                         <div class=" form">
                             <form class="cmxform form-horizontal adminex-form" id="treatiseForm"
-                                  method="post" th:action="@{/treatise/save}" >
+                                  method="post" th:action="@{/treatise/save}">
 
                                 <div class="form-group">
                                     <label for="bookName" class="control-label col-md-2 col-sm-2">专著名：</label>
@@ -63,7 +63,7 @@
                                     <label for="ISBN" class="control-label col-md-2 col-sm-2">ISBN：</label>
                                     <div class="col-md-8 col-sm-8">
                                         <input type="text" id="ISBN" name="ISBN" class="form-control"
-                                               placeholder="ISBN"  required
+                                               placeholder="ISBN" required
                                                th:value="${treatise} ? ${treatise.ISBN}"/>
                                         <p class="help-block">
                                             <label class="error-label"
@@ -86,15 +86,14 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="category" class="control-label col-md-2 col-sm-2">类别:</label>
+                                    <label for="category" class="control-label col-md-2 col-sm-2">类别：</label>
                                     <div class="col-md-8 col-sm-8">
-                                        <input type="text" id="category" name="category" class="form-control"
-                                               placeholder="类别"  required
-                                               th:value="${treatise} ? ${treatise.category}" />
-                                        <p class="help-block">
-                                            <label class="error-label"
-                                                   th:text="${errorMap} ? ${errorMap['category']}"></label>
-                                        </p>
+                                        <select id="category" name="category" class="form-control">
+                                            <option th:each="category:*{categories}"
+                                                    th:value="${category.id}" th:text="${category.name}"
+                                                    th:attr="selected=${treatise} ?(${category.id} eq ${treatise.category})"
+                                            ></option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -103,7 +102,7 @@
                                     <div class="col-md-8 col-sm-8">
                                         <input type="text" id="publishHouse" name="publishHouse" class="form-control"
                                                placeholder="出版社" required
-                                               th:value="${treatise} ? ${treatise.publishHouse}" />
+                                               th:value="${treatise} ? ${treatise.publishHouse}"/>
                                         <p class="help-block">
                                             <label class="error-label"
                                                    th:text="${errorMap} ? ${errorMap['publishHouse']}"></label>
@@ -130,7 +129,7 @@
                                     <div class="col-md-8 col-sm-8">
                                         <textarea id="description" name="description" class="form-control"
                                                   placeholder="描述/备注" maxlength="1024"
-                                               th:text="${treatise} ? ${treatise.description}">
+                                                  th:text="${treatise} ? ${treatise.description}">
                                         </textarea>
                                         <p class="help-block">
                                             <label class="error-label"
@@ -142,11 +141,12 @@
                                 <div class="form-group">
                                     <label for="pdf-file" class="control-label col-md-2 col-sm-2">PDF文件：</label>
                                     <div class="col-md-7 col-sm-7">
-                                        <input type="file" id="pdf-file"  class="form-control"
-                                               required/>
+                                        <input id="pdf-file" name="pdf" type="file"
+                                               accept="application/pdf" class="form-control" required/>
                                     </div>
                                     <button type="button" class="btn btn-info" data-toggle="modal"
                                             data-target="#permission">上传
+                                    <button id="pdfUpload" class="btn btn-info" type="button">上传</button>
                                 </div>
 
                                 <div class="form-group">
@@ -228,14 +228,32 @@
             //菜单的active
             $('.custom-nav .nav-active').removeClass('nav-active');
             $('.custom-nav .active').removeClass('active');
-            $("#pdfLi").addClass("active");
+            $("#treatiseMenu").addClass("nav-active");
+            $("#treatiseLi").addClass("active");
+
+            $("#pdfUpload").on("click", function () {
+                var filename = $("#pdf-file").val();
+                console.log("上传pdf：" + filename);
+                //先验证文件名后缀
+                var preg = /^.*\.pdf/;
+                if (preg.test(filename)) {
+                    // 验证通过
+                    myModal("文件上传", "上传处理中。。。");
+                    var url = "";
+                    var data = "";
+                    //FIXME 文件上传
+
+                } else {
+                    myModalWarning("非pdf文件禁止上传");
+                }
+            });
 
         });
     </script>
     <p class="msg-block" th:if="${errorMap}">
         <script th:if="${errorMap['msg']}" th:inline="javascript">
             /*<![CDATA[*/
-            var msg = [[${errorMap['msg']}]] ;
+            var msg = [[${errorMap['msg']}]];
             $(function () {
                 myModalWarning(msg);
             });

@@ -89,7 +89,12 @@
                 </p>
 
                 <p shiro:hasAnyPermissions="treatise:show">
-                    <li id="pdfLi"><a th:href="@{/treatise}"><i class="fa fa-book"></i> <span> 专著管理</span></a></li>
+                    <li class="menu-list" id="treatiseMenu"><a href=""><i class="fa fa-area-chart"></i>
+                        <span> 著作管理</span></a>
+                        <ul class="sub-menu-list">
+                            <li id="treatiseLi"><a th:href="@{/treatise}"> 著作列表</a></li>
+                            <li id="treatise_categoryLi"><a th:href="@{/treatise_category}"> 著作类别</a></li>
+                        </ul></li>
                 </p>
 
                 <p shiro:hasAnyPermissions="statistics:show">

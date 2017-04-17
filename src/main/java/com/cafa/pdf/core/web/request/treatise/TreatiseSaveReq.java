@@ -27,7 +27,7 @@ public class TreatiseSaveReq implements java.io.Serializable {
     private String ISBN;
     private String bookName;
     private String author;
-    private String category;
+    private Long category;
     private String publishHouse;
     private String publishPlace;
     @DateTimeFormat(pattern="yyyy-MM-dd",iso = DateTimeFormat.ISO.DATE)
