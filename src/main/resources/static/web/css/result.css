@@ -37,6 +37,7 @@ html {
 .inputArea .searchButton {
     color: #fff;
     font-size: 2em;
+    font-weight: bold;
     position: absolute;
     left: 389px;
     top: 0;
@@ -61,7 +62,7 @@ html {
 .nav {
     margin-bottom: 24px;
     height: 35px;
-    background: #f9f9f9;
+    background: #fff;
     border-bottom: 1px solid #e0e0e0;
     padding: 5px 0 0 210px;
 }
