@@ -49,31 +49,31 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         Page<Treatise> treatisePage = super.findAllBySearchParams(
                 buildSearchParams(treatiseSearchReq), pageNumber, basicSearchReq.getPageSize());
 
-        return treatisePage.map(source -> {
-            TreatiseDTO treatiseDTO = new TreatiseDTO();
-            ObjectConvertUtil.objectCopy(treatiseDTO, source);
-            return treatiseDTO;
-        });
+        return treatisePage.map(this::getTreatiseDTO);
     }
 
     public Long getCount() {
-        log.debug("countAllUser没有缓存");
         return treatiseDAO.count();
     }
 
     @Transactional
-    public void update(TreatiseUpdateReq treatiseUpdateReq) {
+    public Treatise update(TreatiseUpdateReq treatiseUpdateReq) {
         Treatise treatise = findById(treatiseUpdateReq.getId());
         ObjectConvertUtil.objectCopy(treatise, treatiseUpdateReq);
-        update(treatise);
+        return update(treatise);
     }
 
     @Transactional
-    public void save(TreatiseSaveReq treatiseSaveReq) {
+    public Treatise save(TreatiseSaveReq treatiseSaveReq) {
+        Treatise treatise = new Treatise();
+        ObjectConvertUtil.objectCopy(treatise, treatiseSaveReq);
+        return save(treatise);
+    }
 
-        Treatise user = new Treatise();
-        ObjectConvertUtil.objectCopy(user, treatiseSaveReq);
-        save(user);
+    private TreatiseDTO getTreatiseDTO(Treatise source) {
+        TreatiseDTO treatiseDTO = new TreatiseDTO();
+        ObjectConvertUtil.objectCopy(treatiseDTO, source);
+        return treatiseDTO;
     }
 
 }

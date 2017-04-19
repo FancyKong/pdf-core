@@ -5,7 +5,6 @@
 	 */
 	var oTable;
 	$(document).ready(function() {
-		/*
 		oTable = $('#otable').DataTable(
 			//拼接options参数
 			$.extend(true,{},CONSTANT.DATA_TABLES.DEFAULT_OPTION, {
@@ -68,7 +67,6 @@
 					"targets" : "_all"
 				}]
 		}));//end $('#otable').DataTable($.extend({
-		*/
 		//查询
 		$("#btn_search").click(function(){
 			//reload效果与draw(true)或者draw()类似,

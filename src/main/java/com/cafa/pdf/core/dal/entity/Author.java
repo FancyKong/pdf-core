@@ -30,7 +30,7 @@ public class Author implements java.io.Serializable {
     @Column(name = "nickname", nullable = false, length = 16)
     private String nickname;
 
-    @Column(name = "telephone", nullable = false, length = 16)
+    @Column(name = "telephone", nullable = false, length = 11)
     private String telephone;
 
     @Temporal(TemporalType.TIMESTAMP)

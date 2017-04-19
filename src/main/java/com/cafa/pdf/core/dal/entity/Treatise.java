@@ -24,7 +24,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Treatise {
+public class Treatise implements java.io.Serializable {
+
+    private static final long serialVersionUID = 2855297224736248527L;
     //ISBN编号,书名,类别,作者,出版社,出版地,出版日期,页码,语种,版次,目录,简介
     //临时就这些. for prototype . 并不规范
     @Id

@@ -181,7 +181,7 @@ public class BasicController extends ABaseController {
 //				new File(directory,newFIleName));
 				String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 						+ request.getContextPath() + "/";
-				url = basePath + "imageDownload?filename=" + newFIleName;
+				url = basePath + "fileDownload?filename=" + newFIleName;
 			} catch (IOException e) {
 				log.error("上传错误 {}", e.getMessage());
 			}
@@ -190,7 +190,7 @@ public class BasicController extends ABaseController {
 		return url;
 	}
 
-	@GetMapping("/imageDownload")
+	@GetMapping("/fileDownload")
 	public ResponseEntity<byte[]> downloadImage(@RequestParam("filename") String filename, HttpServletResponse response) throws IOException {
 		File file = new File(FILE_PATH, filename);
 
