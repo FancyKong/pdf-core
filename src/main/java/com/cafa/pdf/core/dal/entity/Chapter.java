@@ -42,11 +42,6 @@ public class Chapter implements java.io.Serializable {
     @Column(name = "title", nullable = false)
     private String title;
     /**
-     * 内容
-     */
-    @Column(name = "content", nullable = false)
-    private String content;
-    /**
      * 文件路径
      */
     @Column(name = "url", nullable = false)

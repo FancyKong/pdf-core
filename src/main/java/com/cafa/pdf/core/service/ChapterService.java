@@ -55,8 +55,6 @@ public class ChapterService extends ABaseService<Chapter, Long> {
     public void update(ChapterReq chapterReq) {
         Chapter chapter = findById(chapterReq.getId());
         ObjectConvertUtil.objectCopy(chapter, chapterReq);
-        //FIXME 读取pdf内容填充
-        chapter.setContent("读取pdf内容填充");
         this.update(chapter);
     }
 
@@ -64,8 +62,6 @@ public class ChapterService extends ABaseService<Chapter, Long> {
     public void save(ChapterReq chapterReq) {
         Chapter chapter = new Chapter();
         ObjectConvertUtil.objectCopy(chapter, chapterReq);
-        //FIXME 读取pdf内容填充
-        chapter.setContent("读取pdf内容填充");
         this.save(chapter);
     }
 

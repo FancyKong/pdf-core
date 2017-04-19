@@ -30,10 +30,6 @@ public class ChapterDTO implements java.io.Serializable {
      */
     private String title;
     /**
-     * 内容
-     */
-    private String content;
-    /**
      * 文件路径
      */
     private String url;

@@ -19,10 +19,15 @@ import com.cafa.pdf.core.web.request.treatise.TreatiseSaveReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
 import com.cafa.pdf.core.web.response.Response;
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -219,6 +225,35 @@ public class TreatiseController extends ABaseController {
         return mv;
     }
 
+    /**
+     * 保存
+     * @param treatiseSaveReq 保存的信息
+     * @return ModelAndView
+     */
+    @PostMapping("/save")
+    @RequiresPermissions("treatise:add")
+    public ModelAndView save(@Validated TreatiseSaveReq treatiseSaveReq, BindingResult bindingResult) {
+
+        ModelAndView mv = new ModelAndView("admin/treatise/add");
+        Map<String, Object> errorMap = new HashMap<>();
+        mv.addObject("errorMap", errorMap);
+
+        if (bindingResult.hasErrors()) {
+            errorMap.putAll(getErrors(bindingResult));
+            mv.addObject("treatise", treatiseSaveReq);
+        } else {
+            try {
+                Treatise treatise = treatiseService.save(treatiseSaveReq);
+                // 跳转到更新页面
+                mv.setViewName("redirect:admin/treatise/" + treatise.getId() + "/update");
+            } catch (Exception e) {
+                errorMap.put("msg", "系统繁忙");
+                log.error("添加失败:{}", e.getMessage());
+            }
+        }
+        return mv;
+    }
+
     //TODO 文件存放路径
     private static final String FILE_PATH = "F:/cherish";
     /**
@@ -257,35 +292,15 @@ public class TreatiseController extends ABaseController {
         }
         return url;
     }
-
-    /**
-     * 保存
-     * @param treatiseSaveReq 保存的信息
-     * @return ModelAndView
-     */
-    @PostMapping("/save")
-    @RequiresPermissions("treatise:add")
-    public ModelAndView save(@Validated TreatiseSaveReq treatiseSaveReq, BindingResult bindingResult) {
-
-        ModelAndView mv = new ModelAndView("admin/treatise/add");
-        Map<String, Object> errorMap = new HashMap<>();
-        mv.addObject("errorMap", errorMap);
-
-        if (bindingResult.hasErrors()) {
-            errorMap.putAll(getErrors(bindingResult));
-            mv.addObject("treatise", treatiseSaveReq);
-        } else {
-            try {
-                Treatise treatise = treatiseService.save(treatiseSaveReq);
-                // 跳转到更新页面
-                mv.setViewName("redirect:admin/treatise/" + treatise.getId() + "/update");
-            } catch (Exception e) {
-                errorMap.put("msg", "系统繁忙");
-                log.error("添加失败:{}", e.getMessage());
-            }
-        }
-        return mv;
+    @GetMapping("pdf")
+    public ResponseEntity<byte[]> showPDF() throws IOException {
+        File file = new File("/a.pdf");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", "D:a.pdf");
+        headers.setContentType(MediaType.IMAGE_PNG);
+        return new ResponseEntity<>(
+                FileUtils.readFileToByteArray(file),
+                headers, HttpStatus.OK);
     }
-
 
 }
