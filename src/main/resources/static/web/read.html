@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>查询结果</title>
+    <title>在线阅读</title>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <link href="css/read.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -102,25 +102,17 @@
                 数据挖掘技术在移动电商推广中的应用
             </div>
             <br>
-            <div class="read">
-                <input type="button" value="上一章" class="operator"/>
-                <input type="button" value="上一页" class="operator"/>
-                <input type="text" style="height: 30px;width: 60px; text-align: center;border-color: #579bf1;" value="55" />
-                &nbsp;
-                <input type="button" value="下一页" class="operator"/>
-                <input type="button" value="下一章" class="operator"/>
-            </div>
             <div class="pdf">
-                <iframe src="img/7.pdf" width="98%" height="1200px"></iframe>
-            </div>
-
-            <div class="read">
-                <input type="button" value="上一页" class="operator"/>
-                <input type="button" value="下一页" class="operator"/>
+                <iframe id="pdf-reader" src="/pdf/web/viewer.html?file=/treatise/pdf" height="javascript:getHeight()" width="100%"></iframe>
             </div>
 
         </div><!-- End of main -->
     </div><!--End of bd-->
+    <script type="javascript">
+        function windowHeight() {
+            return 1000;
+        }
+    </script>
 </div>
 
 <div id="foot">Copyright &copy;cafa.com 版权所有</div>
@@ -133,7 +125,7 @@
         $('.searchList .searchItem').removeClass('current');
         $(this).addClass('current');
     });
-
+    document.getElementById("pdf-reader").setAttribute("height",document.documentElement.clientHeight);
 
     $.each($('.subfieldContext'), function (i, item) {
         $(this).find('li:gt(9)').hide().end().find('li:last').show();

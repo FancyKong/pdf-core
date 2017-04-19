@@ -197,7 +197,7 @@ public class BasicController extends ABaseController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentDispositionFormData("attachment", filename);
 		headers.setContentType(MediaType.IMAGE_PNG);
-		return new ResponseEntity<byte[]>(
+		return new ResponseEntity<>(
 				FileUtils.readFileToByteArray(file),
 				headers, HttpStatus.OK);
 	}

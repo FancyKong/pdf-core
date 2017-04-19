@@ -12,14 +12,21 @@ import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.response.Response;
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -57,6 +64,17 @@ public class TreatiseController extends ABaseController{
     public ModelAndView show(){
         ModelAndView mv = new ModelAndView("admin/treatise/list");
         return mv;
+    }
+
+    @GetMapping("pdf")
+    public ResponseEntity<byte[]> showPDF() throws IOException {
+        File file = new File("D:/apache-solr-ref-guide-5.5.pdf");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", "D:a.pdf");
+        headers.setContentType(MediaType.IMAGE_PNG);
+        return new ResponseEntity<>(
+                FileUtils.readFileToByteArray(file),
+                headers, HttpStatus.OK);
     }
 
     /**
