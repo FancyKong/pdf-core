@@ -57,17 +57,19 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
     }
 
     @Transactional
-    public Treatise update(TreatiseUpdateReq treatiseUpdateReq) {
+    public TreatiseDTO update(TreatiseUpdateReq treatiseUpdateReq) {
         Treatise treatise = findById(treatiseUpdateReq.getId());
         ObjectConvertUtil.objectCopy(treatise, treatiseUpdateReq);
-        return update(treatise);
+        Treatise update = update(treatise);
+        return getTreatiseDTO(update);
     }
 
     @Transactional
-    public Treatise save(TreatiseSaveReq treatiseSaveReq) {
+    public TreatiseDTO save(TreatiseSaveReq treatiseSaveReq) {
         Treatise treatise = new Treatise();
         ObjectConvertUtil.objectCopy(treatise, treatiseSaveReq);
-        return save(treatise);
+        Treatise save = save(treatise);
+        return getTreatiseDTO(save);
     }
 
     private TreatiseDTO getTreatiseDTO(Treatise source) {

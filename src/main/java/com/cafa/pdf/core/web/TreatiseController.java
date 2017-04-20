@@ -6,13 +6,8 @@ package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.dto.ChapterDTO;
 import com.cafa.pdf.core.commom.dto.TreatiseDTO;
-import com.cafa.pdf.core.commom.exception.ServiceException;
 import com.cafa.pdf.core.dal.entity.Treatise;
 import com.cafa.pdf.core.dal.entity.TreatiseCategory;
-import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
-import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
-import com.cafa.pdf.core.dal.solr.repository.ChapterSolrRepository;
-import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.service.TreatiseService;
@@ -23,13 +18,6 @@ import com.cafa.pdf.core.web.request.treatise.TreatiseSaveReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
 import com.cafa.pdf.core.web.response.Response;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfCopy;
-import com.itextpdf.text.pdf.PdfImportedPage;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.parser.PdfTextExtractor;
-import com.sun.codemodel.internal.JForEach;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -43,12 +31,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author FancyKong
@@ -64,20 +54,14 @@ public class TreatiseController extends ABaseController {
     private final TreatiseService treatiseService;
     private final TreatiseCategoryService treatiseCategoryService;
     private final ChapterService chapterService;
-    private final ChapterSolrRepository chapterSolrRepository;
-    private final TreatiseSolrRepository treatiseSolrRepository;
 
     @Autowired
     public TreatiseController(TreatiseService treatiseService,
                               TreatiseCategoryService treatiseCategoryService,
-                              ChapterService chapterService,
-                              ChapterSolrRepository chapterSolrRepository,
-                              TreatiseSolrRepository treatiseSolrRepository) {
+                              ChapterService chapterService) {
         this.treatiseService = treatiseService;
         this.treatiseCategoryService = treatiseCategoryService;
         this.chapterService = chapterService;
-        this.chapterSolrRepository = chapterSolrRepository;
-        this.treatiseSolrRepository = treatiseSolrRepository;
     }
 
     /**
@@ -150,7 +134,8 @@ public class TreatiseController extends ABaseController {
     public Response delete(@PathVariable("treatiseId") Long treatiseId) {
         try {
             treatiseService.delete(treatiseId);
-            //TODO 级联删除，著作章节，solr等
+            //TODO 级联删除，著作章节，solr等, 应该放在同一个事务下
+            chapterService.deleteAllByTreatiseId(treatiseId);
 
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
@@ -167,6 +152,7 @@ public class TreatiseController extends ABaseController {
     @PostMapping("/update")
     @RequiresPermissions("treatise:update")
     public ModelAndView update(@Validated TreatiseUpdateReq treatiseUpdateReq, BindingResult bindingResult) {
+        log.info("【更改】 {}", treatiseUpdateReq);
 
         ModelAndView mv = new ModelAndView("admin/treatise/edit");
         Map<String, Object> errorMap = new HashMap<>();
@@ -223,7 +209,7 @@ public class TreatiseController extends ABaseController {
 
                 if (chapterReqList == null || chapterReqList.isEmpty()) {
                     // 删除所有
-                    chapterService.deleteByTreatiseId(treatiseId);
+                    chapterService.deleteAllByTreatiseId(treatiseId);
                 }else {
                     // 根据情况实现增删改
                     chapterService.operate(chapterReqList);
@@ -247,95 +233,22 @@ public class TreatiseController extends ABaseController {
      */
     @PostMapping("/save")
     @RequiresPermissions("treatise:add")
-    public ModelAndView save(@Validated TreatiseSaveReq treatiseSaveReq, BindingResult bindingResult) {
-
-        ModelAndView mv = new ModelAndView("admin/treatise/add");
-        Map<String, Object> errorMap = new HashMap<>();
-        mv.addObject("errorMap", errorMap);
-
-        if (bindingResult.hasErrors()) {
-            errorMap.putAll(getErrors(bindingResult));
-            mv.addObject("treatise", treatiseSaveReq);
-        } else {
-            try {
-                Treatise treatise = treatiseService.save(treatiseSaveReq);
-                //TODO call this method to save in solr next
-                saveTreatiseInSolr("abc");
-                // 跳转到更新页面
-                mv.setViewName("redirect:admin/treatise/" + treatise.getId() + "/update");
-            } catch (Exception e) {
-                errorMap.put("msg", "系统繁忙");
-                log.error("添加失败:{}", e.getMessage());
-            }
-        }
-        return mv;
-    }
-
-    //TODO 文件存放路径
-    private static final String FILE_PATH = "/pdf-core/file/";
-
-    private static int test = 1;
-    /**
-     * 上传章节的pdf
-     * @param multipartFile 文件
-     * @param request HttpServletRequest
-     * @return url 文件存放路径
-     */
-    @PostMapping("/uploadPdf")
     @ResponseBody
-    public String uploadPdf(@RequestParam("pdf") MultipartFile multipartFile, HttpServletRequest request){
-        if (multipartFile.isEmpty()) {
-            throw new ServiceException("403", "没有文件数据");
-        }
-        String originalFilename = multipartFile.getOriginalFilename();
-        String extendName = originalFilename.substring(originalFilename.lastIndexOf("."));
-        if (!".pdf".equals(extendName)) {
-            throw new ServiceException("403", "非pdf文件");
-        }
-        long treatiseId = 344;//TODO
-        int chapterSeq = test++;//TODO
-        File directory = new File(FILE_PATH+treatiseId+"/"+chapterSeq+"/");
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-        String url = "上传出错";
+    public Response save(@Validated TreatiseSaveReq treatiseSaveReq, BindingResult bindingResult) {
+        log.info("【保存】 {}", treatiseSaveReq);
         try {
-            String newFIleName = System.currentTimeMillis() + extendName;
-            //multipartFile.transferTo(new File(directory, newFIleName));
-            String solrContent = splitPDFAndGetContent(multipartFile.getInputStream(),
-                    directory);
-            saveChapterInSolr(solrContent,treatiseId,chapterSeq);
-            String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                    + request.getContextPath() + "/";
-            url = basePath + "fileDownload?filename=" + newFIleName;
+            TreatiseDTO treatise = treatiseService.save(treatiseSaveReq);
+            //TODO call this method to save in solr next
+            // 现在测试，没有发到solr
+            // saveTreatiseInSolr("abc");
+
+            return buildResponse(Boolean.TRUE, "保存成功", treatise);
         } catch (Exception e) {
-            log.error("上传错误 {}", e.getMessage());
+            log.error("添加失败:{}", e.getMessage());
+            return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
-        return url;
     }
 
-    private void saveChapterInSolr(String solrContent, long treatiseId, int chapterSeq) {
-        //TODO　to find treatiseSolrId by treatiseId in mysql
-        String treatiseSolrId = "abc";
-        ChapterSolrDoc chapter = new ChapterSolrDoc();
-        chapter.setId(UUID.randomUUID().toString().replace("-",""));
-        chapter.setTreatiseId(treatiseSolrId);
-        chapter.setContent(solrContent);
-        chapter.setSeq(chapterSeq);
-        chapterSolrRepository.save(chapter);
-    }
-
-    private void saveTreatiseInSolr(String treatiseSolrId){
-        List<ChapterSolrDoc> list = chapterSolrRepository.findByTreatiseIdOrderBySeqAsc(treatiseSolrId);
-        TreatiseSolrDoc treatiseSolrDoc = new TreatiseSolrDoc();
-        StringBuilder sb = new StringBuilder();
-        for(ChapterSolrDoc d : list){
-            sb.append(d.getContent());
-        }
-        treatiseSolrDoc.setId(treatiseSolrId);
-        treatiseSolrDoc.setContent(sb.toString());
-        treatiseSolrRepository.save(treatiseSolrDoc);
-    }
 
     @GetMapping("pdf")
     public ResponseEntity<byte[]> showPDF() throws IOException {
@@ -348,23 +261,8 @@ public class TreatiseController extends ABaseController {
                 headers, HttpStatus.OK);
     }
 
-    private String splitPDFAndGetContent(InputStream in, File filePath) throws IOException, DocumentException {
-        PdfReader pdfReader = new PdfReader(in);
-        int pages = pdfReader.getNumberOfPages();
-        StringBuilder solrContent = new StringBuilder();
-        for (int i = 1; i < pages + 1; i++) {
-            //获取任意一页的规格
-            Document document = new Document(pdfReader.getPageSize(1));
-            PdfCopy copy = new PdfCopy(document, new FileOutputStream(filePath+"/"+i+".pdf"));
-            document.open();
-            document.newPage();
-            PdfImportedPage page = copy.getImportedPage(pdfReader, i);
-            solrContent.append(PdfTextExtractor.getTextFromPage(pdfReader,i));
-            copy.addPage(page);
-            document.close();
-        }
-        return solrContent.toString();
-    }
+    //TODO 文件存放路径
+    private static final String FILE_PATH = "/pdf-core/file/";
 
     @GetMapping("page/{treatiseId}/{pageNumber}")
     public ResponseEntity<byte[]> page(@PathVariable("treatiseId")Long treatiseId,@PathVariable("pageNumber") int pageNumber) throws IOException {

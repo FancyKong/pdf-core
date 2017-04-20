@@ -77,29 +77,23 @@ public class ChapterService extends ABaseService<Chapter, Long> {
     }
 
     @Transactional
-    public void deleteByTreatiseId(Long treatiseId) {
+    public void deleteAllByTreatiseId(Long treatiseId) {
         chapterDAO.deleteByTreatiseId(treatiseId);
     }
 
     /**
-     * 根据情况实现增删改
+     * 保存章节信息
      * @param chapterReqList List<ChapterReq>
      */
     @Transactional
-    public void operate(List<ChapterReq> chapterReqList) {
-        chapterReqList.forEach(chapterReq -> {
-            Integer operate = chapterReq.getOperate();
-            if (0 == operate) {
-                // 新增
-                this.save(chapterReq);
-            }else if (1 == operate){
-                // 修改
-                this.update(chapterReq);
-            }else if (2 == operate){
-                //执行删除
-                this.delete(chapterReq.getId());
-            }
-        });
+    public void saveChapters(List<ChapterReq> chapterReqList) {
+        List<Chapter> chapters = chapterReqList.stream().map(chapterReq -> {
+            Chapter chapter = new Chapter();
+            ObjectConvertUtil.objectCopy(chapter, chapterReq);
+            return chapter;
+        }).collect(Collectors.toList());
+
+        chapterDAO.save(chapters);
     }
 
     /**

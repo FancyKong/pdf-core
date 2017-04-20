@@ -2621,7 +2621,7 @@ input:focus:invalid:focus, textarea:focus:invalid:focus, select:focus:invalid:fo
 }
 
 .widget-container .stepy-titles li, .stepy-titles li {
-    background: #fff;
+    background: #8e8e8e;
     margin-right: 15px;
     margin-bottom: 15px;
     border-radius: 5px;

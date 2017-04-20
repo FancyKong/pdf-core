@@ -14,9 +14,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 public class SchedulingConfig {
 
-    @Scheduled(cron = "0/20 * * * * ?") // 每20秒执行一次
+    @Scheduled(cron = "0 0/2 * * * ?") // 每2分钟执行一次
     public void scheduler() {
-        log.debug(">>>>>>>>>>>>> scheduled ... ");
+        log.debug(">>>>>>>>>>>>> 定时任务测试");
     }
 
 }

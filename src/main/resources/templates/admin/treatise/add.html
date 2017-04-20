@@ -9,28 +9,15 @@
     <meta name="description" content="">
     <meta name="author" content="Cherish">
     <title>新增专著</title>
-    <style>
-        .permission-choose {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .permission-choose li {
-            line-height: 35px;
-        }
-    </style>
 </head>
 <body>
 <div layout:fragment="content">
+    <link href="/css/jquery.stepy.css" rel="stylesheet">
     <!-- page heading start-->
     <div class="page-heading">
-        <h3>
-            新增专著
-        </h3>
+        <h3>新增专著</h3>
         <ul class="breadcrumb">
-            <li>
-                <a href="/treatise">专著管理</a>
-            </li>
+            <li><a href="/treatise">专著管理</a></li>
             <li class="active"> 新增专著</li>
         </ul>
     </div>
@@ -41,181 +28,193 @@
 
         <div class="row">
             <div class="col-md-12">
-                <section class="panel">
+
+                <section id="treatiseSection" class="panel">
                     <div class="panel-body">
-                        <div class=" form">
-                            <form class="cmxform form-horizontal adminex-form" id="treatiseForm"
-                                  method="post" th:action="@{/treatise/save}">
+                        <h4 class="fw-title">著作信息录入</h4>
+                        <div class="box-widget">
+                            <div class="widget-head clearfix">
+                                <div id="top_tabby" class="block-tabby pull-left"></div>
+                            </div>
+                            <div class="widget-container">
+                                <div class="widget-block">
+                                    <div class="widget-content box-padding">
+                                        <form id="treatiseForm" class=" form-horizontal left-align form-well"
+                                              th:action="@{/treatise/save}" method="post">
+                                            <fieldset title="核心信息">
+                                                <legend></legend>
 
-                                <div class="form-group">
-                                    <label for="bookName" class="control-label col-md-2 col-sm-2">专著名：</label>
-                                    <div class="col-md-8 col-sm-8">
-                                        <input type="text" id="bookName" name="bookName" class="form-control"
-                                               placeholder="专著名" minlength="1" maxlength="32" autofocus required
-                                               th:value="${treatise} ? ${treatise.bookName}"/>
-                                        <p class="help-block">
-                                            <label class="error-label"
-                                                   th:text="${errorMap} ? ${errorMap['bookName']}"></label>
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="ISBN" class="control-label col-md-2 col-sm-2">ISBN：</label>
-                                    <div class="col-md-8 col-sm-8">
-                                        <input type="text" id="ISBN" name="ISBN" class="form-control"
-                                               placeholder="ISBN" required
-                                               th:value="${treatise} ? ${treatise.ISBN}"/>
-                                        <p class="help-block">
-                                            <label class="error-label"
-                                                   th:text="${errorMap} ? ${errorMap['ISBN']}"></label>
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="author" class="control-label col-md-2 col-sm-2">作者：</label>
-                                    <div class="col-md-8 col-sm-8">
-                                        <input type="text" id="author" name="author" class="form-control"
-                                               placeholder="作者" minlength="1" maxlength="32" required
-                                               th:value="${treatise} ? ${treatise.author}"/>
-                                        <p class="help-block">
-                                            <label class="error-label"
-                                                   th:text="${errorMap} ? ${errorMap['author']}"></label>
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="category" class="control-label col-md-2 col-sm-2">类别：</label>
-                                    <div class="col-md-8 col-sm-8">
-                                        <select id="category" name="category" class="form-control">
-                                            <option th:each="category:*{categories}"
-                                                    th:value="${category.id}" th:text="${category.name}"
-                                                    th:attr="selected=${treatise} ?(${category.id} eq ${treatise.category})"
-                                            ></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="publishHouse" class="control-label col-md-2 col-sm-2">出版社:</label>
-                                    <div class="col-md-8 col-sm-8">
-                                        <input type="text" id="publishHouse" name="publishHouse" class="form-control"
-                                               placeholder="出版社" required
-                                               th:value="${treatise} ? ${treatise.publishHouse}"/>
-                                        <p class="help-block">
-                                            <label class="error-label"
-                                                   th:text="${errorMap} ? ${errorMap['publishHouse']}"></label>
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="publishDate" class="control-label col-md-2 col-sm-2">出版日期：</label>
-                                    <div class="col-md-8 col-sm-8">
-                                        <input type="text" id="publishDate" name="publishDate" class="form-control"
-                                               placeholder="出版日期" data-mask="9999-99-99" required
-                                               th:value="${treatise} ? ${#dates.format(treatise.publishDate,'yyyy-MM-dd')}
+                                                <div class="form-group">
+                                                    <label for="bookName" class="control-label col-md-2 col-sm-2">专著名：</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <input type="text" id="bookName" name="bookName" class="form-control"
+                                                               placeholder="专著名" minlength="1" maxlength="32" autofocus required
+                                                               th:value="${treatise} ? ${treatise.bookName}"/>
+                                                        <p class="help-block">
+                                                            <label class="error-label"
+                                                                   th:text="${errorMap} ? ${errorMap['bookName']}"></label>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ISBN" class="control-label col-md-2 col-sm-2">ISBN：</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <input type="text" id="ISBN" name="ISBN" class="form-control"
+                                                               placeholder="ISBN" required
+                                                               th:value="${treatise} ? ${treatise.ISBN}"/>
+                                                        <p class="help-block">
+                                                            <label class="error-label"
+                                                                   th:text="${errorMap} ? ${errorMap['ISBN']}"></label>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="author" class="control-label col-md-2 col-sm-2">作者：</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <input type="text" id="author" name="author" class="form-control"
+                                                               placeholder="作者" minlength="1" maxlength="32" required
+                                                               th:value="${treatise} ? ${treatise.author}"/>
+                                                        <p class="help-block">
+                                                            <label class="error-label"
+                                                                   th:text="${errorMap} ? ${errorMap['author']}"></label>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="category" class="control-label col-md-2 col-sm-2">类别：</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <select id="category" name="category" class="form-control">
+                                                            <option th:each="category:*{categories}"
+                                                                    th:value="${category.id}" th:text="${category.name}"
+                                                                    th:attr="selected=${treatise} ?(${category.id} eq ${treatise.category})"
+                                                            ></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="publishHouse" class="control-label col-md-2 col-sm-2">出版社:</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <input type="text" id="publishHouse" name="publishHouse" class="form-control"
+                                                               placeholder="出版社" required
+                                                               th:value="${treatise} ? ${treatise.publishHouse}"/>
+                                                        <p class="help-block">
+                                                            <label class="error-label"
+                                                                   th:text="${errorMap} ? ${errorMap['publishHouse']}"></label>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="publishDate" class="control-label col-md-2 col-sm-2">出版日期：</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <input type="text" id="publishDate" name="publishDate" class="form-control"
+                                                               placeholder="出版日期" data-mask="9999-99-99" required
+                                                               th:value="${treatise} ? ${#dates.format(treatise.publishDate,'yyyy-MM-dd')}
                                                                     : ${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"/>
-                                        <p class="help-block">
-                                            <label class="error-label"
-                                                   th:text="${errorMap} ? ${errorMap['publishDate']}"></label>
-                                        </p>
+                                                        <p class="help-block">
+                                                            <label class="error-label"
+                                                                   th:text="${errorMap} ? ${errorMap['publishDate']}"></label>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="description" class="control-label col-md-2 col-sm-2">描述:</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <textarea id="description" name="description" class="form-control"
+                                                                  placeholder="描述/备注" maxlength="1024"
+                                                                  th:text="${treatise} ? ${treatise.description}"></textarea>
+                                                        <p class="help-block">
+                                                            <label class="error-label"
+                                                                   th:text="${errorMap} ? ${errorMap['description']}"></label>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </fieldset>
+
+                                            <fieldset title="其他信息">
+                                                <legend></legend>
+                                                <div class="form-group">
+                                                    <label for="description" class="control-label col-md-2 col-sm-2">简介:</label>
+                                                    <div class="col-md-8 col-sm-8">
+                                                        <textarea id="introduction" name="introduction" class="form-control"
+                                                                  placeholder="著作简介" maxlength="1024"></textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-offset-4 col-md-8 col-sm-8">
+                                                        <button id="treatiseSubmit" class="btn btn-primary" type="button">
+                                                            <span class="glyphicon glyphicon-saved" aria-hidden="true"></span>
+                                                            提交著作信息
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </form>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                                <div class="form-group">
-                                    <label for="description" class="control-label col-md-2 col-sm-2">描述:</label>
-                                    <div class="col-md-8 col-sm-8">
-                                        <textarea id="description" name="description" class="form-control"
-                                                  placeholder="描述/备注" maxlength="1024"
-                                                  th:text="${treatise} ? ${treatise.description}">
-                                        </textarea>
-                                        <p class="help-block">
-                                            <label class="error-label"
-                                                   th:text="${errorMap} ? ${errorMap['description']}"></label>
-                                        </p>
-                                    </div>
-                                </div>
+                <section id="chapterSection" class="panel" hidden>
+                    <header class="panel-heading">章节信息录入</header>
+                    <div class="panel-body">
+                        <table class="table table-hover table-bordered text-center" cellspacing="0" >
+                            <thead>
+                                <tr>
+                                    <th class="text-center">第几章</th>
+                                    <th class="text-center">章标题</th>
+                                    <th class="text-center">是否加密</th>
+                                    <th class="text-center">PDF</th>
+                                    <th class="text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tBody">
+                                <tr>
+                                    <td>
+                                        <input class="text-center" type="number" name="seq" value="1"
+                                               min="1" max="99" style="width:60px;"/>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="title" />
+                                    </td>
+                                    <td>
+                                        <select name="privacy" >
+                                            <option value="1" selected="selected">加密</option>
+                                            <option value="0">不加密</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" name="url" />
+                                        <input class="pull-left" type="file" accept="application/pdf" name="pdf" />
+                                        <button type="button" class="btn btn-primary btn-sm pull-left ">上传</button>
+                                    </td>
+                                    <td>
+                                        <div class='btn-group btn-group-sm' role='group' aria-label='操作'>
+                                            <a href='javascript:void(0);' class='op_delete btn btn-danger' role='button'>删除</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- table end -->
+                        <button id="newRow" class="btn btn-success" type="button">
+                            <i class="fa fa-plus"></i> 添加新行
+                        </button>
 
-                                <div class="form-group">
-                                    <label for="pdf-file" class="control-label col-md-2 col-sm-2">PDF文件：</label>
-                                    <div class="col-md-7 col-sm-7">
-                                        <input id="pdf-file" name="pdf" type="file"
-                                               accept="application/pdf" class="form-control" required/>
-                                    </div>
-                                    <button type="button" class="btn btn-info" data-toggle="modal"
-                                            data-target="#permission">上传</button>
-                                    <!--<button id="pdfUpload" class="btn btn-info" type="button">上传</button>-->
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-md-offset-2 col-md-8 col-sm-8">
-                                        <button class="btn btn-primary" type="submit">
-                                            <span class="glyphicon glyphicon-saved" aria-hidden="true"></span>
-                                            提交
-                                        </button>
-                                        <button class="btn btn-default" type="reset">
-                                            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
-                                            重置
-                                        </button>
-
-                                    </div>
-                                </div>
-                            </form>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-8 col-sm-8">
+                                <button id="chapterSubmit" class="btn btn-primary" type="button">
+                                    <span class="glyphicon glyphicon-saved" aria-hidden="true"></span>
+                                    提交章节信息
+                                </button>
+                            </div>
                         </div>
 
                     </div>
                 </section>
-            </div>
-        </div>
-        <!-- Modal -->
-        <div class="modal fade" id="permission" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        选择公开的章
-                    </div>
-                    <div class="modal-body">
-                        <ul class="permission-choose">
-                            <li>
-                                <label>
-                                    <input type="checkbox">
-                                </label>
-                                <span>第一章 - 数理统计基础1</span>
-                            </li>
-                            <li>
-                                <label>
-                                    <input type="checkbox">
-                                </label>
-                                <span>第二章 - 数理统计基础2</span>
-                            </li>
-                            <li>
-                                <label>
-                                    <input type="checkbox">
-                                </label>
-                                <span>第三章 - 数理统计进阶1</span>
-                            </li>
-                            <li>
-                                <label>
-                                    <input type="checkbox">
-                                </label>
-                                <span>第四章 - 数理统计进阶2</span>
-                            </li>
-                            <li>
-                                <label>
-                                    <input type="checkbox">
-                                </label>
-                                <span>第五章 - 数理统计精通</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary">确定</button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -224,7 +223,11 @@
 </div>
 
 <div layout:fragment="javascript">
+
+    <script src="/js/jquery.stepy.js" type="text/javascript"></script>
     <script type="text/javascript">
+        var seq = 1;//章节表格的章序号
+        var treatiseId = 0;
         $(function () {
             //菜单的active
             $('.custom-nav .nav-active').removeClass('nav-active');
@@ -232,6 +235,44 @@
             $("#treatiseMenu").addClass("nav-active");
             $("#treatiseLi").addClass("active");
 
+            // 著作信息提交
+            $("#treatiseSubmit").on("click", function () {
+
+                var treatiseData = $("#treatiseForm").serialize();
+                console.log("treatiseData: "+treatiseData);
+
+                $.post("/treatise/save", treatiseData, function(result){
+                    if(result.success){
+                        console.log("result.data: "+result.data);
+                        var treatise = result.data;
+                        treatiseId = treatise.id;//赋值给全局变量
+
+                        $("#treatiseSection").hide();
+                        $("#chapterSection").show();
+                    }else {
+                        myModalFail(result.message);
+                    }
+                });
+            });
+
+            // 添加新行
+            $("#newRow").on("click", function () {
+                // 复制
+                $("#tBody").children("tr:last-child").clone().appendTo('#tBody');
+                // 赋空值
+                $("#tBody").children("tr:last-child").find("input").each(function(){
+                    $(this).val("");
+                });
+                // 章序号
+                $("#tBody").children("tr:last-child").children("td:first-child").find("input").val(++seq);
+            });
+
+            // 删除该行
+            $("#tBody").on("click", ".op_delete", function () {
+                $(this).closest('tr').remove();
+            });
+
+            // TODO pdf的上传
             $("#pdfUpload").on("click", function () {
                 var filename = $("#pdf-file").val();
                 console.log("上传pdf：" + filename);
@@ -239,16 +280,97 @@
                 var preg = /^.*\.pdf/;
                 if (preg.test(filename)) {
                     // 验证通过
-                    myModal("文件上传", "上传处理中。。。");
                     var url = "";
                     var data = "";
                     //FIXME 文件上传
-
                 } else {
                     myModalWarning("非pdf文件禁止上传");
                 }
             });
 
+            $("#chapterSubmit").on("click", function () {
+                if (0 >= treatiseId){
+                    myModalWarning("著作信息获取错误");
+                    return;
+                }
+                // 获取内容
+                var i = 0;
+                var json = {};
+                var chapters = [];
+                // TODO 表单验证
+                $("#tBody").find("tr").each(function(){
+                    var chapter = {};
+
+                    var seq = $(this).find("[name='seq']").val();
+                    console.log("seq:" + seq);
+                    chapter.seq = seq;
+
+                    var title = $(this).find("[name='title']").val();
+                    console.log("title:" + title);
+                    chapter.title = title;
+
+                    var privacy = $(this).find("[name='privacy']").val();
+                    console.log("privacy:" + privacy);
+                    chapter.privacy = privacy;
+
+                    var url = $(this).find("[name='url']").val();
+                    console.log("url:" + url);
+                    chapter.url = url;
+
+                    chapter.treatiseId = treatiseId;
+
+                    chapters[i++] = chapter;
+                });
+                console.log(chapters);
+
+                json.chapters = chapters;
+                json.treatiseId = treatiseId;
+
+                console.log(json);
+                $.post("/chapter/save", json, function(result){
+                    if(result.success){
+                        console.log("result.data: "+result.data);
+                        myModalSuccess(result.message);
+                    }else {
+                        myModalFail(result.message);
+                    }
+                });
+
+            });
+
+            /*=====STEPY WIZARD WITH VALIDATION====*/
+            $('#treatiseForm').stepy({
+                backLabel: '上一步',
+                nextLabel: '下一步',
+                block: true,
+                finishButton: false,
+                description: true,
+                legend: false,
+                titleClick: true,
+                titleTarget: '#top_tabby',
+                validate: true
+            });
+            $('#treatiseForm').validate({
+                rules: {
+                },
+                messages: {
+                },
+                errorPlacement: function ( error, element ) {
+                    // Add the `help-block` class to the error element
+                    error.addClass( "help-block" );
+                    if ( element.prop( "type" ) === "checkbox" ) {
+                        error.insertAfter( element.parent( "label" ) );
+                    } else {
+                        error.insertAfter( element );
+                    }
+                },
+                highlight: function ( element, errorClass, validClass ) {
+                    $( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+                }
+            });
         });
     </script>
     <p class="msg-block" th:if="${errorMap}">
