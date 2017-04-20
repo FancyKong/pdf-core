@@ -16,13 +16,12 @@ public class PDFTest {
     static PdfReader reader;
     public static void main(String[] args) throws Exception {
         List<Chapter> pageNumber = new ArrayList<>();
-        reader = new PdfReader("E:c.pdf");
+        reader = new PdfReader("D:apache-solr-ref-guide-5.5.pdf");
         long start = System.currentTimeMillis();
         int pages = reader.getNumberOfPages();
-
-        for (int i = 1; i < pages-1; i++) {
-            split(i,i+1,new FileOutputStream("E:/test/"+i+".pdf"),null);
-            System.out.println(PdfTextExtractor.getTextFromPage(reader,i));
+        for (int i = 1; i <= pages; i++) {
+            split(i,i+1,new FileOutputStream("E:/test1/"+i+".pdf"),null);
+            //System.out.println(PdfTextExtractor.getTextFromPage(reader,i));
         }
         System.out.println("页数:"+pages+" 耗时:"+(System.currentTimeMillis()-start));
         /*List list = SimpleBookmark.getBookmark(reader);

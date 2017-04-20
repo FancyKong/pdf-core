@@ -9,6 +9,10 @@ import com.cafa.pdf.core.commom.dto.TreatiseDTO;
 import com.cafa.pdf.core.commom.exception.ServiceException;
 import com.cafa.pdf.core.dal.entity.Treatise;
 import com.cafa.pdf.core.dal.entity.TreatiseCategory;
+import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
+import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
+import com.cafa.pdf.core.dal.solr.repository.ChapterSolrRepository;
+import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.service.TreatiseService;
@@ -19,6 +23,13 @@ import com.cafa.pdf.core.web.request.treatise.TreatiseSaveReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
 import com.cafa.pdf.core.web.response.Response;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
+import com.sun.codemodel.internal.JForEach;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -36,11 +47,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author FancyKong
@@ -56,13 +67,20 @@ public class TreatiseController extends ABaseController {
     private final TreatiseService treatiseService;
     private final TreatiseCategoryService treatiseCategoryService;
     private final ChapterService chapterService;
+    private final ChapterSolrRepository chapterSolrRepository;
+    private final TreatiseSolrRepository treatiseSolrRepository;
 
     @Autowired
     public TreatiseController(TreatiseService treatiseService,
-                              TreatiseCategoryService treatiseCategoryService, ChapterService chapterService) {
+                              TreatiseCategoryService treatiseCategoryService,
+                              ChapterService chapterService,
+                              ChapterSolrRepository chapterSolrRepository,
+                              TreatiseSolrRepository treatiseSolrRepository) {
         this.treatiseService = treatiseService;
         this.treatiseCategoryService = treatiseCategoryService;
         this.chapterService = chapterService;
+        this.chapterSolrRepository = chapterSolrRepository;
+        this.treatiseSolrRepository = treatiseSolrRepository;
     }
 
     /**
@@ -244,6 +262,8 @@ public class TreatiseController extends ABaseController {
         } else {
             try {
                 Treatise treatise = treatiseService.save(treatiseSaveReq);
+                //TODO call this method to save in solr next
+                saveTreatiseInSolr("abc");
                 // 跳转到更新页面
                 mv.setViewName("redirect:admin/treatise/" + treatise.getId() + "/update");
             } catch (Exception e) {
@@ -255,7 +275,9 @@ public class TreatiseController extends ABaseController {
     }
 
     //TODO 文件存放路径
-    private static final String FILE_PATH = "F:/cherish";
+    private static final String FILE_PATH = "/pdf-core/file/";
+
+    private static int test = 1;
     /**
      * 上传章节的pdf
      * @param multipartFile 文件
@@ -268,22 +290,24 @@ public class TreatiseController extends ABaseController {
         if (multipartFile.isEmpty()) {
             throw new ServiceException("403", "没有文件数据");
         }
-
         String originalFilename = multipartFile.getOriginalFilename();
         String extendName = originalFilename.substring(originalFilename.lastIndexOf("."));
         if (!".pdf".equals(extendName)) {
             throw new ServiceException("403", "非pdf文件");
         }
-
-        File directory = new File(FILE_PATH);
+        long treatiseId = 344;//TODO
+        int chapterSeq = test++;//TODO
+        File directory = new File(FILE_PATH+treatiseId+"/"+chapterSeq+"/");
         if (!directory.exists()) {
             directory.mkdirs();
         }
-
         String url = "上传出错";
         try {
             String newFIleName = System.currentTimeMillis() + extendName;
-            multipartFile.transferTo(new File(directory, newFIleName));
+            //multipartFile.transferTo(new File(directory, newFIleName));
+            String solrContent = splitPDFAndGetContent(multipartFile.getInputStream(),
+                    directory);
+            saveChapterInSolr(solrContent,treatiseId,chapterSeq);
             String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                     + request.getContextPath() + "/";
             url = basePath + "fileDownload?filename=" + newFIleName;
@@ -292,9 +316,33 @@ public class TreatiseController extends ABaseController {
         }
         return url;
     }
+
+    private void saveChapterInSolr(String solrContent, long treatiseId, int chapterSeq) {
+        //TODO　to find treatiseSolrId by treatiseId in mysql
+        String treatiseSolrId = "abc";
+        ChapterSolrDoc chapter = new ChapterSolrDoc();
+        chapter.setId(UUID.randomUUID().toString().replace("-",""));
+        chapter.setTreatiseId(treatiseSolrId);
+        chapter.setContent(solrContent);
+        chapter.setSeq(chapterSeq);
+        chapterSolrRepository.save(chapter);
+    }
+
+    private void saveTreatiseInSolr(String treatiseSolrId){
+        List<ChapterSolrDoc> list = chapterSolrRepository.findByTreatiseIdOrderBySeqAsc(treatiseSolrId);
+        TreatiseSolrDoc treatiseSolrDoc = new TreatiseSolrDoc();
+        StringBuilder sb = new StringBuilder();
+        for(ChapterSolrDoc d : list){
+            sb.append(d.getContent());
+        }
+        treatiseSolrDoc.setId(treatiseSolrId);
+        treatiseSolrDoc.setContent(sb.toString());
+        treatiseSolrRepository.save(treatiseSolrDoc);
+    }
+
     @GetMapping("pdf")
     public ResponseEntity<byte[]> showPDF() throws IOException {
-        File file = new File("/a.pdf");
+        File file = new File("D:a.pdf");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentDispositionFormData("attachment", "D:a.pdf");
         headers.setContentType(MediaType.IMAGE_PNG);
@@ -303,4 +351,21 @@ public class TreatiseController extends ABaseController {
                 headers, HttpStatus.OK);
     }
 
+    private String splitPDFAndGetContent(InputStream in, File filePath) throws IOException, DocumentException {
+        PdfReader pdfReader = new PdfReader(in);
+        int pages = pdfReader.getNumberOfPages();
+        StringBuilder solrContent = new StringBuilder();
+        for (int i = 1; i < pages + 1; i++) {
+            //获取任意一页的规格
+            Document document = new Document(pdfReader.getPageSize(1));
+            PdfCopy copy = new PdfCopy(document, new FileOutputStream(filePath+"/"+(i+1)+".pdf"));
+            document.open();
+            document.newPage();
+            PdfImportedPage page = copy.getImportedPage(pdfReader, i);
+            solrContent.append(PdfTextExtractor.getTextFromPage(pdfReader,i));
+            copy.addPage(page);
+            document.close();
+        }
+        return solrContent.toString();
+    }
 }
