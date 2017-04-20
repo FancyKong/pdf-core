@@ -358,7 +358,7 @@ public class TreatiseController extends ABaseController {
         for (int i = 1; i < pages + 1; i++) {
             //获取任意一页的规格
             Document document = new Document(pdfReader.getPageSize(1));
-            PdfCopy copy = new PdfCopy(document, new FileOutputStream(filePath+"/"+(i+1)+".pdf"));
+            PdfCopy copy = new PdfCopy(document, new FileOutputStream(filePath+"/"+i+".pdf"));
             document.open();
             document.newPage();
             PdfImportedPage page = copy.getImportedPage(pdfReader, i);
