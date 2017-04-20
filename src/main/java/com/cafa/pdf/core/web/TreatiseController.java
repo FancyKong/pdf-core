@@ -48,10 +48,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author FancyKong
@@ -345,7 +342,7 @@ public class TreatiseController extends ABaseController {
         File file = new File("D:a.pdf");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentDispositionFormData("attachment", "D:a.pdf");
-        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentType(MediaType.APPLICATION_PDF);
         return new ResponseEntity<>(
                 FileUtils.readFileToByteArray(file),
                 headers, HttpStatus.OK);
@@ -367,5 +364,25 @@ public class TreatiseController extends ABaseController {
             document.close();
         }
         return solrContent.toString();
+    }
+
+    @GetMapping("page/{treatiseId}/{pageNumber}")
+    public ResponseEntity<byte[]> page(@PathVariable("treatiseId")Long treatiseId,@PathVariable("pageNumber") int pageNumber) throws IOException {
+        //TODO　select from chapter where treatiseId is order by seq
+        List<Integer> pageNums = Arrays.asList(100,100,100,100,100,100,13);
+        int seq = 1;
+        for(Integer i : pageNums) {
+            if(pageNumber>i){
+                pageNumber-=i;
+                seq++;
+            }else break;
+        }
+        File file = new File(FILE_PATH+treatiseId+"/"+seq+"/"+pageNumber+".pdf");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", "x.pdf");
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        return new ResponseEntity<>(
+                FileUtils.readFileToByteArray(file),
+                headers, HttpStatus.OK);
     }
 }
