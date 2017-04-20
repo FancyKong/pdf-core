@@ -12,8 +12,6 @@ import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
-import com.cafa.pdf.core.web.request.chapter.ChapterReq;
-import com.cafa.pdf.core.web.request.treatise.TreatiseAndChapterReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSaveReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
@@ -171,52 +169,6 @@ public class TreatiseController extends ABaseController {
                 treatiseService.update(treatiseUpdateReq);
                 mv.addObject("treatise", treatiseService.findById(treatiseUpdateReq.getId()));
                 mv.addObject("chapters", chapterService.findByTreatiseId(treatiseUpdateReq.getId()));
-                errorMap.put("msg", "修改成功");
-            } catch (Exception e) {
-                errorMap.put("msg", "系统繁忙");
-                log.error("修改错误:{}", e.getMessage());
-            }
-        }
-        return mv;
-    }
-
-    /**
-     * 更改章节
-     * @param treatiseAndChapterReq 更新信息
-     * @return ModelAndView
-     */
-    @PostMapping("/updateChapter")
-    @RequiresPermissions("treatise:update")
-    public ModelAndView updateChapter(@Validated TreatiseAndChapterReq treatiseAndChapterReq, BindingResult bindingResult) {
-        log.info("【更改章节】 参数：{}", treatiseAndChapterReq);
-
-        ModelAndView mv = new ModelAndView("admin/treatise/edit");
-        Map<String, Object> errorMap = new HashMap<>();
-        mv.addObject("errorMap", errorMap);
-
-        Long treatiseId = treatiseAndChapterReq.getTreatiseId();
-        if (treatiseId == null) {
-            errorMap.put("msg", "数据错误");
-            return mv;
-        }
-
-        if (bindingResult.hasErrors()) {
-            errorMap.putAll(getErrors(bindingResult));
-            mv.addObject("treatise", treatiseAndChapterReq);
-        } else {
-            try {
-                List<ChapterReq> chapterReqList = treatiseAndChapterReq.getChapterReqList();
-
-                if (chapterReqList == null || chapterReqList.isEmpty()) {
-                    // 删除所有
-                    chapterService.deleteAllByTreatiseId(treatiseId);
-                }else {
-                    // 根据情况实现增删改
-                    chapterService.operate(chapterReqList);
-                }
-
-                mv.addObject("treatise", treatiseService.findById(treatiseId));
-                mv.addObject("chapters", chapterService.findByTreatiseId(treatiseId));
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
                 errorMap.put("msg", "系统繁忙");
