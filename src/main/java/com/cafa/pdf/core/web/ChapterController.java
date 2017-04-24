@@ -65,7 +65,7 @@ public class ChapterController extends ABaseController {
     public Response delete(@PathVariable("chapterId") Long chapterId) {
         try {
             chapterService.delete(chapterId);
-            return buildResponse(Boolean.TRUE, "删除成功", null);
+            return buildResponse(Boolean.TRUE, "删除 成功", null);
         } catch (Exception e) {
             log.error("删除失败:{}", e.getMessage());
             return buildResponse(Boolean.FALSE, "删除失败", null);
@@ -145,7 +145,7 @@ public class ChapterController extends ABaseController {
      */
     @PostMapping("/uploadPdf")
     @ResponseBody
-    public String uploadPdf(@RequestParam("pdf") MultipartFile multipartFile, HttpServletRequest request){
+    public String uploadPdf(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request){
         if (multipartFile.isEmpty()) {
             throw new ServiceException("403", "没有文件数据");
         }
@@ -154,8 +154,8 @@ public class ChapterController extends ABaseController {
         if (!".pdf".equals(extendName)) {
             throw new ServiceException("403", "非pdf文件");
         }
-        long treatiseId = 344;//TODO
-        int chapterSeq = test++;//TODO
+        long treatiseId = Long.parseLong(request.getParameter("treatiseId"));
+        int chapterSeq = Integer.parseInt(request.getParameter("seq"));
         File directory = new File(FILE_PATH+treatiseId+"/"+chapterSeq+"/");
         if (!directory.exists()) {
             directory.mkdirs();
@@ -217,6 +217,5 @@ public class ChapterController extends ABaseController {
         }
         return solrContent.toString();
     }
-
 
 }

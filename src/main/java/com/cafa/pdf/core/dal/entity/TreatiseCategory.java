@@ -24,11 +24,10 @@ public class TreatiseCategory implements java.io.Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
+	private Long pid = 0L;
+
 	@Column(name = "name", nullable = false, length = 16)
 	private String name;
-
-	@Column(name = "description", nullable=false, columnDefinition = "varchar(1024) default '' ")
-	private String description;
 
 
 }

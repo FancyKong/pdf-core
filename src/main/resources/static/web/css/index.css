@@ -15,9 +15,14 @@ html {
 #bd {
     margin-bottom: 20px;
 }
-
+.logo-img{
+    position: relative;
+    top:-57px;
+    left:1px;
+}
 .logo.large {
-    margin: 0px auto 10px auto;
+    display: inline-block;
+    margin: 0 auto 10px auto;
     width: 382px;
     height: 144px;
     background: url(../img/logo.png) no-repeat center center;

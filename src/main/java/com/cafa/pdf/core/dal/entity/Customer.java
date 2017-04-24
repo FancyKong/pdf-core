@@ -3,6 +3,7 @@ package com.cafa.pdf.core.dal.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nz.net.ultraq.thymeleaf.decorators.Title;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -22,12 +23,45 @@ public class Customer implements java.io.Serializable {
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
-
-    @Column(name = "nickname", nullable = false, length = 32)
+    /**
+     * 姓名
+     */
+    @Column(name = "name", nullable = false, length = 32)
     private String nickname;
-
+    /**
+     * 出生年
+     */
+    private int birthYear;
+    /**
+     * 性别
+     */
+    private String gender;
+    /**
+     * 电话
+     */
     @Column(name = "telephone", unique = true, nullable = false, length = 11)
     private String telephone;
+    /**
+     * 籍贯
+     */
+    private String nativePlace;
+    /**
+     * 单位
+     */
+    private String company;
+    /**
+     * 学历
+     * @see com.cafa.pdf.core.commom.enums.Education
+     */
+    private String education;
+    /**
+     * 职称
+     */
+    private String professionalTitle;
+    /**
+     * 职务
+     */
+    private String position;
 
     @Column(name = "password", nullable = false, length = 40)
     private String password;
