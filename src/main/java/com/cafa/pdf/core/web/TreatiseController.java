@@ -6,8 +6,12 @@ package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.dto.ChapterDTO;
 import com.cafa.pdf.core.commom.dto.TreatiseDTO;
+import com.cafa.pdf.core.commom.enums.Language;
+import com.cafa.pdf.core.commom.enums.PublicationMode;
+import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.dal.entity.Treatise;
 import com.cafa.pdf.core.dal.entity.TreatiseCategory;
+import com.cafa.pdf.core.service.AuthorService;
 import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.service.TreatiseService;
@@ -33,10 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author FancyKong
@@ -53,13 +54,16 @@ public class TreatiseController extends ABaseController {
     private final TreatiseCategoryService treatiseCategoryService;
     private final ChapterService chapterService;
 
+    private final AuthorService authorService;
+
     @Autowired
     public TreatiseController(TreatiseService treatiseService,
                               TreatiseCategoryService treatiseCategoryService,
-                              ChapterService chapterService) {
+                              ChapterService chapterService, AuthorService authorService) {
         this.treatiseService = treatiseService;
         this.treatiseCategoryService = treatiseCategoryService;
         this.chapterService = chapterService;
+        this.authorService = authorService;
     }
 
     /**
@@ -68,7 +72,27 @@ public class TreatiseController extends ABaseController {
      */
     @ModelAttribute("categories")
     public List<TreatiseCategory> categories() {
-        return treatiseCategoryService.findAll();
+        return treatiseCategoryService.findParent();
+    }
+
+    @ModelAttribute("childCategories")
+    public List<TreatiseCategory> childCategories() {
+        return treatiseCategoryService.findChildren(1L);
+    }
+
+    @ModelAttribute("language")
+    public List<Language> language() {
+        return Arrays.asList(Language.values());
+    }
+
+    @ModelAttribute("publicationMode")
+    public List<PublicationMode> publicationMode() {
+        return Arrays.asList(PublicationMode.values());
+    }
+
+    @ModelAttribute("authors")
+    public List<Author> authors(){
+        return authorService.findAll();
     }
 
     @GetMapping
@@ -78,6 +102,11 @@ public class TreatiseController extends ABaseController {
         return mv;
     }
 
+    @GetMapping("{pid}/children")
+    @ResponseBody
+    public List<TreatiseCategory> children(@PathVariable("pid") Long pid){
+        return treatiseCategoryService.findChildren(pid);
+    }
     /**
      * 分页查询
      * @param basicSearchReq 基本搜索条件

@@ -14,4 +14,6 @@ public interface TreatiseCategoryDAO extends IBaseDAO<TreatiseCategory,Long> {
 
     TreatiseCategory findByName(String name);
 
+    List<TreatiseCategory> findByPid(Long pid);
+
 }

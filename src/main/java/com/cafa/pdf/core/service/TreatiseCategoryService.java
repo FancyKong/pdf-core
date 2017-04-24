@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class TreatiseCategoryService extends ABaseService<TreatiseCategory, Long> {
@@ -37,6 +39,9 @@ public class TreatiseCategoryService extends ABaseService<TreatiseCategory, Long
         return treatiseCategoryPage.map(this::getTreatiseCategoryDTO);
     }
 
+    public List<TreatiseCategory> findParent(){
+        return treatiseCategoryDAO.findByPid(0L);
+    }
 
 
     @Transactional
@@ -68,4 +73,7 @@ public class TreatiseCategoryService extends ABaseService<TreatiseCategory, Long
         return treatiseCategoryDTO;
     }
 
+    public List<TreatiseCategory> findChildren(Long pid) {
+        return treatiseCategoryDAO.findByPid(pid);
+    }
 }
