@@ -58,7 +58,7 @@ public class Treatise implements java.io.Serializable {
     /**
      * 编号
      */
-    @Column(name = "ISBN", nullable = false , length = 40)
+    @Column(name = "no", nullable = false , length = 40)
     private String no;
     /**
      * ISBN编号
