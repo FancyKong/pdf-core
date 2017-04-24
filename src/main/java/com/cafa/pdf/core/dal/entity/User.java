@@ -42,9 +42,6 @@ public class User implements java.io.Serializable {
     @Column(name = "telephone", nullable = false, length = 16)
     private String telephone;
 
-    @Column(name = "position", nullable = false, length = 16)
-    private String position;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_time", nullable = false, length = 19)
     private Date createdTime;
