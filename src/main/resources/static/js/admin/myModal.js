@@ -132,7 +132,6 @@ function myEditModal(bodyHTML,editFunction){
 			  var success = editFunction();
 			  $("#myEditModal").modal("hide");
 		  });
-		  $('#editor').wysiwyg();
 	})
 	//hide 方法调用之后立即触发该事件
 	.one('hidden.bs.modal', function(event){
