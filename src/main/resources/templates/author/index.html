@@ -86,27 +86,33 @@
                             <header class="panel-heading">我的专著</header>
                             <div class="panel-body">
                                 <div class="list-group">
-                                    <a href="#" class="list-group-item">
+                                    <a href="javascript:void(0);" class="list-group-item">
                                         <span class="badge">点击量：1444</span>
                                         <h4 class="list-group-item-heading">著作名</h4>
                                         <p class="list-group-item-text">简短信息</p>
                                     </a>
-                                    <a href="#" class="list-group-item">
+                                    <a href="javascript:void(0);" class="list-group-item">
                                         <span class="badge">点击量：1234</span>
-                                        <h4 class="list-group-item-heading">著作名</h4>
+                                        <h4 class="list-group-item-heading">计算机网络</h4>
                                         <p class="list-group-item-text">简短信息</p>
                                     </a>
-                                    <a href="#" class="list-group-item">
+                                    <a href="javascript:void(0);" class="list-group-item">
                                         <span class="badge">点击量：1234</span>
-                                        <h4 class="list-group-item-heading">著作名</h4>
+                                        <h4 class="list-group-item-heading">数据挖掘</h4>
                                         <p class="list-group-item-text">简短信息</p>
                                     </a>
-                                    <a href="#" class="list-group-item">
+                                    <a href="javascript:void(0);" class="list-group-item">
                                         <span class="badge">点击量：1234</span>
-                                        <h4 class="list-group-item-heading">著作名</h4>
+                                        <h4 class="list-group-item-heading">时间简史</h4>
                                         <p class="list-group-item-text">简短信息</p>
                                     </a>
-                                    <a href="#" class="list-group-item">......</a>
+                                    <a href="javascript:void(0);" class="list-group-item">......</a>
+
+                                    <!--<a href="javascript:void(0);" class="list-group-item"
+                                        th:each="treatise:treatiseStat:*{treatises}"
+                                        th:name="${treatise.id}">
+                                        ......
+                                    </a>-->
                                 </div>
                             </div>
                         </div>
@@ -117,10 +123,79 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div id="treatiseModal" class="modal fade" aria-hidden="true"
+     aria-labelledby="treatiseModalLabel" role="dialog" tabindex="-1" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title">著作详情</h4>
+            </div>
+            <div class="modal-body text-center">
+                <p>这里显示著作的详情</p>
+
+                <table class="table">
+                    <tr><td>ISBN</td><td>国际标准书号（International Standard Book Number）</td></tr>
+                    <tr><td>书名</td><td>著作名称</td></tr>
+                    <tr><td>作者</td><td>Cherish</td></tr>
+                    <tr><td>类别</td><td>计算机科学</td></tr>
+                    <tr><td>出版社</td><td>机械工业出版社</td></tr>
+                    <tr><td>出版日期</td><td>2017-04-01</td></tr>
+                    <tr><td>页码</td><td>666</td></tr>
+                    <tr><td>语种</td><td>中文</td></tr>
+                    <tr><td>版次</td><td>第二版</td></tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script src="/tools/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script>
-        $(function () {
+        function showModal(treatiseId) {
+            $("#treatiseModal")
+            //show 方法调用之后立即触发该事件
+                .on('show.bs.modal', function (event) {
+                    var modal = $(this);
+                    /*
+                     * ISBN编号ISBN;
+                     * 书名 bookName;
+                     * 作者author;
+                     * 类别category;
+                     * 出版社publishHouse;
+                     * 出版地publishPlace;
+                     * 出版日期publishDate;
+                     * 页码pageNum;
+                     * 语种language;
+                     * 版次revision;
+                     * 简介？description;
+                     */
+                    //TODO 赋值
+                    /*$.getJSON("/treatise/"+treatiseId,function(result){
+                        var treatise = result.data;
+                    });*/
+                    /*var title = "著作详情";
+                    var body = "<p>这里显示著作的详情</p>";
+                    modal.find('.modal-title').text(title);
+                    modal.find('.modal-body').text(body);*/
+                });
 
+            $("#treatiseModal").modal({
+                backdrop: false
+            });
+        }
+
+        $(function () {
+            $(".panel-body").on("click", "a", function () {
+                var treatiseId = $(this).attr("name");
+                showModal(treatiseId);
+            });
         });
     </script>
 </body>
