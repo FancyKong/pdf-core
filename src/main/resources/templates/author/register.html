@@ -20,6 +20,9 @@
         .help-block{
             color: #e9151c;
         }
+        #authorForm {
+            margin: 0 50px;
+        }
     </style>
 </head>
 
@@ -27,6 +30,7 @@
 
 <div class="container">
     <div style="height: 25px;"></div>
+
     <div class="row">
         <section class="panel">
             <header class="panel-heading">
@@ -52,8 +56,9 @@
 
                             <div class="col-sm-4">
                                 <label for="birthYear">出生年份：</label>
-                                <input type="text" id="birthYear" name="birthYear" class="form-control"
+                                <input type="number" id="birthYear" name="birthYear" class="form-control"
                                        placeholder="出生年份" data-mask="9999-99-99" required
+                                       min="1901" max="2037"
                                        th:value="${author} ? ${#dates.format(author.birthYear,'yyyy-MM-dd')}
                                                                     : ${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"/>
                             </div>
@@ -88,9 +93,9 @@
 
                         <div class="form-group">
                             <div class="col-sm-4">
-                                <label for="nickname">手机：</label>
-                                <input type="text" id="telphone" name="telphone" class="form-control"
-                                       placeholder="手机号码" minlength="1" maxlength="32" required
+                                <label for="telephone">手机：</label>
+                                <input type="text" id="telephone" name="telephone" class="form-control"
+                                       placeholder="手机号码" minlength="11" maxlength="11" required
                                        th:value="${author} ? ${author.telphone}"/>
                             </div>
 
@@ -106,20 +111,20 @@
                             <div class="col-sm-4">
                                 <label for="company">公司单位：</label>
                                 <input type="text" id="company" name="company" class="form-control"
-                                       placeholder="公司单位" minlength="1" maxlength="32"
+                                       placeholder="公司单位"
                                        th:value="${author} ? ${author.company}"/>
                             </div>
 
                             <div class="col-sm-4">
                                 <label for="job">职称：</label>
-                                <input type="job" id="job" name="job" class="form-control"
+                                <input type="text" id="job" name="job" class="form-control"
                                        placeholder="职称"
                                        th:value="${author} ? ${author.job}"/>
                             </div>
 
                             <div class="col-sm-4">
                                 <label for="duties">职务：</label>
-                                <input type="duties" id="duties" name="job" class="form-control"
+                                <input type="text" id="duties" name="job" class="form-control"
                                        placeholder="职务"
                                        th:value="${author} ? ${author.duties}"/>
                             </div>
@@ -130,14 +135,6 @@
                     <fieldset title="登录信息">
 
                         <div class="form-group">
-                            <div class="col-sm-4">
-                                <label for="duties">登录名：</label>
-                                <input type="text" id="username" name="username" class="form-control"
-                                       placeholder="登录名"
-                                       required minlength="6" maxlength="16"
-                                       th:value="${author} ? ${author.username}">
-                            </div>
-
                             <div class="col-sm-4">
                                 <label for="password">密码：</label>
                                 <input type="password" id="password" name="password" class="form-control" placeholder="密码"
@@ -158,13 +155,14 @@
                                        required minlength="4" maxlength="4">
                             </div>
                             <div class="col-sm-4">
+                                <p style="height: 18px;"></p>
                                 <img src="/validateCode">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="text-center">
-                                <div class="checkbox" style="font">
+                                <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id="agree" name="agree" value="agree" />
                                         我同意
@@ -221,11 +219,23 @@
         var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/;
         return reg.test(str);
     }
+    // 手机号码验证
+    $.validator.addMethod("isMobile", function(value, element, params) {
+        var length = value.length;
+        var mobile = /^[1][34578][0-9]{9}$/;
+        return this.optional(element) || (length == 11 && mobile.test(value));
+    }, "请正确填写您的手机号码");
 
     $(function () {
+
         $('#authorForm').validate({
             rules: {
                 nickname: "required",
+                telephone : {
+                    required : true,
+                    minlength : 11,
+                    isMobile : true
+                },
                 username: {
                     required: true,
                     minlength: 6
@@ -245,7 +255,14 @@
                 },
                 agree: "required"
             },
-            messages: {},
+            messages: {
+                agree: "请接受这个协议",
+                repeatPwd: {
+                    required: "请输入确认密码",
+                    minlength: "密码长度不能小于 6 个字母",
+                    equalTo: "两次密码输入不一致"
+                }
+            },
             errorElement: "em",
             errorPlacement: function ( error, element ) {
                 // Add the `help-block` class to the error element

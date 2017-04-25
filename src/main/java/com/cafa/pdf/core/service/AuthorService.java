@@ -3,12 +3,12 @@ package com.cafa.pdf.core.service;
 import com.cafa.pdf.core.commom.dto.AuthorDTO;
 import com.cafa.pdf.core.commom.enums.ActiveEnum;
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
-import com.cafa.pdf.core.dal.dao.IBaseDAO;
 import com.cafa.pdf.core.dal.dao.AuthorDAO;
+import com.cafa.pdf.core.dal.dao.IBaseDAO;
 import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
-import com.cafa.pdf.core.web.request.author.AuthorSaveReq;
+import com.cafa.pdf.core.web.request.author.AuthorRegisterReq;
 import com.cafa.pdf.core.web.request.author.AuthorSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorUpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,6 @@ public class AuthorService extends ABaseService<Author, Long> {
     }
 
     public Long getCount() {
-        log.debug("countAllAuthor没有缓存");
         return authorDAO.count();
     }
 
@@ -68,14 +67,9 @@ public class AuthorService extends ABaseService<Author, Long> {
     }
 
     @Transactional
-    public void save(AuthorSaveReq authorSaveReq) {
-
-        if (exist(authorSaveReq.getTelephone())) {
-            return;
-        }
-
+    public void save(AuthorRegisterReq authorRegisterReq) {
         Author author = new Author();
-        ObjectConvertUtil.objectCopy(author, authorSaveReq);
+        ObjectConvertUtil.objectCopy(author, authorRegisterReq);
         author.setCreatedTime(new Date());
         author.setModifiedTime(new Date());
         author.setPassword(CryptographyUtil.cherishSha1(author.getPassword()));
@@ -116,6 +110,10 @@ public class AuthorService extends ABaseService<Author, Long> {
         ObjectConvertUtil.objectCopy(authorDTO, source);
         authorDTO.setActiveStr(ActiveEnum.getDesc(source.getActive()));
         return authorDTO;
+    }
+
+    public boolean existEmail(String email) {
+        return authorDAO.findByEmail(email) != null;
     }
 
 }

@@ -4,7 +4,7 @@ import com.cafa.pdf.core.commom.dto.AuthorDTO;
 import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.service.AuthorService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
-import com.cafa.pdf.core.web.request.author.AuthorSaveReq;
+import com.cafa.pdf.core.web.request.author.AuthorRegisterReq;
 import com.cafa.pdf.core.web.request.author.AuthorSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorUpdateReq;
 import com.cafa.pdf.core.web.response.Response;
@@ -26,7 +26,6 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("author")
-@RequiresRoles("admin")
 public class AuthorController extends ABaseController {
 
     private final AuthorService authorService;
@@ -36,8 +35,22 @@ public class AuthorController extends ABaseController {
         this.authorService = authorService;
     }
 
-    @GetMapping
+    @GetMapping({"/","/index"})
     public ModelAndView index(){
+        ModelAndView mv = new ModelAndView("author/index");
+        //TODO 查询信息，做权限认证
+        return mv;
+    }
+
+    @GetMapping("/register")
+    public ModelAndView register(){
+        ModelAndView mv = new ModelAndView("author/register");
+        return mv;
+    }
+
+    @RequiresRoles("admin")
+    @GetMapping("/list")
+    public ModelAndView list(){
         ModelAndView mv = new ModelAndView("admin/author/list");
         return mv;
     }
@@ -45,6 +58,7 @@ public class AuthorController extends ABaseController {
     /**
      * 返回新增页面
      */
+    @RequiresRoles("admin")
     @GetMapping("/add")
     public ModelAndView addForm(){
         ModelAndView mv = new ModelAndView("admin/author/add");
@@ -54,6 +68,7 @@ public class AuthorController extends ABaseController {
     /**
      * 返回修改信息页面
      */
+    @RequiresRoles("admin")
     @GetMapping("/{authorId}/update")
     public ModelAndView updateForm(@PathVariable("authorId") Long authorId){
         ModelAndView mv = new ModelAndView("admin/author/edit");
@@ -68,6 +83,7 @@ public class AuthorController extends ABaseController {
      * @return JSON
      * @date 2016年8月30日 下午5:30:18
      */
+    @RequiresRoles("admin")
     @GetMapping("/page")
     @ResponseBody
     public Response toPage(BasicSearchReq basicSearchReq, AuthorSearchReq authorSearchReq){
@@ -85,6 +101,7 @@ public class AuthorController extends ABaseController {
      * @param authorId ID
      * @return JSON
      */
+    @RequiresRoles("admin")
     @DeleteMapping("/{authorId}/delete")
     @ResponseBody
     public Response delete(@PathVariable("authorId") Long authorId){
@@ -102,6 +119,7 @@ public class AuthorController extends ABaseController {
      * @param updateReq 更新信息
      * @return ModelAndView
      */
+    @RequiresRoles("admin")
     @PostMapping("/update")
     public ModelAndView update(@Validated AuthorUpdateReq updateReq, BindingResult bindingResult){
 
@@ -130,29 +148,37 @@ public class AuthorController extends ABaseController {
         return mv;
     }
 
+
     /**
-     * 保存新用户
-     * @param saveReq 保存的信息
+     * 注册著作者
+     * @param authorRegisterReq 参数
+     * @param bindingResult 验证
      * @return ModelAndView
      */
-    @PostMapping("/save")
-    public ModelAndView save(@Validated AuthorSaveReq saveReq, BindingResult bindingResult){
-        log.info("start to handle save param = {}",saveReq);
+    @PostMapping("/register")
+    public ModelAndView register(@Validated AuthorRegisterReq authorRegisterReq, BindingResult bindingResult) {
+        log.info("【注册著作者】 {}",authorRegisterReq);
         ModelAndView mv = new ModelAndView("admin/author/add");
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);
 
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
-            mv.addObject("author", saveReq);
-        }else {
-            try {
-                authorService.save(saveReq);
-                errorMap.put("msg", "添加成功");
-            } catch (Exception e) {
-                errorMap.put("msg", "系统繁忙");
-                log.error("添加失败:{}", e.getMessage());
+            mv.addObject("author", authorRegisterReq);
+            return mv;
+        }
+
+        try {
+            boolean existEmail = authorService.existEmail(authorRegisterReq.getEmail());
+            if (existEmail){
+                errorMap.put("email", "该邮箱已存在");
+            }else {
+                authorService.save(authorRegisterReq);
+                errorMap.put("msg", "信息提交成功，请等候管理员检查信息");
             }
+        } catch (Exception e) {
+            errorMap.put("msg", "系统繁忙");
+            log.error("添加失败:{}", e.getMessage());
         }
         return mv;
     }
@@ -166,6 +192,7 @@ public class AuthorController extends ABaseController {
 
         return null;
     }
+
 
 
 }

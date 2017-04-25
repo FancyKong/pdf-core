@@ -18,5 +18,6 @@ public interface AuthorDAO extends IBaseDAO<Author, Long> {
     @Query("SELECT au FROM Author AS au ")
     List<Author> listAllPaged(Pageable pageable);
 
+    Author findByEmail(String email);
 
 }
