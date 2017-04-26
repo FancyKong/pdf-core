@@ -144,7 +144,28 @@ public class TreatiseController extends ABaseController {
         ModelAndView mv = new ModelAndView("admin/treatise/edit");
         Treatise treatise = treatiseService.findById(treatiseId);
         mv.addObject("treatise", treatise);
+        TreatiseCategory category = treatiseCategoryService.findById(treatise.getCategoryId());
+        mv.addObject("thisCategory",category);
+        mv.addObject("categories",treatiseCategoryService.findParent());
+        mv.addObject("childCategories",treatiseCategoryService.findChildren(category.getPid()));
+        List<ChapterDTO> chapters = chapterService.findByTreatiseId(treatiseId);
+        mv.addObject("chapters", chapters);
+        return mv;
+    }
 
+    /**
+     * 返回修改著作信息的详情页面
+     */
+    @GetMapping("/{treatiseId}/info")
+    @RequiresPermissions("treatise:update")
+    public ModelAndView infoForm(@PathVariable("treatiseId") Long treatiseId) {
+        ModelAndView mv = new ModelAndView("admin/treatise/info");
+        Treatise treatise = treatiseService.findById(treatiseId);
+        mv.addObject("treatise", treatise);
+        TreatiseCategory category = treatiseCategoryService.findById(treatise.getCategoryId());
+        mv.addObject("thisCategory",category);
+        mv.addObject("categories",treatiseCategoryService.findParent());
+        mv.addObject("childCategories",treatiseCategoryService.findChildren(category.getPid()));
         List<ChapterDTO> chapters = chapterService.findByTreatiseId(treatiseId);
         mv.addObject("chapters", chapters);
         return mv;

@@ -4,6 +4,19 @@
 	 * @date 2017年4月14日 下午3:10:05
 	 */
 	var oTable;
+	var operator = { //操作
+        "className": "td_operation",
+            "orderable": false,
+            "data": null,
+            "render": function (data, type, row, meta) {// btn-group-justified
+            var btn_group =  "<div class='btn-group btn-group-sm' role='group' aria-label='操作'>"
+                +"<a href='#' class='op_info btn btn-info' role='button'>查看</a>"
+                +"<a href='#' class='op_edit btn btn-warning' role='button'>编辑</a>"
+                +"<a href='#' class='op_delete btn btn-danger' role='button'>删除</a>"
+                +"</div>";
+            return btn_group;
+        }
+    };
 	$(document).ready(function() {
 		oTable = $('#otable').DataTable(
 			//拼接options参数
@@ -24,6 +37,7 @@
 							myModalFail("查询失败，" + result.message);
 							return;
 						}
+						console.log(result.data);
 						var pageInfo = result.data;
 						//封装返回数据，这里仅演示了修改属性名
 						var returnData = {};
@@ -41,8 +55,9 @@
 				});
 			},
 			"columns" : [
-			    CONSTANT.DATA_TABLES.COLUMN.NO,
-			    {
+				{
+					"data" : "isbn"
+				}, {
 					"data" : 'bookName'
 				}, {
 					"data" : 'author'
@@ -51,15 +66,9 @@
                 }, {
                     "data" : 'publishHouse'
 				}, {
-					"data" : 'publishPlace'
-				}, {
 					"data" : 'publishDate'
-                }, {
-                    "data" : 'pageNum'
-                }, {
-                    "data" : 'language'
-				},
-				CONSTANT.DATA_TABLES.COLUMN.OPERATION
+                },
+				operator
 				],
 			"columnDefs" : [ {
 					"searchable" : false,
@@ -178,5 +187,15 @@
         //var id = oTable.row(nRow).id();
         var id = 1;
         var url = "/treatise/" + id + "/update";
+        window.open(url, "_self");
+    });
+	//表格行查看操作
+    $('#otable').on('click', 'a.op_info', function (e) {
+        e.preventDefault();
+		/* Get the row as a parent of the link that was clicked on */
+        //var nRow = $(this).parents('tr')[0];
+        //var id = oTable.row(nRow).id();
+        var id = 1;
+        var url = "/treatise/" + id + "/info";
         window.open(url, "_self");
     });

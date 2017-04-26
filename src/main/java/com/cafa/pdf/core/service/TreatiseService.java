@@ -5,7 +5,11 @@
 package com.cafa.pdf.core.service;
 
 import com.cafa.pdf.core.commom.dto.TreatiseDTO;
+import com.cafa.pdf.core.commom.enums.Language;
+import com.cafa.pdf.core.commom.enums.PublicationMode;
+import com.cafa.pdf.core.dal.dao.AuthorDAO;
 import com.cafa.pdf.core.dal.dao.IBaseDAO;
+import com.cafa.pdf.core.dal.dao.TreatiseCategoryDAO;
 import com.cafa.pdf.core.dal.dao.TreatiseDAO;
 import com.cafa.pdf.core.dal.entity.Treatise;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
@@ -31,9 +35,15 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
 
     private final TreatiseDAO treatiseDAO;
 
+    private final AuthorDAO authorDAO;
+
+    private final TreatiseCategoryDAO categoryDAO;
+
     @Autowired
-    public TreatiseService(TreatiseDAO treatiseDAO) {
+    public TreatiseService(TreatiseDAO treatiseDAO, AuthorDAO authorDAO, TreatiseCategoryDAO categoryDAO) {
         this.treatiseDAO = treatiseDAO;
+        this.authorDAO = authorDAO;
+        this.categoryDAO = categoryDAO;
     }
 
     @Override
@@ -75,6 +85,12 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
     private TreatiseDTO getTreatiseDTO(Treatise source) {
         TreatiseDTO treatiseDTO = new TreatiseDTO();
         ObjectConvertUtil.objectCopy(treatiseDTO, source);
+        treatiseDTO.setAuthor(authorDAO.findById(source.getAuthorId()).getNickname());
+        treatiseDTO.setCategory(categoryDAO.findById(source.getId()).getName());
+        treatiseDTO.setLanguage(Language.valueOf(source.getLanguage()).getDesc());
+        treatiseDTO.setPublicationMode(PublicationMode.valueOf(source.getPublicationMode()).getDesc());
+        treatiseDTO.setISBN(source.getISBN());
+        log.info("isbn = {}",source.getISBN());
         return treatiseDTO;
     }
 

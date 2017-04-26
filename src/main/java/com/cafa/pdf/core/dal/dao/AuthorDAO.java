@@ -20,4 +20,6 @@ public interface AuthorDAO extends IBaseDAO<Author, Long> {
 
     Author findByEmail(String email);
 
+    Author findById(Long id);
+
 }

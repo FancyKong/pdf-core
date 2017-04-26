@@ -8,28 +8,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Cherish">
-    <title>更改专著</title>
-    <style>
-        .step button {
-            width: 200px;
-        }
-        .inactive {
-            display: none;
-        }
-    </style>
+    <title>详细信息</title>
 </head>
 <body>
 <div layout:fragment="content">
     <!-- page heading start-->
     <div class="page-heading">
         <h3>
-            更改专著
+            详细信息
         </h3>
         <ul class="breadcrumb">
             <li>
                 <a href="/treatise">专著管理</a>
             </li>
-            <li class="active"> 更改专著 </li>
+            <li class="active"> 详细信息 </li>
         </ul>
     </div>
     <!-- page heading end-->
@@ -40,8 +32,8 @@
         <div class="row">
             <div class="col-md-12">
 
-                <section id="coreInfoSection" class="panel active">
-                    <header class="panel-heading">核心信息修改</header>
+                <section id="coreInfoSection" class="panel">
+                    <header class="panel-heading">著作核心信息</header>
                     <div class="panel-body">
                         <div class="box-widget">
                             <div class="widget-head clearfix">
@@ -231,21 +223,13 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="step" style="text-align: center">
-                                    <button class="btn btn-lg btn-success" id="next-0">
-                                        保存并下一步
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <section id="chapterSection" class="panel inactive">
-                    <header class="panel-heading">目录信息修改
-                        <button id="newRow" class="btn btn-info" style="float: right">
-                            <i class="fa fa-plus"></i> 添加一章
-                        </button>
+                <section id="chapterSection" class="panel">
+                    <header class="panel-heading">著作目录信息
                     </header>
                     <div class="panel-body">
                         <table class="table table-hover table-bordered text-center" cellspacing="0">
@@ -254,62 +238,40 @@
                                 <th class="text-center">第几章</th>
                                 <th class="text-center">章标题</th>
                                 <th class="text-center">是否加密</th>
-                                <th class="text-center">PDF</th>
-                                <th class="text-center">操作</th>
                             </tr>
                             </thead>
                             <tbody id="tBody">
                             <tr th:each="chapter:*{chapters}">
                                 <td>
                                     <label>
-                                        <input class="text-center" type="number" name="seq" th:value="${chapter.seq}"
-                                               min="1" max="99" style="width:60px;"/>
+                                        <span th:text="${chapter.seq}"></span>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-                                        <input type="text" name="title" th:value="${chapter.title}"/>
+                                        <span th:text="${chapter.title}"></span>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-                                        <select name="privacy" th:value="${chapter.privacy}">
+                                       <!-- <select name="privacy" th:value="${chapter.privacy}">
                                             <option value="1">加密</option>
                                             <option value="0">不加密</option>
-                                        </select>
+                                        </select>-->
+                                        <span th:if="${chapter.privacy} eq 1">加密</span>
+                                        <span th:if="${chapter.privacy} eq 0">不加密</span>
                                     </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input type="hidden" name="url" th:value="${chapter.url}"/>
-                                        <input type="file" accept="application/pdf" style="display:none;">
-                                        <a href="javascript:void(0)" onclick="showFile(this)"><span>您已上传过文件,点击重新上传</span></a>
-                                    </label>
-                                </td>
-                                <td>
-                                    <div class='btn-group btn-group-sm' role='group' aria-label='操作'>
-                                        <a href='javascript:void(0);' class='op_delete btn btn-danger'
-                                           role='button'>删除</a>
-                                    </div>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                         <br>
                         <!-- table end -->
-                        <div class="step" style="text-align: center">
-                            <button class="btn btn-lg btn-default" id="prev-1">
-                                返回上一步
-                            </button>
-                            <button class="btn btn-lg btn-success" id="next-1">
-                                保存并下一步
-                            </button>
-                        </div>
                     </div>
                 </section>
 
-                <section id="extraInfoSection" class="panel inactive">
-                    <header class="panel-heading">补充信息修改</header>
+                <section id="extraInfoSection" class="panel">
+                    <header class="panel-heading">著作补充信息</header>
                     <div class="panel-body">
                         <div class="widget-container">
                             <div class="widget-block">
@@ -565,50 +527,17 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="step" style="text-align: center">
-                                <button class="btn btn-lg btn-default" id="prev-2">
-                                    返回上一步
-                                </button>
-                                <button class="btn btn-lg btn-success" id="persist" >
-                                    提交
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </section>
             </div>
         </div>
     </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="uploadModel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">保存目录信息</h4>
-                </div>
-                <div class="modal-body" id="uploadModalBody">
-                    <h3>文件上传中,请勿关闭网页!</h3>
-                    <div class="progress">
-                        <div id="uploadProgress" class="progress-bar" role="progressbar" aria-valuenow="0"
-                             aria-valuemin="0" aria-valuemax="100" style="width: 0;min-width: 2em;">
-                            0%
-                        </div>
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
 
 </div>
 
 <div layout:fragment="javascript">
     <script type="text/javascript">
-        function showFile(that) {
-            $(that).attr('class','inactive');
-            $(that).prev().css({
-                "display":"inline-block"
-            })
-        }
         function appendChildren(select){
             var pid = select.options[select.selectedIndex].value;
 
@@ -619,58 +548,14 @@
                 $.each(result,function (i, n) {
                     console.log(n);
                     selectChild += "<option value='"+n.id+"'>"+n.name+"</option>";
-                })
+                });
                 child.append(selectChild);
             });
 
         }
-        function showModal() {
-            $('#uploadModel').modal({backdrop: 'static'});
-            var now = 0;
-            var interval = setInterval(function () {
-                now += 10;
-                var progress = $("#uploadProgress");
-                progress.attr('aria-valuenow', "" + now);
-                progress.css('width', "" + now + "%");
-                progress.html("" + now + "%");
-                if (now === 100) {
-                    progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
-                    $('#uploadModel').modal('hide');
-                    clearInterval(interval);
-                    myModalSuccess("章节信息保存成功");
-                }
-            }, 1000);
-        }
-        $("#next-0").click(function () {
-            $("#chapterSection").removeClass("inactive");
-            $("#coreInfoSection").addClass("inactive");
-        });
-        $("#prev-1").click(function () {
-            $("#coreInfoSection").removeClass("inactive");
-            $("#chapterSection").addClass("inactive");
-        });
-        $("#next-1").click(function () {
-            showModal();
-            $("#extraInfoSection").removeClass("inactive");
-            $("#chapterSection").addClass("inactive");
-        });
-        $("#prev-2").click(function () {
-            $("#chapterSection").removeClass("inactive");
-            $("#extraInfoSection").addClass("inactive");
-        });
-        $(".upload-btn").click(function (that) {
-            $("#picker-0").click();
-        });
     </script>
     <script type="text/javascript">
         $(function () {
-            //timepicker
-            $('.form_datetime').datetimepicker({
-                format: 'yyyy-mm-dd',
-                language: 'zh-CN',
-                startView: 2,
-                minView: 2
-            });
             //菜单的active
             $('.custom-nav .nav-active').removeClass('nav-active');
             $('.custom-nav .active').removeClass('active');
@@ -679,16 +564,6 @@
 
         });
     </script>
-    <p class="msg-block" th:if="${errorMap}">
-        <script th:if="${errorMap['msg']}" th:inline="javascript">
-            /*<![CDATA[*/
-            var msg = [[${errorMap['msg']}]] ;
-            $(function () {
-                myModalWarning(msg);
-            });
-            /*]]>*/
-        </script>
-    </p>
 </div>
 </body>
 </html>
