@@ -35,19 +35,29 @@ public class AuthorController extends ABaseController {
         this.authorService = authorService;
     }
 
-    @GetMapping({"/","/index"})
+    /**
+     * 著作者中心页面
+     * @return ModelAndView
+     */
+    @GetMapping({"","/","/index"})
     public ModelAndView index(){
         ModelAndView mv = new ModelAndView("author/index");
         //TODO 查询信息，做权限认证
         return mv;
     }
-
+    /**
+     * 著作者注册页面
+     * @return ModelAndView
+     */
     @GetMapping("/register")
     public ModelAndView register(){
         ModelAndView mv = new ModelAndView("author/register");
         return mv;
     }
-
+    /**
+     * 管理员所看的 著作者列表页面
+     * @return ModelAndView
+     */
     @RequiresRoles("admin")
     @GetMapping("/list")
     public ModelAndView list(){
@@ -148,7 +158,6 @@ public class AuthorController extends ABaseController {
         return mv;
     }
 
-
     /**
      * 注册著作者
      * @param authorRegisterReq 参数
@@ -158,7 +167,7 @@ public class AuthorController extends ABaseController {
     @PostMapping("/register")
     public ModelAndView register(@Validated AuthorRegisterReq authorRegisterReq, BindingResult bindingResult) {
         log.info("【注册著作者】 {}",authorRegisterReq);
-        ModelAndView mv = new ModelAndView("admin/author/add");
+        ModelAndView mv = new ModelAndView("author/register");
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);
 
@@ -171,10 +180,11 @@ public class AuthorController extends ABaseController {
         try {
             boolean existEmail = authorService.existEmail(authorRegisterReq.getEmail());
             if (existEmail){
-                errorMap.put("email", "该邮箱已存在");
+                errorMap.put("msg", "该邮箱已注册");
+                errorMap.put("author", authorRegisterReq);
             }else {
-                authorService.save(authorRegisterReq);
-                errorMap.put("msg", "信息提交成功，请等候管理员检查信息");
+                authorService.register(authorRegisterReq);
+                errorMap.put("msg", "信息提交成功，请登录您的邮箱激活账号");
             }
         } catch (Exception e) {
             errorMap.put("msg", "系统繁忙");
@@ -183,6 +193,17 @@ public class AuthorController extends ABaseController {
         return mv;
     }
 
+    @GetMapping("/{checkId}/active")
+    public ModelAndView active(@PathVariable Long checkId, @RequestParam String key){
+        ModelAndView mv = new ModelAndView("admin/login");
+        boolean bool = authorService.active(checkId, key);
+        if (bool){
+            mv.addObject("msg", "激活成功，请登录");
+        } else {
+            mv.addObject("msg", "激活失败，请联系管理员");
+        }
+        return mv;
+    }
     /**
      * 提交密码修改请求
      * @return ModelAndView

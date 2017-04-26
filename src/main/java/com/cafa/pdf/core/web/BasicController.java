@@ -2,6 +2,7 @@ package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
+import com.cafa.pdf.core.util.MStringUtils;
 import com.cafa.pdf.core.util.ValidateCode;
 import com.cafa.pdf.core.web.request.user.UserLoginReq;
 import org.apache.commons.io.FileUtils;
@@ -179,8 +180,7 @@ public class BasicController extends ABaseController {
 				multipartFile.transferTo(new File(directory, newFIleName));
 //				FileUtils.copyInputStreamToFile(multipartFile.getInputStream(),
 //				new File(directory,newFIleName));
-				String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-						+ request.getContextPath() + "/";
+				String basePath = MStringUtils.getBasePath(request);
 				url = basePath + "fileDownload?filename=" + newFIleName;
 			} catch (IOException e) {
 				log.error("上传错误 {}", e.getMessage());

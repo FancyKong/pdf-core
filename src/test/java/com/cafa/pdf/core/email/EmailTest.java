@@ -1,6 +1,6 @@
 package com.cafa.pdf.core.email;
 
-import com.cafa.pdf.core.service.MailService;
+import com.cafa.pdf.core.service.MailComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,19 +19,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class EmailTest {
 
     @Autowired
-    private MailService mailService;
+    private MailComponent mailComponent;
 
     private String to = "785427346@qq.com";
 
     @Test
     public void sendSimpleMail() {
-        mailService.sendSimpleMail(to, "主题：简单邮件", "测试邮件内容");
+        mailComponent.sendSimpleMail(to, "主题：简单邮件", "测试邮件内容");
     }
 
     @Test
     public void sendHtmlMail() {
         String content = "<h1>主题：html邮件</h1>";
-        mailService.sendHtmlMail(to, "主题：html邮件", content);
+        mailComponent.sendHtmlMail(to, "主题：html邮件", content);
     }
 
 }
