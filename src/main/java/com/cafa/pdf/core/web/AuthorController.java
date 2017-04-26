@@ -181,7 +181,7 @@ public class AuthorController extends ABaseController {
             boolean existEmail = authorService.existEmail(authorRegisterReq.getEmail());
             if (existEmail){
                 errorMap.put("msg", "该邮箱已注册");
-                errorMap.put("author", authorRegisterReq);
+                mv.addObject("author", authorRegisterReq);
             }else {
                 authorService.register(authorRegisterReq);
                 errorMap.put("msg", "信息提交成功，请登录您的邮箱激活账号");
@@ -196,11 +196,13 @@ public class AuthorController extends ABaseController {
     @GetMapping("/{checkId}/active")
     public ModelAndView active(@PathVariable Long checkId, @RequestParam String key){
         ModelAndView mv = new ModelAndView("admin/login");
+        Map<String, Object> errorMap = new HashMap<>();
+        mv.addObject("errorMap", errorMap);
         boolean bool = authorService.active(checkId, key);
         if (bool){
-            mv.addObject("msg", "激活成功，请登录");
+            errorMap.put("msg", "激活成功，请登录");
         } else {
-            mv.addObject("msg", "激活失败，请联系管理员");
+            errorMap.put("msg", "激活失败，请联系管理员");
         }
         return mv;
     }
