@@ -86,16 +86,15 @@ public class PdfCoreApplicationTests {
         List<ChapterSolrDoc> chapterSolrDocs = pages.getContent();
         for(ChapterSolrDoc d : chapterSolrDocs) {
             StringBuilder sb = new StringBuilder();
-            sb.append("...");
             List<HighlightEntry.Highlight> hs = pages.getHighlights(d);
             for(HighlightEntry.Highlight h  : hs) {
                 for(String s  : h.getSnipplets()) {
                     sb.append(s);
+                    System.out.println(s);
                 }
             }
-            sb.append("...");
+            System.out.println();
             d.setContent(sb.toString());
-            System.out.println(d);
         }
     }
 }

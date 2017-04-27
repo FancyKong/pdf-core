@@ -113,7 +113,9 @@ html {
     margin-left: -182px;
     width: 182px;
 }
-
+.name .child-category{
+    cursor: pointer;
+}
 .sideBar .subfieldContext {
     margin-bottom: 20px;
     padding-left: 25px;
@@ -121,7 +123,6 @@ html {
 
 .sideBar .subfieldContext li {
     margin-bottom: 5px;
-    cursor: pointer;
 }
 
 .sideBar .subfieldContext input[type=text] {

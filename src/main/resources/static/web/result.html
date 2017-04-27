@@ -72,72 +72,28 @@
                         <span class="name">游戏开发</span>
                         <span class="unit">(485)</span>
                     </li>
+                    <li>
+                        <span class="name">数据挖掘</span>
+                        <span class="unit">(9862)</span>
+                    </li>
+                    <li>
+                        <span class="name">后台开发</span>
+                        <span class="unit">(485)</span>
+                    </li>
+                    <li>
+                        <span class="name">前端开发</span>
+                        <span class="unit">(1564)</span>
+                    </li>
+                    <li>
+                        <span class="name">机器学习</span>
+                        <span class="unit">(485)</span>
+                    </li>
                     <li class="more">
                         <span class="text">更多</span>
                         <i class="moreIcon"></i>
                         </a>
                     </li>
                 </ul>
-                <!--<div class="subfield">发布时间</div>
-                <ul class="subfieldContext">
-                	<li>
-                    	<span class="name">2013年</span>
-                        <span class="unit">(9862)</span>
-                    </li>
-                    <li>
-                    	<span class="name">2012年</span>
-                        <span class="unit">(485)</span>
-                    </li>
-                    <li>
-                    	<span class="name">2011年</span>
-                        <span class="unit">(1564)</span>
-                    </li>
-                    <li>
-                    	<input type="text" />
-                        <span class="divsion">-</span>
-                        <input type="text" />
-                    </li>
-                    <li class="more define">
-                    	<a href="javascript:;">
-                        	<span class="text">自定义</span>
-                        </a>
-                    </li>
-                    
-                </ul>-->
-                <!--<div class="subfield">搜索引擎</div>
-                <ul class="subfieldContext">
-                	<li>
-                    	<span class="name">百度搜索</span>
-                    </li>
-                    <li>
-                    	<span class="name">Google</span>
-                    </li>
-                    <li>
-                    	<span class="name">360搜索</span>
-                    </li>
-                    <li>
-                    	<span class="name">搜搜</span>
-                    </li>
-                    <li class="more">
-                    	<a href="javascript:;">
-                        	<span class="text">更多</span>
-                        	<i class="moreIcon"></i>
-                        </a>
-                    </li>
-                </ul>-->
-                <!--
-                <div class="subfield">您是不是要找</div>
-                <ul class="subfieldContext">
-                	<li>
-                    	<span class="name">UI作者</span>
-                    </li>
-                    <li>
-                    	<span class="name">界面作品</span>
-                    </li>
-                </ul>
-                
-                <a href="javascript:;" class="reset">重置搜索选项</a>
-                -->
                 <div class="sideBarShowHide">
                     <a href="javascript:;" class="icon"></a>
                 </div>
@@ -326,7 +282,7 @@
 
 
     $.each($('.subfieldContext'), function (i, item) {
-        $(this).find('li:gt(5)').hide().end().find('li:last').show();
+        $(this).find('li:gt(9)').hide().end().find('li:last').show();
     });
 
     $('.subfieldContext .more').click(function (e) {
@@ -338,10 +294,10 @@
             } else {
                 $(this).parent('.subfieldContext').find('.more').removeClass('show').find('.text').text('更多');
             }
-            $(this).parent('.subfieldContext').find('li:gt(5)').hide().end().find('li:last').show();
+            $(this).parent('.subfieldContext').find('li:gt(9)').hide().end().find('li:last').show();
         } else {
             $(this).parent('.subfieldContext').find('.more').addClass('show').find('.text').text('收起');
-            $(this).parent('.subfieldContext').find('li:gt(5)').show();
+            $(this).parent('.subfieldContext').find('li:gt(9)').show();
         }
 
     });
