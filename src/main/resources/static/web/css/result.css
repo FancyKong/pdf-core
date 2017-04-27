@@ -37,7 +37,6 @@ html {
 .inputArea .searchButton {
     color: #fff;
     font-size: 2em;
-    font-weight: bold;
     position: absolute;
     left: 389px;
     top: 0;
@@ -60,7 +59,6 @@ html {
 
 /*分界区域，导航*/
 .nav {
-    margin-bottom: 24px;
     height: 35px;
     background: #fff;
     border-bottom: 1px solid #e0e0e0;
