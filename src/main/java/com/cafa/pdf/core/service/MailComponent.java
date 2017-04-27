@@ -7,6 +7,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -19,8 +20,8 @@ import java.io.File;
  * @date 2017/4/25 17:19
  */
 @Slf4j
-@Service
-public class MailService {
+@Component
+public class MailComponent {
 
     private final JavaMailSender javaMailSender;
 
@@ -28,7 +29,7 @@ public class MailService {
     private String from;
 
     @Autowired
-    public MailService(JavaMailSender javaMailSender) {
+    public MailComponent(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
