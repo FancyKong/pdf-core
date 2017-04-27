@@ -177,6 +177,9 @@ public class Treatise implements java.io.Serializable {
      */
     @Column(nullable = false)
     private String language = Language.CHN.getCode();
-
-
+    /**
+     * 点击量
+      */
+    @Column(nullable = false)
+    private Long hits = 0L;
 }

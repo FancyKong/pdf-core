@@ -132,12 +132,14 @@ public class TreatiseDTO implements java.io.Serializable {
      * 出版形式
      * @see com.cafa.pdf.core.commom.enums.PublicationMode
      */
-    @Column(nullable = false)
     private String publicationMode;
     /**
      * 语种
      * @see com.cafa.pdf.core.commom.enums.Language
      */
-    @Column(nullable = false)
     private String language;
+    /**
+     * 点击量
+     */
+    private Long hits;
 }
