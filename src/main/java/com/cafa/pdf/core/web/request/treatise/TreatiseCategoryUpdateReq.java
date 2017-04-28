@@ -17,6 +17,9 @@ public class TreatiseCategoryUpdateReq implements java.io.Serializable {
     private Long id;
 
     @Length(min = 1, max = 16, message="必须是1~16个字符")
+    private String classifiedNum;
+
+    @Length(min = 1, max = 32, message="必须是1~32个字符")
     private String name;
 
     @Length(min = 0, max = 1024, message = "{user.description}")

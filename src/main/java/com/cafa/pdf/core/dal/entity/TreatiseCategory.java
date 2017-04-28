@@ -26,6 +26,9 @@ public class TreatiseCategory implements java.io.Serializable {
 
 	private Long pid = 0L;
 
+	@Column(name = "classified_num", nullable = false)
+	private String classifiedNum;
+
 	@Column(name = "name", nullable = false)
 	private String name;
 
