@@ -143,6 +143,19 @@ public class AuthorService extends ABaseService<Author, Long> {
         return true;
     }
 
+    public boolean existUsername(String username) {
+        Author author = authorDAO.findByUsername(username);
+        if (author == null) {
+            return false;
+        }
+        if (author.getActive().equals(ActiveEnum.UN_CHECK_EMAIL.getNum())){
+            //邮箱未验证的，删除他，返回false
+            authorDAO.delete(author);
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 邮箱验证激活著作者
      * @param checkId

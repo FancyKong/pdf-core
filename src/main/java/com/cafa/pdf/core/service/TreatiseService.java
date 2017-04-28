@@ -85,7 +85,7 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
     private TreatiseDTO getTreatiseDTO(Treatise source) {
         TreatiseDTO treatiseDTO = new TreatiseDTO();
         ObjectConvertUtil.objectCopy(treatiseDTO, source);
-        treatiseDTO.setAuthor(authorDAO.findById(source.getAuthorId()).getNickname());
+        treatiseDTO.setAuthor(authorDAO.findOne(source.getAuthorId()).getNickname());
         treatiseDTO.setCategory(categoryDAO.findById(source.getId()).getName());
         treatiseDTO.setLanguage(Language.valueOf(source.getLanguage()).getDesc());
         treatiseDTO.setPublicationMode(PublicationMode.valueOf(source.getPublicationMode()).getDesc());

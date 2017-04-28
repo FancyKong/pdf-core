@@ -3,7 +3,6 @@ package com.cafa.pdf.core.dal.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nz.net.ultraq.thymeleaf.decorators.Title;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -62,7 +61,10 @@ public class Customer implements java.io.Serializable {
      * 职务
      */
     private String position;
-
+    /**
+     * 登录账号
+     */
+    private String username;
     @Column(name = "password", nullable = false, length = 40)
     private String password;
 

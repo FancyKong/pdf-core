@@ -82,10 +82,9 @@
                             <div class="form-group">
                                 <div class="col-xs-12">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                                        <input type="email" id="email" name="email" class="form-control"
-                                               placeholder="请输入邮箱"
-                                               pattern="^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+" required />
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input type="text" id="username" name="username" class="form-control"
+                                               placeholder="请登录账号" required />
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +106,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-5">
-                                    <img src="/validateCode" onclick="">
+                                    <img src="/validateCode?_index" onclick="changeCode(this)">
                                 </div>
                             </div>
 
@@ -119,7 +118,7 @@
                         </form>
 
                         <p class="text-center">
-                            <a data-dismiss="modal" data-toggle="modal" href="#registerModal">注册会员</a>
+                            <a href="/customer/register">注册会员</a>
                             <span> / </span>
                             <a data-dismiss="modal" data-toggle="modal" href="#forgotModal">忘记密码？</a>
                         </p>
@@ -131,77 +130,6 @@
         </div>
     </div>
     <!-- loginModal -->
-
-    <!-- registerModal -->
-    <div id="registerModal" class="modal fade"
-         aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" >
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header bg-primary">
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">会员注册</h4>
-                </div>
-                <div class="modal-body">
-
-                    <div class=" form">
-                        <form id="registerForm" class="form-horizontal" method="post" action="#" >
-
-                            <div class="form-group">
-                                <div class="col-xs-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                                        <input type="email" id="email1" name="email" class="form-control"
-                                               placeholder="请输入邮箱"
-                                               pattern="^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+" required />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-xs-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                        <input type="password" id="password1" name="password" class="form-control"
-                                               placeholder="请输入密码" minlength="6" required />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-xs-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                        <input type="password" id="password2" name="password" class="form-control"
-                                               placeholder="重复密码" minlength="6" required />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-xs-7">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-ok"></i></span>
-                                        <input type="text" id="code1" name="code" class="form-control"
-                                               placeholder="验证码" min="1000" max="9999" required />
-                                    </div>
-                                </div>
-                                <div class="col-xs-5">
-                                    <img src="/validateCode" onclick="">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-xs-12">
-                                    <button id="register" class="btn btn-success btn-block" type="button">注册</button>
-                                </div>
-                            </div>
-                        </form>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- registerModal -->
 
     <!-- forgotModal -->
     <div id="forgotModal" class="modal fade"
@@ -237,7 +165,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-5">
-                                    <img src="/validateCode" onclick="">
+                                    <img src="/validateCode?_index" onclick="changeCode(this)">
                                 </div>
                             </div>
 
@@ -288,5 +216,9 @@
 	});
 	
 	hideElement($('.dataList'), $('.searchInput'));
+
+	function changeCode(img){
+        $(img).attr("src","/validateCode?_" + new Date().getTime());
+    }
 </script>
 </html>

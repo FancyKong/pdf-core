@@ -49,7 +49,7 @@
                            required minlength="4" maxlength="4">
                 </div>
                 <div class="col-xs-5">
-                    <img src="/validateCode">
+                    <img src="/validateCode?_admin" onclick="changeCode(this)">
                 </div>
                 <label class="error-label" th:text="${errorMap} ? ${errorMap['validateCodeError']}"></label>
             </div>
@@ -124,6 +124,10 @@
     </script>
 </p>
 <script type="text/javascript">
+    function changeCode(img){
+        $(img).attr("src","/validateCode?_" + new Date().getTime());
+    }
+
     function isEmail(str){
         var reg=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/;
         return reg.test(str);

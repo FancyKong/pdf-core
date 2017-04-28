@@ -36,6 +36,10 @@ public class Author implements java.io.Serializable {
      */
     private String email;
     /**
+     * 登录账号
+     */
+    private String username;
+    /**
      * 密码
      */
     @JsonIgnore

@@ -182,10 +182,17 @@ public class AuthorController extends ABaseController {
             if (existEmail){
                 errorMap.put("msg", "该邮箱已注册");
                 mv.addObject("author", authorRegisterReq);
-            }else {
-                authorService.register(authorRegisterReq);
-                errorMap.put("msg", "信息提交成功，请登录您的邮箱激活账号");
+                return mv;
             }
+            boolean existUsername = authorService.existUsername(authorRegisterReq.getUsername());
+            if (existUsername){
+                errorMap.put("msg", "该登录账号已被注册，请更换");
+                mv.addObject("author", authorRegisterReq);
+                return mv;
+            }
+
+            authorService.register(authorRegisterReq);
+            errorMap.put("msg", "信息提交成功，请登录您的邮箱激活账号");
         } catch (Exception e) {
             errorMap.put("msg", "系统繁忙");
             log.error("添加失败:{}", e.getMessage());

@@ -42,7 +42,6 @@ public class CustomerController extends ABaseController {
         ModelAndView mv = new ModelAndView("admin/customer/list");
         return mv;
     }
-
     /**
      * 返回新增页面
      */
@@ -52,7 +51,6 @@ public class CustomerController extends ABaseController {
         ModelAndView mv = new ModelAndView("admin/customer/add");
         return mv;
     }
-
     /**
      * 返回修改信息页面
      */
@@ -174,6 +172,23 @@ public class CustomerController extends ABaseController {
 
         return null;
     }
-
+    /**
+     * 会员中心页面
+     * @return ModelAndView
+     */
+    @GetMapping({"","/","/index"})
+    public ModelAndView index(){
+        ModelAndView mv = new ModelAndView("customer/index");
+        return mv;
+    }
+    /**
+     * 注册页面
+     * @return ModelAndView
+     */
+    @GetMapping("/register")
+    public ModelAndView register(){
+        ModelAndView mv = new ModelAndView("customer/register");
+        return mv;
+    }
 
 }
