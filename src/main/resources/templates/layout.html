@@ -70,19 +70,19 @@
                         <span> 用户管理</span></a>
                         <ul class="sub-menu-list">
                             <p shiro:hasPermission="user:show">
-                                <li id="userLi"><a th:href="@{/user}"> 管理员列表</a></li>
+                                <li id="userLi"><a th:href="@{/user/list}"> 管理员列表</a></li>
                             </p>
                             <p shiro:hasPermission="user:show">
                                 <li id="authorLi"><a th:href="@{/author/list}"> 著作者列表</a></li>
                             </p>
                             <p shiro:hasPermission="user:show">
-                                <li id="customerLi"><a th:href="@{/customer}"> 会员列表</a></li>
+                                <li id="customerLi"><a th:href="@{/customer/list}"> 会员列表</a></li>
                             </p>
                             <p shiro:hasRole="super">
-                                <li id="roleLi"><a th:href="@{/role}"> 角色列表</a></li>
+                                <li id="roleLi"><a th:href="@{/role/list}"> 角色列表</a></li>
                             </p>
                             <p shiro:hasRole="super">
-                                <li id="permitLi"><a th:href="@{/permission}"> 权限列表</a></li>
+                                <li id="permitLi"><a th:href="@{/permission/list}"> 权限列表</a></li>
                             </p>
                             <p shiro:hasRole="super">
                                 <li id="superLi"><a th:href="@{/super}"> 权限控制</a></li>
@@ -95,8 +95,8 @@
                     <li class="menu-list" id="treatiseMenu"><a href=""><i class="fa fa-book"></i>
                         <span> 著作管理</span></a>
                         <ul class="sub-menu-list">
-                            <li id="treatiseLi"><a th:href="@{/treatise}"> 著作列表</a></li>
-                            <li id="treatise_categoryLi"><a th:href="@{/treatise_category}"> 著作类别</a></li>
+                            <li id="treatiseLi"><a th:href="@{/treatise/list}"> 著作列表</a></li>
+                            <li id="treatise_categoryLi"><a th:href="@{/treatise_category/list}"> 著作类别</a></li>
                         </ul></li>
                 </p>
 
@@ -104,7 +104,7 @@
                     <li class="menu-list" id="statisticsMenu"><a href=""><i class="fa fa-area-chart"></i>
                         <span> 统计</span></a>
                         <ul class="sub-menu-list">
-                            <li id="focusLi"><a th:href="@{/statistics}"> 专著点击量</a></li>
+                            <li id="focusLi"><a th:href="@{/statistics/list}"> 专著点击量</a></li>
                         </ul></li>
                 </p>
 

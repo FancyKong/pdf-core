@@ -35,8 +35,8 @@ public class PermissionController extends ABaseController {
         this.permissionService = permissionService;
     }
 
-    @GetMapping
-    public ModelAndView index(){
+    @GetMapping({"","/list"})
+    public ModelAndView list(){
         ModelAndView mv = new ModelAndView("admin/permission/list");
         return mv;
     }

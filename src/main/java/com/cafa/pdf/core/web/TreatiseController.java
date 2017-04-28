@@ -95,9 +95,9 @@ public class TreatiseController extends ABaseController {
         return authorService.findAll();
     }
 
-    @GetMapping
+    @GetMapping({"","/list"})
     @RequiresPermissions("treatise:show")
-    public ModelAndView show() {
+    public ModelAndView list() {
         ModelAndView mv = new ModelAndView("admin/treatise/list");
         return mv;
     }

@@ -41,9 +41,9 @@ public class UserController extends ABaseController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping({"","/list"})
     @RequiresPermissions("user:show")
-    public ModelAndView index(){
+    public ModelAndView list(){
         ModelAndView mv = new ModelAndView("admin/user/list");
         return mv;
     }

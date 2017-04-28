@@ -35,8 +35,8 @@ public class TreatiseCategoryController extends ABaseController {
         this.treatiseCategoryService = treatiseCategoryService;
     }
 
-    @GetMapping
-    public ModelAndView index(){
+    @GetMapping({"","/list"})
+    public ModelAndView list(){
         ModelAndView mv = new ModelAndView("admin/treatiseCategory/list");
         return mv;
     }

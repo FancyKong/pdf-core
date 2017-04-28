@@ -35,8 +35,8 @@ public class RoleController extends ABaseController {
         this.roleService = roleService;
     }
 
-    @GetMapping
-    public ModelAndView index(){
+    @GetMapping({"","/list"})
+    public ModelAndView list(){
         ModelAndView mv = new ModelAndView("admin/role/list");
         return mv;
     }

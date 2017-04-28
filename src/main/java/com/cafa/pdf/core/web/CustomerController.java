@@ -7,6 +7,7 @@ import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.customer.CustomerReq;
 import com.cafa.pdf.core.web.request.customer.CustomerSearchReq;
 import com.cafa.pdf.core.service.CustomerService;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,8 +36,9 @@ public class CustomerController extends ABaseController {
         this.customerService = customerService;
     }
 
-    @GetMapping
-    public ModelAndView index(){
+    @RequiresRoles("admin")
+    @GetMapping("/list")
+    public ModelAndView list(){
         ModelAndView mv = new ModelAndView("admin/customer/list");
         return mv;
     }
@@ -44,6 +46,7 @@ public class CustomerController extends ABaseController {
     /**
      * 返回新增页面
      */
+    @RequiresRoles("admin")
     @GetMapping("/add")
     public ModelAndView addForm(){
         ModelAndView mv = new ModelAndView("admin/customer/add");
@@ -53,6 +56,7 @@ public class CustomerController extends ABaseController {
     /**
      * 返回修改信息页面
      */
+    @RequiresRoles("admin")
     @GetMapping("/{customerId}/update")
     public ModelAndView updateForm(@PathVariable("customerId") Long customerId){
         ModelAndView mv = new ModelAndView("admin/customer/edit");
@@ -67,6 +71,7 @@ public class CustomerController extends ABaseController {
      * @return JSON
      * @date 2016年8月30日 下午5:30:18
      */
+    @RequiresRoles("admin")
     @GetMapping("/page")
     @ResponseBody
     public Response toPage(BasicSearchReq basicSearchReq, CustomerSearchReq customerSearchReq){
@@ -84,6 +89,7 @@ public class CustomerController extends ABaseController {
      * @param customerId ID
      * @return JSON
      */
+    @RequiresRoles("admin")
     @DeleteMapping("/{customerId}/delete")
     @ResponseBody
     public Response delete(@PathVariable("customerId") Long customerId){
@@ -101,6 +107,7 @@ public class CustomerController extends ABaseController {
      * @param customerReq 更新信息
      * @return ModelAndView
      */
+    @RequiresRoles("admin")
     @PostMapping("/update")
     public ModelAndView update(@Validated CustomerReq customerReq, BindingResult bindingResult){
 
@@ -134,6 +141,7 @@ public class CustomerController extends ABaseController {
      * @param customerReq 保存的信息
      * @return ModelAndView
      */
+    @RequiresRoles("admin")
     @PostMapping("/save")
     public ModelAndView save(@Validated CustomerReq customerReq, BindingResult bindingResult){
         log.info("start to handle register param = {}",customerReq);
@@ -160,6 +168,7 @@ public class CustomerController extends ABaseController {
      * 提交密码修改请求
      * @return ModelAndView
      */
+    @RequiresAuthentication
     @PostMapping("/modifyPassword")
     public ModelAndView modifyPassword() {
 

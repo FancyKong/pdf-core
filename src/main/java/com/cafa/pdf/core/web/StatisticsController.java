@@ -22,10 +22,12 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("statistics")
 public class StatisticsController {
 
-    @GetMapping
+    @GetMapping({"","/list"})
     @RequiresPermissions("statistics:show")
-    public ModelAndView show(){
+    public ModelAndView list(){
         ModelAndView modelAndView = new ModelAndView("admin/statistics/list");
         return modelAndView;
     }
+
+
 }
