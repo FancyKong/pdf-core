@@ -4,13 +4,13 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 /**
- * 著作类别保存的参数
+ * 著作类别搜索
  * Created by Cherish on 2017/2/6.
  */
 @Data
-public class TreatiseCategorySaveReq implements java.io.Serializable {
+public class TreatiseCategorySearchReq implements java.io.Serializable {
 
-    private static final long serialVersionUID = 9170373893193352781L;
+    private static final long serialVersionUID = -6549926745989510926L;
 
     @Length(min = 1, max = 16, message="必须是1~16个字符")
     private String classifiedNum;
