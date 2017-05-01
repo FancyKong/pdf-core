@@ -53,9 +53,15 @@
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="input-group">
-                                    <span class="input-group-addon"> <label for="mtime">年月日：</label>
-                                    </span> <input name="mtime" id="mtime" type="text"
-                                                   class="form-control" placeholder="年月日">
+                                    <span class="input-group-addon">
+                                        <select name="ymd">
+                                            <option value="y">年</option>
+                                            <option value="m">月</option>
+                                            <option value="d">日</option>
+                                        </select>
+                                    </span>
+                                    <input name="mtime" id="mtime" type="text"
+                                           class="form-control" placeholder="年、月或日期来查询">
                                 </div>
                             </div>
 
@@ -185,6 +191,13 @@
             $('.custom-nav .active').removeClass('active');
             $("#statisticsMenu").addClass("nav-active");
             $("#focusLi").addClass("active");
+
+            $('#mtime').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                startView: 2,
+                minView: 2
+            });
         });
 
     </script>
