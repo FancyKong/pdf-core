@@ -76,7 +76,7 @@
         <div class="text-center">
             <a href="/author/register"> 著作者申请</a>
             <span>/</span>
-            <a data-toggle="modal" href="#forgotPwdModal"> 忘记密码？</a>
+            <a data-toggle="modal" href="#retrievePwdModal"> 找回密码</a>
         </div>
     </form>
 
@@ -84,8 +84,8 @@
 
 </div>
 <!-- Modal -->
-<div id="forgotPwdModal" class="modal fade" aria-hidden="true"
-     aria-labelledby="forgotPwdModalLabel" role="dialog" tabindex="-1" >
+<div id="retrievePwdModal" class="modal fade" aria-hidden="true"
+     aria-labelledby="retrievePwdModalLabel" role="dialog" tabindex="-1" >
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -134,7 +134,7 @@
     }
 
     $(function () {
-        var modal = $("#forgotPwdModal");
+        var modal = $("#retrievePwdModal");
         var btn = modal.find('.modal-footer .btn-primary');
         $(btn).unbind();
         $(btn).on("click", function () {
@@ -147,11 +147,11 @@
 
                 //TODO 做Ajax 提交邮箱
                 window.open("/overridePwd");
-                /*$.post("/forgotPwd", "email="+email, function(result){
+                /*$.post("/retrievePwd", "email="+email, function(result){
                     if(result.success){
 
                     }else {
-                        forgotPwdModalFail(result.message);
+                        retrievePwdModalFail(result.message);
                     }
                 });*/
             }else {
