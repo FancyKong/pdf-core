@@ -171,6 +171,16 @@ public abstract class ABaseService<E, PK extends Serializable> {
      */
     public Page<E> findAllBySearchParams(Map<String, Object> searchParams, int pageNumber, int pageSize) {
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+        return findAllBySearchParams(searchParams, pageRequest);
+    }
+
+    /**
+     * 带参数的分页查询
+     * @param searchParams 搜索条件
+     * @param pageRequest 搜索请求
+     * @return Page<E>
+     */
+    public Page<E> findAllBySearchParams(Map<String, Object> searchParams, PageRequest pageRequest) {
         Specification<E> spec = buildSpecification(searchParams);
         log.debug("findAllBySearchParams:{}",searchParams.toString());
         return this.getEntityDAO().findAll(spec, pageRequest);

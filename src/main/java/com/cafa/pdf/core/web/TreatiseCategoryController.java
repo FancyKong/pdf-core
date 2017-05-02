@@ -4,6 +4,7 @@ import com.cafa.pdf.core.commom.dto.TreatiseCategoryDTO;
 import com.cafa.pdf.core.dal.entity.TreatiseCategory;
 import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.treatise.TreatiseCategorySearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseCategorySaveReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseCategoryUpdateReq;
 import com.cafa.pdf.core.web.response.Response;
@@ -69,9 +70,9 @@ public class TreatiseCategoryController extends ABaseController {
      */
     @GetMapping("/page")
     @ResponseBody
-    public Response toPage(BasicSearchReq basicSearchReq){
+    public Response toPage(BasicSearchReq basicSearchReq, TreatiseCategorySearchReq treatiseCategorySearchReq){
         try {
-            Page<TreatiseCategoryDTO> page = treatiseCategoryService.findAll(basicSearchReq);
+            Page<TreatiseCategoryDTO> page = treatiseCategoryService.findAll(basicSearchReq, treatiseCategorySearchReq);
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
             log.error("获取列表失败: {}", e.getMessage());

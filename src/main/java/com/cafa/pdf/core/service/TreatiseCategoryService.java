@@ -7,9 +7,11 @@ import com.cafa.pdf.core.dal.entity.TreatiseCategory;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseCategorySaveReq;
+import com.cafa.pdf.core.web.request.treatise.TreatiseCategorySearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseCategoryUpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +33,13 @@ public class TreatiseCategoryService extends ABaseService<TreatiseCategory, Long
         return treatiseCategoryDAO;
     }
 
-    public Page<TreatiseCategoryDTO> findAll(BasicSearchReq basicSearchReq) {
+    public Page<TreatiseCategoryDTO> findAll(BasicSearchReq basicSearchReq, TreatiseCategorySearchReq treatiseCategorySearchReq) {
 
         int pageNumber = basicSearchReq.getStartIndex() / basicSearchReq.getPageSize() + 1;
-        Page<TreatiseCategory> treatiseCategoryPage = this.findAll(pageNumber, basicSearchReq.getPageSize());
+        PageRequest pageRequest = new PageRequest(pageNumber - 1, basicSearchReq.getPageSize(), null);
+
+        Page<TreatiseCategory> treatiseCategoryPage = super.findAllBySearchParams(
+                buildSearchParams(treatiseCategorySearchReq), pageRequest);
 
         return treatiseCategoryPage.map(this::getTreatiseCategoryDTO);
     }

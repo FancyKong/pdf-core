@@ -201,5 +201,15 @@ public class BasicController extends ABaseController {
 				FileUtils.readFileToByteArray(file),
 				headers, HttpStatus.OK);
 	}
+
+    /**
+     * TODO 暂时这样写，这个更改密码的链接会发送到邮箱，点击链接验证跳转来实现
+     * 忘记密码后，重写密码的页面
+     */
+    @GetMapping(value = "/overridePwd")
+    public String forgotPwd(){
+        return "overridePwd";
+    }
+
 	
 }

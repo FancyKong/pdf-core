@@ -42,9 +42,9 @@
 			"columns" : [
 			    CONSTANT.DATA_TABLES.COLUMN.NO,
 			    {
-					"data" : 'name'
+					"data" : 'classifiedNum'
 				}, {
-					"data" : 'description'
+					"data" : 'name'
 				},
 				CONSTANT.DATA_TABLES.COLUMN.OPERATION
 				],
@@ -54,6 +54,35 @@
 					"targets" : "_all"
 				}]
 		}));//end $('#otable').DataTable($.extend({
+
+        //查询
+        $("#btn_search").click(function(){
+            oTable.draw();
+        });
+        //重置
+        $("#btn_reset").click(function(){
+            $("#classifiedNum").val("");
+            $("#name").val("");
+            oTable.draw();
+        });
+        //刷新
+        $("#btn_fresh").click(function(){
+            oTable.draw(false);
+        });
+
+        // 回车键事件
+        $("#classifiedNum").keypress(function(e) {
+            if(e.keyCode == 13) {
+                $("#btn_search").click();
+            }
+            return;
+        });
+        $("#name").keypress(function(e) {
+            if(e.keyCode == 13) {
+                $("#btn_search").click();
+            }
+            return;
+        });
 		
 	});
 
@@ -67,7 +96,7 @@
 			if (data.order && data.order.length && data.order[0]) {
 				switch (data.order[0].column) {
 				case 1:
-					param.orderColumn = "name";
+					param.orderColumn = "classifiedNum";
 					break;
 				default:
 					param.orderColumn = "id";
@@ -80,6 +109,8 @@
 			if (treatise_categoryManage.fuzzySearch) {//模糊查询
 				param.fuzzy = $("#fuzzy-search").val();
 			} else {//非模糊查询
+                param.classifiedNum = $("#classifiedNum").val();
+                param.name = $("#name").val();
 			}
 			//组装分页参数
 			param.startIndex = data.start;
