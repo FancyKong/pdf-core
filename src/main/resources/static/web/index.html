@@ -222,5 +222,11 @@
 	function changeCode(img){
         $(img).attr("src","/validateCode?_" + new Date().getTime());
     }
+
+    // 登录
+    $("#login").on("click", function () {
+        //TODO
+        window.open("/customer");
+    });
 </script>
 </html>

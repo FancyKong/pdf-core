@@ -1,4 +1,4 @@
-package com.cafa.pdf.core.web.request.user;
+package com.cafa.pdf.core.web.request;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class UserLoginReq implements java.io.Serializable {
+public class LoginReq implements java.io.Serializable {
 
     private static final long serialVersionUID = 5776046626749774423L;
     /**
@@ -38,5 +38,7 @@ public class UserLoginReq implements java.io.Serializable {
 
     @Pattern(regexp="^(?![0-9]+$)[0-9A-Za-z]{6,16}$", message="密码必须是6~16位字母和数字的组合")
     private String password;
+
+    private String loginType;
 
 }

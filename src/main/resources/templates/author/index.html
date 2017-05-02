@@ -56,7 +56,7 @@
                                 <ul class="p-info">
                                     <li>
                                         <div class="title">姓名</div>
-                                        <div class="desk">陈小明</div>
+                                        <div class="desk" th:text="${author.nickname}">陈小明</div>
                                     </li>
                                     <li>
                                         <div class="title">性别</div>
@@ -64,31 +64,31 @@
                                     </li>
                                     <li>
                                         <div class="title">出生年份</div>
-                                        <div class="desk">1970</div>
+                                        <div class="desk" th:text="${author.birthYear}">1970</div>
                                     </li>
                                     <li>
                                         <div class="title">籍贯</div>
-                                        <div class="desk">广东广州</div>
+                                        <div class="desk" th:text="${author.birthPlace}">广东广州</div>
                                     </li>
                                     <li>
                                         <div class="title">单位</div>
-                                        <div class="desk">华南理工大学</div>
+                                        <div class="desk" th:text="${author.company}">华南理工大学</div>
                                     </li>
                                     <li>
                                         <div class="title">职称</div>
-                                        <div class="desk">教授</div>
+                                        <div class="desk" th:text="${author.job}">教授</div>
                                     </li>
                                     <li>
                                         <div class="title">职务</div>
-                                        <div class="desk">副院长</div>
+                                        <div class="desk" th:text="${author.duties}">副院长</div>
                                     </li>
                                     <li>
                                         <div class="title">手机号码</div>
-                                        <div class="desk">1888888888</div>
+                                        <div class="desk" th:text="${author.telephone}">1888888888</div>
                                     </li>
                                     <li>
                                         <div class="title">个人邮箱</div>
-                                        <div class="desk">823382133@qq.com</div>
+                                        <div class="desk" th:text="${author.email}">823382133@qq.com</div>
                                     </li>
                                 </ul>
                             </div>

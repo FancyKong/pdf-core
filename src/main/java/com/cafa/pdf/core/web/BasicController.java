@@ -3,12 +3,14 @@ package com.cafa.pdf.core.web;
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.util.MStringUtils;
+import com.cafa.pdf.core.util.SessionUtil;
 import com.cafa.pdf.core.util.ValidateCode;
-import com.cafa.pdf.core.web.request.user.UserLoginReq;
+import com.cafa.pdf.core.web.request.LoginReq;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
@@ -50,6 +52,7 @@ public class BasicController extends ABaseController {
     /**
      * 管理页面
      */
+    @RequiresRoles("admin")
     @GetMapping(value = "admin")
     public String admin(){
         return "admin/introduce";
@@ -67,12 +70,12 @@ public class BasicController extends ABaseController {
 	 * 执行登陆
 	 */
 	@PostMapping(value = "/login")
-	public ModelAndView login(@Validated UserLoginReq loginReq, BindingResult bindingResult, HttpServletRequest request){
-
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("admin/login");
+	public ModelAndView login(@Validated LoginReq loginReq, BindingResult bindingResult, HttpServletRequest request){
+        log.info("【执行登陆】 {}", loginReq);
+        ModelAndView mv = new ModelAndView();
+		mv.setViewName("admin/login");
         Map<String, Object> errorMap = new HashMap<>();
-        modelAndView.addObject("errorMap", errorMap);
+        mv.addObject("errorMap", errorMap);
 
 		String code = (String) request.getSession().getAttribute("validateCode");
 		String submitCode = WebUtils.getCleanParam(request, "validateCode");
@@ -81,59 +84,66 @@ public class BasicController extends ABaseController {
 			log.debug("验证码不正确");
             errorMap.put("validateCodeError", "验证码不正确");
             //添加上表单输入数据返回给页面
-            modelAndView.addObject("usernameInput", loginReq.getUsername());
-            modelAndView.addObject("passwordInput", loginReq.getPassword());
-			return modelAndView;
+            mv.addObject("loginReq", loginReq);
+			return mv;
 		}
-
 		//表单验证是否通过
 		if (bindingResult.hasErrors()) {
 			errorMap.putAll(getErrors(bindingResult));
             //添加上表单输入数据返回给页面
-            modelAndView.addObject("usernameInput", loginReq.getUsername());
-            modelAndView.addObject("passwordInput", loginReq.getPassword());
+			mv.addObject("loginReq", loginReq);
+			return mv;
+		}
+		// 保存到session中，按照类别做登录
+        SessionUtil.add("loginType", loginReq.getLoginType());
+        // 实现登陆
+		UsernamePasswordToken token = new UsernamePasswordToken(
+				loginReq.getUsername(), CryptographyUtil.cherishSha1(loginReq.getPassword()));
+		// token.setRememberMe(true);
+		Subject subject = SecurityUtils.getSubject();
 
-		}else {
-			//实现登陆
-			UsernamePasswordToken token = new UsernamePasswordToken(
-					loginReq.getUsername(), CryptographyUtil.cherishSha1(loginReq.getPassword()));
-			//token.setRememberMe(true);
-			Subject subject = SecurityUtils.getSubject();
+		try {
+			// subject.login(token);就会调用 ShiroRealm的 doGetAuthenticationInfo方法
+			subject.login(token);
 
-			try {
-				//subject.login(token);就会调用 ShiroRealm的 doGetAuthenticationInfo方法
-				subject.login(token);
+			Session session = subject.getSession();
+			session.setAttribute("msg", "登陆成功");
+			session.setAttribute("username", ShiroUserUtil.getUsername());
+			session.setAttribute("nickname", ShiroUserUtil.getNickname());
 
-				Session session = subject.getSession();
-				session.setAttribute("msg", "登陆成功");
-				session.setAttribute("username", ShiroUserUtil.getUsername());
-				session.setAttribute("nickname", ShiroUserUtil.getNickname());
-
-			} catch (UnknownAccountException uae) {
-				log.debug("账户不存在!");
-				errorMap.put("username","账户或密码错误，请重新输入");
-			} catch (IncorrectCredentialsException ice) {
-				errorMap.put("username","账户或密码错误，请重新输入");
-				log.debug("密码不正确!");
-			} catch (LockedAccountException lae) {
-				log.debug("账户被冻结!");
-				errorMap.put("username","该账户被冻结");
-			}catch(ExcessiveAttemptsException eae){
-				log.debug("错误次数过多");
-				errorMap.put("username","密码错误次数过多，请稍后再试");
-			} catch (AuthenticationException ae) {
-				token.clear();
-				errorMap.put("username","系统认证错误");
-				log.debug("认证错误!");
-			}
-
-			if (subject.isAuthenticated()){
-				log.debug("登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
-				modelAndView.setViewName("redirect:/admin");
-			}
+		} catch (UnknownAccountException uae) {
+			log.debug("【执行登陆】 账户不存在!");
+			errorMap.put("username","账户或密码错误，请重新输入");
+		} catch (IncorrectCredentialsException ice) {
+			log.debug("【执行登陆】 密码不正确!");
+			errorMap.put("username","账户或密码错误，请重新输入");
+		} catch (LockedAccountException lae) {
+			log.debug("【执行登陆】 账户被冻结!");
+			errorMap.put("username","该账户被冻结");
+		}catch(ExcessiveAttemptsException eae){
+			log.debug("【执行登陆】 错误次数过多");
+			errorMap.put("username","密码错误次数过多，请稍后再试");
+		} catch (AuthenticationException ae) {
+			log.debug("【执行登陆】 认证错误!");
+			errorMap.put("username","系统认证错误");
+			token.clear();
 		}
 
-		return modelAndView;
+		if (subject.isAuthenticated()){
+			log.debug("【执行登陆】 登录认证通过(这里可以进行一些系统参数初始化操作)");
+
+            String loginType = (String) SessionUtil.get("loginType");
+            if ("AUTHOR".equals(loginType)){
+                mv.setViewName("redirect:/author");
+            }else if ("ADMIN".equals(loginType)){
+                mv.setViewName("redirect:/admin");
+            }else {
+                mv.setViewName("redirect:/login");
+            }
+
+		}
+
+		return mv;
 	}
 
 	@GetMapping("/403")

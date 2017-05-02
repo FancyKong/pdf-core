@@ -17,6 +17,7 @@ import com.cafa.pdf.core.web.request.author.AuthorRegisterReq;
 import com.cafa.pdf.core.web.request.author.AuthorSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorUpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Scope("prototype")
 @Service
 @Transactional(readOnly = true)
 public class AuthorService extends ABaseService<Author, Long> {
@@ -49,6 +51,10 @@ public class AuthorService extends ABaseService<Author, Long> {
 
     public Author findByTelephone(String telephone) {
         return authorDAO.findByTelephone(telephone);
+    }
+
+    public Author findByUsername(String username) {
+        return authorDAO.findByUsername(username);
     }
 
     public Long getCount() {

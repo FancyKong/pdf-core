@@ -1,6 +1,7 @@
 package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.dto.AuthorDTO;
+import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.service.AuthorService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
@@ -39,10 +40,14 @@ public class AuthorController extends ABaseController {
      * 著作者中心页面
      * @return ModelAndView
      */
+    @RequiresRoles("author")
     @GetMapping({"","/","/index"})
     public ModelAndView index(){
         ModelAndView mv = new ModelAndView("author/index");
-        //TODO 查询信息，做权限认证
+        // TODO 查询信息，以及个人的著作信息
+        Author author = authorService.findByUsername(ShiroUserUtil.getUsername());
+        mv.addObject(author);
+
         return mv;
     }
     /**
