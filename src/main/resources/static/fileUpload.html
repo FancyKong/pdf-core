@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>文件上传</title>
+    <script src="/js/jquery-1.12.4.min.js" type="text/javascript"></script>
+    <script src="/js/ajaxfileupload.js" type="text/javascript"></script>
+    <script>
+        $(function () {
+            $(":button").click(function () {
+                if ($("#pdf").val().length > 0) {
+                    ajaxFileUpload();
+                }
+                else {
+                    alert("请选择图片");
+                }
+            })
+        });
+        function ajaxFileUpload() {
+            $.ajaxFileUpload(
+                {
+                    url: '/imageUpload', //用于文件上传的服务器端请求地址
+                    type: 'post',
+                    secureuri: false, //一般设置为false
+                    fileElementId: 'pdf', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                    data : {
+                        other : "附带数据"
+                    },
+                    dataType: 'JSON', //返回值类型
+                    success: function (data, status)  //服务器成功响应处理函数
+                    {
+                        alert(data);
+                        $("#img1").attr("src", data);
+                        if (typeof (data.error) != 'undefined') {
+                            if (data.error != '') {
+                                alert(data.error);
+                            } else {
+                                alert(data.msg);
+                            }
+                        }
+                    },
+                    error: function (data, status, e)//服务器响应失败处理函数
+                    {
+                        alert(e);
+                    }
+                }
+            );
+            return false;
+        }
+    </script>
+</head>
+<body>
+<p><input type="file" id="pdf" name="pdf"/></p>
+<input type="button" value="上传"/>
+<p><img id="img1" alt="上传成功啦" src=""/></p>
+</body>
+</html>

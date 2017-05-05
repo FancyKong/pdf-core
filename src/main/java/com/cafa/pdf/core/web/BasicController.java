@@ -171,34 +171,37 @@ public class BasicController extends ABaseController {
 	//文件存放路径
 	private static final String FILE_PATH = "F:/cherish";
 
-	@PostMapping("/imageUpload")
-	@ResponseBody
-	public String upload(@RequestParam("wangEditorH5File") MultipartFile multipartFile, HttpServletRequest request){
-		String url = "";
-		if (!multipartFile.isEmpty()) {
-			File directory = new File(FILE_PATH);
+    @PostMapping("/imageUpload")
+    @ResponseBody
+    public String upload(@RequestParam("pdf") MultipartFile multipartFile, String other,
+                         HttpServletRequest request) {
+        log.info("【文件上传】 other:{}", other);
 
-			if (!directory.exists()) {
-				directory.mkdirs();
-			}
+        String url = "";
+        if (!multipartFile.isEmpty()) {
+            File directory = new File(FILE_PATH);
 
-			try {
-				String originalFilename = multipartFile.getOriginalFilename();
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
 
-				String newFIleName = System.currentTimeMillis()//UUID.randomUUID().toString()
-						+ originalFilename.substring(originalFilename.lastIndexOf("."));
-				multipartFile.transferTo(new File(directory, newFIleName));
+            try {
+                String originalFilename = multipartFile.getOriginalFilename();
+
+                String newFIleName = System.currentTimeMillis()//UUID.randomUUID().toString()
+                        + originalFilename.substring(originalFilename.lastIndexOf("."));
+                multipartFile.transferTo(new File(directory, newFIleName));
 //				FileUtils.copyInputStreamToFile(multipartFile.getInputStream(),
 //				new File(directory,newFIleName));
-				String basePath = MStringUtils.getBasePath(request);
-				url = basePath + "fileDownload?filename=" + newFIleName;
-			} catch (IOException e) {
-				log.error("上传错误 {}", e.getMessage());
-			}
+                String basePath = MStringUtils.getBasePath(request);
+                url = basePath + "fileDownload?filename=" + newFIleName;
+            } catch (IOException e) {
+                log.error("上传错误 {}", e);
+            }
 
-		} // end if
-		return url;
-	}
+        } // end if
+        return url;
+    }
 
 	@GetMapping("/fileDownload")
 	public ResponseEntity<byte[]> downloadImage(@RequestParam("filename") String filename, HttpServletResponse response) throws IOException {
