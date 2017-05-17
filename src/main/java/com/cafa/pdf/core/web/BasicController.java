@@ -49,7 +49,7 @@ public class BasicController extends ABaseController {
         if ("cafa".equals(code)) {
             System.exit(0);
         }
-        return "index";
+        return "redirect:/";
     }
 
     /**
@@ -57,7 +57,7 @@ public class BasicController extends ABaseController {
      */
     @GetMapping(value = {"/","/index"})
     public String index(){
-        return "index";
+        return "redirect:/web/index.html";
     }
 
     /**
