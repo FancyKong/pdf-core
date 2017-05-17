@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      layout:decorate="layout">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Cherish">
+    <title>管理中心</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <!-- page heading start-->
+    <div class="page-heading">
+        <h3>管理中心</h3>
+        <ul class="breadcrumb">
+            <li class="active"> </li>
+        </ul>
+        <div class="state-info">
+            <section class="panel">
+                <div class="panel-body">
+                    <div class="summary">
+                        <span>专著收录量</span>
+                        <h3 class="red-txt">5,600</h3>
+                    </div>
+                    <div id="income" class="chart-bar"></div>
+                </div>
+            </section>
+            <section class="panel">
+                <div class="panel-body">
+                    <div class="summary">
+                        <span>会员注册量</span>
+                        <h3 class="green-txt">45,600</h3>
+                    </div>
+                    <div id="expense" class="chart-bar"></div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page heading end-->
+
+    <!--body wrapper start-->
+    <div class="wrapper">
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="profile-pic text-center">
+                                    <img alt="个人图像" src="/images/user-avatar.png">
+                                </div>
+                                <div style="height: 50px;"></div>
+
+                                <ul class="p-info">
+                                    <li>
+                                        <div class="title">呢称</div>
+                                        <div class="desk" th:text="${#session.getAttribute('nickname')}">Cherish</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">性别</div>
+                                        <div class="desk">男</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">职位</div>
+                                        <div class="desk">管理员</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">生日</div>
+                                        <div class="desk">1970-7-7</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">年龄</div>
+                                        <div class="desk">60</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">政治面貌</div>
+                                        <div class="desk">中共党员</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">邮箱</div>
+                                        <div class="desk">823382133@qq.com</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- <div class="col-md-4"> -->
+
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="profile-desk">
+                                    <h1>广东科技著作出版服务平台</h1>
+                                    <span class="designation">著作管理系统</span>
+                                    <p>
+                                        为贯彻国家科技政策和出版方针，推动我省创新驱动发展战略实施，省科技厅2015年新增了广东科学技术学术专著项目。
+                                        申请的项目获得资助出版后两个月内向广东科技专著出版服务平台提供10本专著和电子版。广东科技专著平台若收集到这些数据，暂时还没有共享资源的平台，为了更好地整合、分析和共享这些数据，我平台将建立一个数据库进行管理。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row state-overview">
+                    <a th:href="@{/customer/list}" style="color: #fff">
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                            <div class="panel purple">
+                                <div class="symbol">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <div class="state-value">
+                                    <div class="value">会员管理</div>
+                                    <div class="title">Customer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a th:href="@{/user/list}" style="color: #fff">
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                            <div class="panel red">
+                                <div class="symbol">
+                                    <i class="fa fa-user"></i>
+                                </div>
+                                <div class="state-value">
+                                    <div class="value">管理员</div>
+                                    <div class="title">Administrator</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="row state-overview">
+                    <a th:href="@{/treatise/list}" style="color: #fff">
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                            <div class="panel blue">
+                                <div class="symbol">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="state-value">
+                                    <div class="value">著作管理</div>
+                                    <div class="title">Treatise</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a th:href="@{/statistics/list}" style="color: #fff">
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                            <div class="panel green">
+                                <div class="symbol">
+                                    <i class="fa fa-area-chart"></i>
+                                </div>
+                                <div class="state-value">
+                                    <div class="value">专著点击量</div>
+                                    <div class="title">Statics</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div><!-- <div class="col-md-8"> -->
+
+        </div>
+    </div>
+    <!--body wrapper end-->
+    <div style="height: 100px;"></div>
+
+</div>
+
+<!--将被layout引入的js-->
+<div layout:fragment="javascript">
+    <script>
+        $("#introduceLi").addClass("active");
+    </script>
+
+</div>
+
+</body>
+</html>

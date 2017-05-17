@@ -9,6 +9,9 @@ Author: Cherish
 /*
 @import url(http://fonts.useso.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
 */
+.error{
+    border: #e9151c;
+}
 .field-error{
     border: #e9151c;
 }
@@ -128,8 +131,8 @@ hr {
     z-index: 2;
 }
 
-.form-signin input[type="text"], .form-signin input[type="password"] {
-    margin-bottom: 15px;
+.form-signin input {
+    /*margin-bottom: 15px;*/
     border-radius: 5px;
     -webkit-border-radius: 5px;
     border: 1px solid #eaeaec;
@@ -2621,7 +2624,7 @@ input:focus:invalid:focus, textarea:focus:invalid:focus, select:focus:invalid:fo
 }
 
 .widget-container .stepy-titles li, .stepy-titles li {
-    background: #fff;
+    background: #8e8e8e;
     margin-right: 15px;
     margin-bottom: 15px;
     border-radius: 5px;

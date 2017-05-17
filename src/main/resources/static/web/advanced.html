@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>高级检索</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="css/advanced.css" rel="stylesheet" type="text/css"/>
+    <link href="/tools/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="container">
+    <div id="hd" class="ue-clear">
+        <div class="logo"></div>
+        <div class="inputArea">
+            <input type="text" class="searchInput"/>
+            <input type="button" class="searchButton" value="搜索"/>
+            <a class="back" href="index.html">返回主页</a>
+        </div>
+    </div>
+    <div class="divsion"></div>
+    <div id="bd">
+        <div id="main">
+            <div class="subfield">高级搜索</div>
+            <div class="subfieldContent">
+                <!--搜索范围-->
+                <dl class="ue-clear advanceItem">
+                    <dd>
+                        <label>语种</label>
+                        <span>选择要搜索的著作语种</span>
+                    </dd>
+                    <dt class="fillInArea">
+                    	<span class="choose">
+                            <input name="scope" type="checkbox" checked="checked">
+                            <span class="text">中文</span>
+                        </span>
+                        <span class="choose">
+                        <input type="checkbox" name="scope">
+                            <span class="text">英文</span>
+                        </span>
+                        <input type="checkbox" name="scope">
+                            <span class="text">其他</span>
+                        </span>
+                    </dt>
+                </dl>
+
+                <!--多属性检索-->
+                <dl class="ue-clear advanceItem keyWords">
+                    <dd>
+                        <label>多属性检索</label>
+                        <div class="tips">
+                            <p class="tip"><span class="impInfo">书名:</span></p>
+                            <p class="tip"><span class="impInfo">作者:</span></p>
+                            <p class="tip"><span class="impInfo">出版社:</span></p>
+                        </div>
+                    </dd>
+                    <dt class="fillInArea">
+                    <p><input type="text"/></p>
+                    <p><input type="text"/></p>
+                    <p><input type="text"/></p>
+                    </dt>
+                </dl>
+
+                <!--著作类别-->
+                <dl class="ue-clear advanceItem part">
+                    <dd>
+                        <label>著作类别</label>
+                        <span>选择要指定的著作类别</span>
+                    </dd>
+                    <dt class="fillInArea">
+                        <select style="width: 150px;">
+                            <option>请选择</option>
+                            <option>马恩列斯毛邓理论</option>
+                            <option>哲学、宗教</option>
+                        </select>
+                        <select style="width: 150px;">
+                            <option>请选择</option>
+                            <option>毛泽东思想</option>
+                            <option>邓小平理论</option>
+                            <option>三个代表重要思想</option>
+                        </select>
+                    </dt>
+                </dl>
+
+                <!--年份-->
+                <dl class="ue-clear advanceItem part">
+                    <dd>
+                        <label>年份</label>
+                        <span>选择要指定的出版年份</span>
+                    </dd>
+                    <dt class="fillInArea">
+                        <select style="width: 150px">
+                            <option>2009</option>
+                            <option>2010</option>
+                            <option>2011</option>
+                            <option>2012</option>
+                            <option>2013</option>
+                        </select>
+                    </dt>
+                </dl>
+                <div class="button">
+                    <input type="button" class="search" value="立刻搜索"
+                           onclick="javascript:window.location='result.html'"/>
+                </div>
+            </div>
+        </div><!-- End of main -->
+    </div><!--End of bd-->
+
+
+</div>
+<div id="foot">Copyright &copy;cafa.com 版权所有</div>
+</body>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="/tools/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript">
+    $('.defineRadio input[type=radio]').click(function (e) {
+        if ($(this).prop('checked')) {
+            $('.define').show();
+        }
+    });
+
+    $('.time input[type=radio]').click(function () {
+        if (!$(this).parent().hasClass('defineRadio')) {
+            $('.define').hide();
+        }
+    });
+
+    $('.part input[type=checkbox]:gt(3)').parent().hide();
+    $('.part .more').toggle(function (e) {
+        $(this).addClass('show').find('.text').text('收起');
+        $('.part input[type=checkbox]:gt(3)').parent().show();
+    }, function () {
+        $(this).removeClass('show').find('.text').text('更多');
+        $('.part input[type=checkbox]:gt(3)').parent().hide();
+    });
+
+    setHeight();
+    $(window).resize(function () {
+        setHeight();
+    });
+
+    function setHeight() {
+        if ($('#container').outerHeight() < $(window).height()) {
+            $('#container').height($(window).height() - 33);
+        }
+    }
+</script>
+</html>

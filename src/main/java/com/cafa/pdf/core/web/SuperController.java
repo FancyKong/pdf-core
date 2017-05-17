@@ -1,7 +1,7 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.dal.request.su.SuperRolePermissionReq;
-import com.cafa.pdf.core.dal.request.su.SuperUserRoleReq;
+import com.cafa.pdf.core.web.request.su.SuperRolePermissionReq;
+import com.cafa.pdf.core.web.request.su.SuperUserRoleReq;
 import com.cafa.pdf.core.service.SuperService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import java.util.Map;
 
 
 /**
+ * 超级用户控制器
  * Created by Cherish on 2017/1/6.
  */
 @Controller
@@ -27,8 +28,12 @@ import java.util.Map;
 @RequiresRoles("super")
 public class SuperController extends ABaseController {
 
+    private final SuperService superService;
+
     @Autowired
-    private SuperService superService;
+    public SuperController(SuperService superService) {
+        this.superService = superService;
+    }
 
     @ModelAttribute
     public void roles(Model model) {
@@ -69,7 +74,6 @@ public class SuperController extends ABaseController {
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);
 
-
         if(superUserRoleReq == null || superUserRoleReq.getUsername() == null){
             errorMap.put("msg", "数据错误");
             return mv;
@@ -77,19 +81,15 @@ public class SuperController extends ABaseController {
 
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
-
         }else {
             try {
                 superService.updateUserRole(superUserRoleReq);
-
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
-                e.printStackTrace();
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 
@@ -109,23 +109,19 @@ public class SuperController extends ABaseController {
             errorMap.put("msg", "数据错误");
             return mv;
         }
-        LOGGER.debug("superRolePermissionReq = " + superRolePermissionReq);
+        log.debug("superRolePermissionReq = " + superRolePermissionReq);
 
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
-
         }else {
             try {
                 superService.updateRolePermission(superRolePermissionReq);
-
                 errorMap.put("msg", "修改角色权限成功");
             } catch (Exception e) {
-                e.printStackTrace();
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 

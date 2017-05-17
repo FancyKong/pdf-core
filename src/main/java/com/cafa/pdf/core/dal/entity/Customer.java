@@ -22,14 +22,50 @@ public class Customer implements java.io.Serializable {
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
-
-    @Column(name = "nickname", nullable = false, length = 32)
+    /**
+     * 姓名
+     */
+    @Column(name = "name", nullable = false, length = 32)
     private String nickname;
-
+    /**
+     * 出生年
+     */
+    private int birthYear;
+    /**
+     * 性别
+     */
+    private String gender;
+    /**
+     * 电话
+     */
     @Column(name = "telephone", unique = true, nullable = false, length = 11)
     private String telephone;
-
-    @Column(name = "password", nullable = false, length = 16)
+    /**
+     * 籍贯
+     */
+    private String nativePlace;
+    /**
+     * 单位
+     */
+    private String company;
+    /**
+     * 学历
+     * @see com.cafa.pdf.core.commom.enums.Education
+     */
+    private String education;
+    /**
+     * 职称
+     */
+    private String professionalTitle;
+    /**
+     * 职务
+     */
+    private String position;
+    /**
+     * 登录账号
+     */
+    private String username;
+    @Column(name = "password", nullable = false, length = 40)
     private String password;
 
     @Temporal(TemporalType.TIMESTAMP)

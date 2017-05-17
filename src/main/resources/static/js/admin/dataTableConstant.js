@@ -48,7 +48,7 @@ var CONSTANT = {
 					var startIndex = api.context[0]._iDisplayStart;//获取到本页开始的条数
 					api.column(0).nodes().each(function(cell, i) {
 						cell.innerHTML = startIndex + i + 1;
-					}); 
+					});
 				},
 				*/
 			},
@@ -71,10 +71,9 @@ var CONSTANT = {
                 OPERATION: { //操作
                 	"className": "td_operation",
                 	"orderable": false,
-                	"width": "100px",
                     "data": null,
                     "render": function (data, type, row, meta) {// btn-group-justified
-                    	var btn_group =  "<div class='btn-group btn-group-sm btn-group-justified' role='group' aria-label='操作'>"
+                    	var btn_group =  "<div class='btn-group btn-group-sm' role='group' aria-label='操作'>"
 			                    +"<a href='#' class='op_edit btn btn-warning' role='button'>编辑</a>"
 			                    +"<a href='#' class='op_delete btn btn-danger' role='button'>删除</a>"
 			                    +"</div>";

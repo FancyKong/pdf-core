@@ -1,0 +1,247 @@
+<!--
+            __   ____  _____   ____
+           /  ] /    ||     | /    |
+          /  / |  o  ||   __||  o  |
+         /  /  |     ||  |_  |     |
+        /   \_ |  _  ||   _] |  _  |
+        \     ||  |  ||  |   |  |  |
+         \____||__|__||__|   |__|__|
+
+                  广东工业大学
+
+    Author: FancyKong Email:823382133@qq.com
+    Author: Cherish   Email:785427346@qq.com | Blog:www.caihongwen.cn | GitHub:https://github.com/CherishC
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="UTF-8" />
+    <title>广东科技著作出版服务平台</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link href="css/index.css" rel="stylesheet" type="text/css" />
+    <link href="/tools/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="container">
+    <div id="hd" class="ue-clear">
+        <div class="" style="float:right;padding-top: 15px;padding-right: 100px;">
+            <a href="/customer">
+            <span style="color:#4b8dde;font-size: 16px;">欢迎您，小明&nbsp;&nbsp;&nbsp;</span>
+            </a>
+            <a data-toggle="modal" href="#loginModal">
+                <img src="img/personal.png"/>
+            </a>
+        </div>
+    </div>
+	<div id="bd">
+        <div id="main">
+        	<h1 class="title">
+                <img src="/images/logo.png" width="128px" height="128px" class="logo-img">
+            	<div class="logo large"></div>
+            </h1>
+            <div class="inputArea">
+            	<input type="text" class="searchInput" placeholder="默认为全文关键字检索"/>
+                <input type="button" class="searchButton" value="搜索" onclick="javascript:window.location='result.html'" />
+                <a class="advanced" href="advanced.html">高级搜索</a>
+                <ul class="dataList">
+                	<li>标题</li>
+                    <li>作者</li>
+                    <li>出版社</li>
+                    <li>简介</li>
+                </ul>
+            </div>
+            
+            <!--<div class="historyArea">
+            	<p class="history">
+                	<label>热门搜索：</label>
+                    <a href="javascript:;">UI设计</a>
+                    <a href="javascript:;">界面设计</a>
+                    <a href="javascript:;">手机界面</a>
+                    <a href="javascript:;">交互</a>
+                    <a href="javascript:;">图标</a>
+                    <a href="javascript:;">UI素材</a>
+                    <a href="javascript:;">教程</a>
+                </p>
+                <p class="history">
+                	<label>我的搜索：</label>
+                    <a href="javascript:;">专注界面设计网站</a>
+                    <a href="javascript:;">用户体验</a>
+                    <a href="javascript:;">互联网</a>
+                    <a href="javascript:;">资费套餐</a>
+                </p>
+            </div>-->
+        </div><!-- End of main -->
+    </div><!--End of bd-->
+    
+    <div class="foot">
+    	<div class="wrap">
+            <div class="copyright">Copyright &copy;cafa.com 版权所有</div>
+        </div>
+    </div>
+
+    <!-- loginModal -->
+    <div id="loginModal" class="modal fade"
+         aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" >
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">会员登录</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class=" form">
+                        <form id="loginForm" class="form-horizontal" method="post" action="#" >
+
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input type="text" id="username" name="username" class="form-control"
+                                               placeholder="请登录账号" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                        <input type="password" id="password" name="password" class="form-control"
+                                               placeholder="请输入密码" minlength="6" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-7">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-ok"></i></span>
+                                        <input type="text" id="code" name="code" class="form-control"
+                                               placeholder="验证码" min="1000" max="9999" required />
+                                    </div>
+                                </div>
+                                <div class="col-xs-5">
+                                    <img src="/validateCode?_index" onclick="changeCode(this)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <button id="login" class="btn btn-success btn-block" type="button">登录</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <p class="text-center">
+                            <a href="/customer/register">注册会员</a>
+                            <span> / </span>
+                            <a data-dismiss="modal" data-toggle="modal" href="#retrievePwdModal">找回密码</a>
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- loginModal -->
+
+    <!-- retrievePwdModal -->
+    <div id="retrievePwdModal" class="modal fade"
+         aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" >
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">找回密码</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class=" form">
+                        <form id="forgotForm" class="form-horizontal" method="post" action="#" >
+
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                        <input type="email" id="email2" name="email" class="form-control"
+                                               placeholder="请输入邮箱"
+                                               pattern="^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-7">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-ok"></i></span>
+                                        <input type="text" id="code2" name="code" class="form-control"
+                                               placeholder="验证码" min="1000" max="9999" required />
+                                    </div>
+                                </div>
+                                <div class="col-xs-5">
+                                    <img src="/validateCode?_index" onclick="changeCode(this)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <button id="forgot" class="btn btn-success btn-block" type="button">提交</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- retrievePwdModal -->
+</div>
+</body>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="/tools/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript">
+	$('.searchList').on('click', '.searchItem', function(){
+		$('.searchList .searchItem').removeClass('current');
+		$(this).addClass('current');	
+	});
+	
+	// 联想下拉显示隐藏
+	$('.searchInput').on('focus', function(){
+		$('.dataList').show()
+    });
+
+    // 联想下拉显示隐藏
+    $('.searchInput').on('click', function(){
+        var text = $('.searchInput').val();
+        if(text == ""){
+            $('.dataList').show()
+        }
+    });
+
+	// 联想下拉点击
+	$('.dataList').on('click', 'li', function(){
+		var text = $(this).text()+":";
+		$('.searchInput').val(text);
+		$('.searchInput').focus();
+		$('.dataList').hide()
+	});
+	
+	hideElement($('.dataList'), $('.searchInput'));
+
+	function changeCode(img){
+        $(img).attr("src","/validateCode?_" + new Date().getTime());
+    }
+
+    // 登录
+    $("#login").on("click", function () {
+        //TODO
+        window.open("/customer");
+    });
+</script>
+</html>

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      layout:decorate="layout">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Cherish">
+    <title>详细信息</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- page heading start-->
+    <div class="page-heading">
+        <h3>
+            详细信息
+        </h3>
+        <ul class="breadcrumb">
+            <li>
+                <a href="/treatise/list">专著管理</a>
+            </li>
+            <li class="active"> 详细信息 </li>
+        </ul>
+    </div>
+    <!-- page heading end-->
+
+    <!--body wrapper start-->
+    <div class="wrapper">
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <section id="coreInfoSection" class="panel">
+                    <header class="panel-heading">著作核心信息</header>
+                    <div class="panel-body">
+                        <div class="box-widget">
+                            <div class="widget-head clearfix">
+                                <div id="top_tabby" class="block-tabby pull-left"></div>
+                            </div>
+                            <div class="widget-container">
+                                <div class="widget-block">
+                                    <div class="widget-content box-padding">
+                                        <form id="treatiseForm" class=" form-horizontal left-align form-well"
+                                              th:action="@{/treatise/save}" method="post">
+                                            <div class="form-group">
+                                                <label for="ISBN" class="control-label col-md-2 col-sm-2">ISBN：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <input type="text" id="ISBN" name="ISBN" class="form-control"
+                                                           placeholder="ISBN" required
+                                                           th:value="${treatise} ? ${treatise.ISBN}"/>
+                                                    <p class="help-block">
+                                                        <label class="error-label"
+                                                               th:text="${errorMap} ? ${errorMap['ISBN']}"></label>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="no" class="control-label col-md-2 col-sm-2">编号：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <input type="text" id="no" name="no" class="form-control"
+                                                           placeholder="编号" required
+                                                           th:value="${treatise} ? ${treatise.no}"/>
+                                                    <p class="help-block">
+                                                        <label class="error-label"
+                                                               th:text="${errorMap} ? ${errorMap['no']}"></label>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="bookName"
+                                                       class="control-label col-md-2 col-sm-2">专著名：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <input type="text" id="bookName" name="bookName"
+                                                           class="form-control"
+                                                           placeholder="专著名" minlength="1" maxlength="32" autofocus
+                                                           required
+                                                           th:value="${treatise} ? ${treatise.bookName}"/>
+                                                    <p class="help-block">
+                                                        <label class="error-label"
+                                                               th:text="${errorMap} ? ${errorMap['bookName']}"></label>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="author" class="control-label col-md-2 col-sm-2">作者：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <select id='author' name='author' class='form-control'>
+                                                        <option th:each="author:*{authors}"
+                                                                th:value="${author.id}" th:text="${author.nickname}"
+                                                                th:attr="selected=${author} ?(${author.id} eq ${treatise.authorId})"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="language"
+                                                       class="control-label col-md-2 col-sm-2">语种：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <select id='language' name='language' class='form-control'>
+                                                        <option th:each="l:*{language}"
+                                                                th:value="${l.code}" th:text="${l.desc}"
+                                                                th:attr="selected=${l} ?(${l.code} eq ${treatise.language})"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="publicationMode"
+                                                       class="control-label col-md-2 col-sm-2">出版形式：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <select id='publicationMode' name='publicationMode' class='form-control'>
+                                                        <option th:each="p:*{publicationMode}"
+                                                                th:value="${p.code}" th:text="${p.desc}"
+                                                                th:attr="selected=${p} ?(${p.code} eq ${treatise.publicationMode})"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="category"
+                                                       class="control-label col-md-2 col-sm-2">类别：</label>
+                                                <div class="col-md-4 col-sm-4">
+                                                    <select class="form-control" onchange="appendChildren(this)">
+                                                        <option th:each="category:*{categories}"
+                                                                th:value="${category.id}" th:text="${category.name}"
+                                                                th:attr="selected=${category} ?(${category.id} eq ${thisCategory.pid})"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-4 col-sm-4">
+                                                    <select id='category' name='category' class='form-control' >
+                                                        <option th:each="category:*{childCategories}"
+                                                                th:value="${category.id}" th:text="${category.name}"
+                                                                th:attr="selected=${category} ?(${category.id} eq ${thisCategory.id})"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="publishHouse"
+                                                       class="control-label col-md-2 col-sm-2">出版社：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <input type="text" id="publishHouse" name="publishHouse"
+                                                           class="form-control"
+                                                           placeholder="出版社" required
+                                                           th:value="${treatise} ? ${treatise.publishHouse}"/>
+                                                    <p class="help-block">
+                                                        <label class="error-label"
+                                                               th:text="${errorMap} ? ${errorMap['publishHouse']}"></label>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="publishPlace"
+                                                       class="control-label col-md-2 col-sm-2">出版地：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <input type="text" id="publishPlace" name="publishHouse"
+                                                           class="form-control"
+                                                           placeholder="出版地" required
+                                                           th:value="${treatise} ? ${treatise.publishPlace}"/>
+                                                    <p class="help-block">
+                                                        <label class="error-label"
+                                                               th:text="${errorMap} ? ${errorMap['publishPlace']}"></label>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="publishDate"
+                                                       class="control-label col-md-2 col-sm-2">出版日期：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <input type="text" id="publishDate" name="publishDate"
+                                                           class="form_datetime form-control"
+                                                           placeholder="出版日期" data-mask="9999-99-99" required
+                                                           th:value="${treatise} ? ${#dates.format(treatise.publishDate,'yyyy-MM-dd')}
+                                                                    : ${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"/>
+                                                    <p class="help-block">
+                                                        <label class="error-label"
+                                                               th:text="${errorMap} ? ${errorMap['publishDate']}"></label>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="keywords"
+                                                       class="control-label col-md-2 col-sm-2">关键词集合：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <input type="text" id="keywords" name="keywords"
+                                                           class="form-control"
+                                                           placeholder="多个关键词用';'隔开,如: 数据挖掘;搜索引擎;聚类算法" required
+                                                           th:value="${treatise} ? ${treatise.keywords}"/>
+                                                    <p class="help-block">
+                                                        <label class="error-label"
+                                                               th:text="${errorMap} ? ${errorMap['keywords']}"></label>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="description"
+                                                       class="control-label col-md-2 col-sm-2">简介：</label>
+                                                <div class="col-md-8 col-sm-8">
+                                                        <textarea id="description" name="description"
+                                                                  class="form-control"
+                                                                  placeholder="简介/描述"
+                                                                  style="height: 150px"
+                                                                  th:text="${treatise} ? ${treatise.description}"></textarea>
+                                                    <p class="help-block">
+                                                        <label class="error-label"
+                                                               th:text="${errorMap} ? ${errorMap['description']}"></label>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="chapterSection" class="panel">
+                    <header class="panel-heading">著作目录信息
+                    </header>
+                    <div class="panel-body">
+                        <table class="table table-hover table-bordered text-center" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th class="text-center">第几章</th>
+                                <th class="text-center">章标题</th>
+                                <th class="text-center">是否公开</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tBody">
+                            <tr th:each="chapter:*{chapters}">
+                                <td>
+                                    <label>
+                                        <span th:text="${chapter.seq}"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <span th:text="${chapter.title}"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                       <!-- <select name="privacy" th:value="${chapter.privacy}">
+                                            <option value="1">公开</option>
+                                            <option value="0">不公开</option>
+                                        </select>-->
+                                        <span th:if="${chapter.privacy} eq 1">公开</span>
+                                        <span th:if="${chapter.privacy} eq 0">不公开</span>
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <!-- table end -->
+                    </div>
+                </section>
+
+                <section id="extraInfoSection" class="panel">
+                    <header class="panel-heading">著作补充信息</header>
+                    <div class="panel-body">
+                        <div class="widget-container">
+                            <div class="widget-block">
+                                <div class="widget-content box-padding">
+                                    <form id="extraInfoForm" class=" form-horizontal left-align form-well"
+                                          th:action="@{/treatise/save}" method="post">
+                                        <div class="form-group">
+                                            <label for="price"
+                                                   class="control-label col-md-2 col-sm-2">定价：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <input type="text" id="price" name="price"
+                                                       class="form-control"
+                                                       placeholder="定价" minlength="1" maxlength="32" autofocus
+                                                       required
+                                                       th:value="${treatise} ? ${treatise.price}"/>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['price']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="pageNumber"
+                                                   class="control-label col-md-2 col-sm-2">总页数：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <input type="text" id="pageNumber" name="price"
+                                                       class="form-control"
+                                                       placeholder="总页数" minlength="1" maxlength="32" autofocus
+                                                       required
+                                                       th:value="${treatise} ? ${treatise.pageNumber}"/>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['pageNumber']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="words"
+                                                   class="control-label col-md-2 col-sm-2">字数：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <input type="text" id="words" name="words"
+                                                       class="form-control"
+                                                       placeholder="字数" minlength="1" maxlength="32" autofocus
+                                                       required
+                                                       th:value="${treatise} ? ${treatise.words}"/>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['words']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="impression"
+                                                   class="control-label col-md-2 col-sm-2">印次：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <input type="text" id="impression" name="impression"
+                                                       class="form-control"
+                                                       placeholder="印次" minlength="1" maxlength="32" autofocus
+                                                       required
+                                                       th:value="${treatise} ? ${treatise.impression}"/>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['impression']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="edition"
+                                                   class="control-label col-md-2 col-sm-2">版次：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <input type="text" id="edition" name="edition"
+                                                       class="form-control"
+                                                       placeholder="版次" minlength="1" maxlength="32" autofocus
+                                                       required
+                                                       th:value="${treatise} ? ${treatise.edition}"/>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['edition']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="bookSize"
+                                                   class="control-label col-md-2 col-sm-2">开本：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <input type="text" id="bookSize" name="bookSize"
+                                                       class="form-control"
+                                                       placeholder="开本" minlength="1" maxlength="32" autofocus
+                                                       required
+                                                       th:value="${treatise} ? ${treatise.bookSize}"/>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['bookSize']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="referenceBooks"
+                                                   class="control-label col-md-2 col-sm-2">参考文献：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                        <textarea id="referenceBooks" name="referenceBooks"
+                                                                  class="form-control"
+                                                                  placeholder="一行一则参考文献,即每输入一则就按一次回车键" style="height: 200px"
+                                                                  th:text="${treatise} ? ${treatise.referenceBooks}"></textarea>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['referenceBooks']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="recommends"
+                                                   class="control-label col-md-2 col-sm-2">系列丛书：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                        <textarea id="series" name="series"
+                                                                  class="form-control"
+                                                                  placeholder="一行一则系列丛书,即每输入一则就按一次回车键" style="height: 200px"
+                                                                  th:text="${treatise} ? ${treatise.series}"></textarea>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['series']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="recommends"
+                                                   class="control-label col-md-2 col-sm-2">推荐书：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                        <textarea id="recommends" name="recommends"
+                                                                  class="form-control"
+                                                                  placeholder="一行一则推荐书,即每输入一则就按一次回车键" style="height: 200px"
+                                                                  th:text="${treatise} ? ${treatise.recommends}"></textarea>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['recommends']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="relatedBooks"
+                                                   class="control-label col-md-2 col-sm-2">相关著作书目：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                        <textarea id="relatedBooks" name="relatedBooks"
+                                                                  class="form-control"
+                                                                  placeholder="一行一则相关著作书目,即每输入一则就按一次回车键" style="height: 200px"
+                                                                  th:text="${treatise} ? ${treatise.relatedBooks}"></textarea>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['relatedBooks']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="introductory"
+                                                   class="control-label col-md-2 col-sm-2">序：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                        <textarea id="introductory" name="introductory"
+                                                                  class="form-control"
+                                                                  placeholder="序" style="height: 150px"
+                                                                  th:text="${treatise} ? ${treatise.introductory}"></textarea>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['introductory']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="preface"
+                                                   class="control-label col-md-2 col-sm-2">前言：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                        <textarea id="preface" name="preface"
+                                                                  class="form-control"
+                                                                  placeholder="前言" style="height: 150px"
+                                                                  th:text="${treatise} ? ${treatise.preface}"></textarea>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['preface']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="exordium"
+                                                   class="control-label col-md-2 col-sm-2">绪言：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                        <textarea id="exordium" name="exordium"
+                                                                  class="form-control"
+                                                                  placeholder="绪言" style="height: 150px"
+                                                                  th:text="${treatise} ? ${treatise.exordium}"></textarea>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['exordium']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="review"
+                                                   class="control-label col-md-2 col-sm-2">书评：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                        <textarea id="review" name="review"
+                                                                  class="form-control"
+                                                                  placeholder="书评" style="height: 150px"
+                                                                  th:text="${treatise} ? ${treatise.review}"></textarea>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['review']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="postscript"
+                                                   class="control-label col-md-2 col-sm-2">跋：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                        <textarea id="postscript" name="description"
+                                                                  class="form-control"
+                                                                  placeholder="跋" style="height: 150px"
+                                                                  th:text="${treatise} ? ${treatise.postscript}"></textarea>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['postscript']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="appendix"
+                                                   class="control-label col-md-2 col-sm-2">章外后记：</label>
+                                            <div class="col-md-8 col-sm-8">
+                                                        <textarea id="appendix" name="appendix"
+                                                                  class="form-control"
+                                                                  placeholder="章外后记" style="height: 150px"
+                                                                  th:text="${treatise} ? ${treatise.appendix}"></textarea>
+                                                <p class="help-block">
+                                                    <label class="error-label"
+                                                           th:text="${errorMap} ? ${errorMap['appendix']}"></label>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div layout:fragment="javascript">
+    <script type="text/javascript">
+        function appendChildren(select){
+            var pid = select.options[select.selectedIndex].value;
+
+            $.getJSON('/treatise/'+pid+'/children',function (result) {
+                var child = $("#category");
+                child.empty();
+                var selectChild = '';
+                $.each(result,function (i, n) {
+                    console.log(n);
+                    selectChild += "<option value='"+n.id+"'>"+n.name+"</option>";
+                });
+                child.append(selectChild);
+            });
+
+        }
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            //菜单的active
+            $('.custom-nav .nav-active').removeClass('nav-active');
+            $('.custom-nav .active').removeClass('active');
+            $("#treatiseMenu").addClass("nav-active");
+            $("#treatiseLi").addClass("active");
+
+        });
+    </script>
+</div>
+</body>
+</html>

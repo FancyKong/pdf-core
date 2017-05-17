@@ -27,7 +27,7 @@
     <form class="form-signin" action="/login" method="POST">
         <div class="form-signin-heading text-center">
             <h1 class="sign-title">登陆界面</h1>
-            <img src="/images/logo128.jpg" alt="LOGO"/>
+            <img src="/images/logo.png"  alt="LOGO" style="max-height: 150px;"/>
         </div>
 
         <!--<p th:each="attr : ${#request.getAttributeNames()}"-->
@@ -36,68 +36,129 @@
 
         <div class="login-wrap">
             <input type="text" name="username" class="form-control" placeholder="登录名" autofocus
-                   required minlength="6" maxlength="16" th:value="${usernameInput}">
+                   required minlength="6" maxlength="16" th:value="${loginReq} ? ${loginReq.username}">
                 <label class="error-label" th:text="${errorMap} ? ${errorMap['username']}"></label>
 
             <input type="password" name="password" class="form-control" placeholder="密码"
-                   required minlength="6" maxlength="16" th:value="${passwordInput}">
+                   required minlength="6" maxlength="16" th:value="${loginReq} ? ${loginReq.password}">
                 <label class="error-label" th:text="${errorMap} ? ${errorMap['password']}"></label>
 
-            <input type="text" name="validateCode" class="form-control" placeholder="验证码"
-                   required minlength="4" maxlength="4">
-                <img src="/validateCode">
+            <div class="row">
+                <div class="col-xs-7">
+                    <input type="text" name="validateCode" class="form-control" placeholder="验证码"
+                           required minlength="4" maxlength="4">
+                </div>
+                <div class="col-xs-5">
+                    <img src="/validateCode?_admin" onclick="changeCode(this)">
+                </div>
                 <label class="error-label" th:text="${errorMap} ? ${errorMap['validateCodeError']}"></label>
+            </div>
 
-
-            <button class="btn btn-lg btn-login btn-block" type="submit">
-                <i class="fa fa-check"></i>
-            </button>
-
-            <label class="checkbox"> <span class="pull-right">
-						<a data-toggle="modal" href="#myModal"> Forgot Password?</a></span>
-            </label>
-
-        </div>
-
-        <!-- Modal -->
-        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog"
-             tabindex="-1" id="myModal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"
-                                aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Forgot Password ?</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Enter your e-mail address below to reset your password.</p>
-                        <input type="email" name="email" placeholder="邮箱"
-                               autocomplete="off" class="form-control placeholder-no-fix">
-
-                    </div>
-                    <div class="modal-footer">
-                        <button data-dismiss="modal" class="btn btn-default"
-                                type="button">Cancel
-                        </button>
-                        <button class="btn btn-primary" type="button">Submit</button>
+            <div class="row">
+                <div class="col-xs-6">
+                   <div class="pull-right">
+                       <input type="radio" name="loginType" value="ADMIN" checked >
+                       <label>管理员</label>
+                   </div>
+                </div>
+                <div class="col-xs-6">
+                    <div>
+                        <input type="radio" name="loginType" value="AUTHOR"
+                               th:attr="checked=(${loginReq} ? ${'AUTHOR' eq loginReq.loginType})">
+                        <label>著作者</label>
                     </div>
                 </div>
             </div>
+            <button class="btn btn-lg btn-login btn-block" type="submit">
+                <i class="fa fa-check"></i>
+            </button>
         </div>
-        <!-- modal -->
 
+        <div class="text-center">
+            <a href="/author/register"> 著作者申请</a>
+            <span>/</span>
+            <a data-toggle="modal" href="#retrievePwdModal"> 找回密码</a>
+        </div>
     </form>
 
+
+
+</div>
+<!-- Modal -->
+<div id="retrievePwdModal" class="modal fade" aria-hidden="true"
+     aria-labelledby="retrievePwdModalLabel" role="dialog" tabindex="-1" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title">找回密码</h4>
+            </div>
+            <div class="modal-body">
+                <p>请输入您的邮箱地址找回密码。</p>
+                <input id="email" type="email" name="email" placeholder="邮箱"
+                       autocomplete="off" class="form-control placeholder-no-fix">
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                <button class="btn btn-primary" type="button">提交</button>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- modal -->
 
 <!-- Placed js at the end of the document so the pages load faster -->
 <script src="/js/jquery-1.12.4.js" type="text/javascript"></script>
 <script src="/tools/bootstrap-3.3.7/js/bootstrap.js" type="text/javascript"></script>
 <script src="/js/modernizr.js"></script>
+<script src="/js/admin/myModal.js" type="text/javascript"></script>
+<p class="msg-block" th:if="${errorMap}">
+    <script th:if="${errorMap['msg']}" th:inline="javascript">
+        /*<![CDATA[*/
+        var msg = [[${errorMap['msg']}]] ;
+        $(function () {
+            myModalWarning(msg);
+        });
+        /*]]>*/
+    </script>
+</p>
 <script type="text/javascript">
-    $(function () {
+    function changeCode(img){
+        $(img).attr("src","/validateCode?_" + new Date().getTime());
+    }
 
+    function isEmail(str){
+        var reg=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+        return reg.test(str);
+    }
+
+    $(function () {
+        var modal = $("#retrievePwdModal");
+        var btn = modal.find('.modal-footer .btn-primary');
+        $(btn).unbind();
+        $(btn).on("click", function () {
+            var email = modal.find('#email').val();
+            console.log("email:" + email);
+
+            if (isEmail(email)){
+                $(btn).unbind();
+                modal.modal("hide");
+
+                //TODO 做Ajax 提交邮箱
+                window.open("/overridePwd");
+                /*$.post("/retrievePwd", "email="+email, function(result){
+                    if(result.success){
+
+                    }else {
+                        retrievePwdModalFail(result.message);
+                    }
+                });*/
+            }else {
+                alert("请输入正确的邮箱")
+            }
+        });
 
     });
 </script>

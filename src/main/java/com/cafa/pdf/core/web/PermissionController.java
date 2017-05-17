@@ -1,11 +1,11 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.dal.MResponse;
-import com.cafa.pdf.core.dal.dto.PermissionDTO;
+import com.cafa.pdf.core.web.response.Response;
+import com.cafa.pdf.core.commom.dto.PermissionDTO;
 import com.cafa.pdf.core.dal.entity.Permission;
-import com.cafa.pdf.core.dal.request.BasicSearchReq;
-import com.cafa.pdf.core.dal.request.permission.PermissionSaveReq;
-import com.cafa.pdf.core.dal.request.permission.PermissionUpdateReq;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.permission.PermissionSaveReq;
+import com.cafa.pdf.core.web.request.permission.PermissionUpdateReq;
 import com.cafa.pdf.core.service.PermissionService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 权限控制器
  * Created by Cherish on 2017/1/6.
  */
 @Controller
@@ -27,11 +28,15 @@ import java.util.Map;
 @RequiresRoles("super")
 public class PermissionController extends ABaseController {
 
-    @Autowired
-    private PermissionService permissionService;
+    private final PermissionService permissionService;
 
-    @GetMapping
-    public ModelAndView index(){
+    @Autowired
+    public PermissionController(PermissionService permissionService) {
+        this.permissionService = permissionService;
+    }
+
+    @GetMapping({"","/list"})
+    public ModelAndView list(){
         ModelAndView mv = new ModelAndView("admin/permission/list");
         return mv;
     }
@@ -64,15 +69,13 @@ public class PermissionController extends ABaseController {
      */
     @GetMapping("/page")
     @ResponseBody
-    public MResponse toPage(BasicSearchReq basicSearchReq){
-
+    public Response toPage(BasicSearchReq basicSearchReq){
         try {
             Page<PermissionDTO> page = permissionService.findAll(basicSearchReq);
-
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.error("获取列表失败: {}", e.getMessage());
+            log.error("获取列表失败: {}", e.getMessage());
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
@@ -84,14 +87,13 @@ public class PermissionController extends ABaseController {
      */
     @DeleteMapping("/{permissionId}/delete")
     @ResponseBody
-    public MResponse delpermission(@PathVariable("permissionId") Long permissionId){
-
+    public Response del(@PathVariable("permissionId") Long permissionId){
         try {
             permissionService.delete(permissionId);
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.error("删除失败:{}", e.getMessage());
+            log.error("删除失败:{}", e.getMessage());
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
     }
@@ -102,7 +104,7 @@ public class PermissionController extends ABaseController {
      * @return ModelAndView
      */
     @PostMapping("/update")
-    public ModelAndView updatepermission(@Validated PermissionUpdateReq permissionUpdateReq, BindingResult bindingResult){
+    public ModelAndView update(@Validated PermissionUpdateReq permissionUpdateReq, BindingResult bindingResult){
 
         ModelAndView mv = new ModelAndView("admin/permission/edit");
         Map<String, Object> errorMap = new HashMap<>();
@@ -116,17 +118,14 @@ public class PermissionController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("permission", permissionUpdateReq);
-
         }else {
             try {
-                permissionService.updateByReq(permissionUpdateReq);
-
+                permissionService.update(permissionUpdateReq);
                 mv.addObject("permission", permissionService.findById(permissionUpdateReq.getId()));
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
-                e.printStackTrace();
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", e.getMessage());
             }
         }
 
@@ -139,7 +138,7 @@ public class PermissionController extends ABaseController {
      * @return ModelAndView
      */
     @PostMapping("/save")
-    public ModelAndView savepermission(@Validated PermissionSaveReq permissionSaveReq, BindingResult bindingResult){
+    public ModelAndView save(@Validated PermissionSaveReq permissionSaveReq, BindingResult bindingResult){
 
         ModelAndView mv = new ModelAndView("admin/permission/add");
         Map<String, Object> errorMap = new HashMap<>();
@@ -148,24 +147,21 @@ public class PermissionController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("permission", permissionSaveReq);
-
         }else {
             try {
                 if (permissionService.exist(permissionSaveReq.getPermit())){
                     errorMap.put("msg", "该角色名已存在，请更换再试");
                     mv.addObject("permission", permissionSaveReq);
                 }else {
-                    permissionService.saveByReq(permissionSaveReq);
+                    permissionService.save(permissionSaveReq);
                     errorMap.put("msg", "添加成功");
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("添加失败:{}", e.getMessage());
+                log.error("添加失败:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 

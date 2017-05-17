@@ -1,11 +1,11 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.dal.MResponse;
-import com.cafa.pdf.core.dal.dto.RoleDTO;
+import com.cafa.pdf.core.web.response.Response;
+import com.cafa.pdf.core.commom.dto.RoleDTO;
 import com.cafa.pdf.core.dal.entity.Role;
-import com.cafa.pdf.core.dal.request.BasicSearchReq;
-import com.cafa.pdf.core.dal.request.role.RoleSaveReq;
-import com.cafa.pdf.core.dal.request.role.RoleUpdateReq;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.role.RoleSaveReq;
+import com.cafa.pdf.core.web.request.role.RoleUpdateReq;
 import com.cafa.pdf.core.service.RoleService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 角色控制器
  * Created by Cherish on 2017/1/6.
  */
 @Controller
@@ -27,11 +28,15 @@ import java.util.Map;
 @RequiresRoles("super")
 public class RoleController extends ABaseController {
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
-    @GetMapping
-    public ModelAndView index(){
+    @Autowired
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
+    @GetMapping({"","/list"})
+    public ModelAndView list(){
         ModelAndView mv = new ModelAndView("admin/role/list");
         return mv;
     }
@@ -64,15 +69,12 @@ public class RoleController extends ABaseController {
      */
     @GetMapping("/page")
     @ResponseBody
-    public MResponse toPage(BasicSearchReq basicSearchReq){
-
+    public Response toPage(BasicSearchReq basicSearchReq){
         try {
             Page<RoleDTO> page = roleService.findAll(basicSearchReq);
-
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("获取列表失败: {}", e.getMessage());
+            log.error("获取列表失败: {}", e.getMessage());
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
@@ -84,14 +86,12 @@ public class RoleController extends ABaseController {
      */
     @DeleteMapping("/{roleId}/delete")
     @ResponseBody
-    public MResponse delete(@PathVariable("roleId") Long roleId){
-
+    public Response delete(@PathVariable("roleId") Long roleId){
         try {
             roleService.delete(roleId);
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("删除失败:{}", e.getMessage());
+            log.error("删除失败:{}", e.getMessage());
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
     }
@@ -116,20 +116,16 @@ public class RoleController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("role", roleUpdateReq);
-
         }else {
             try {
-                roleService.updateByReq(roleUpdateReq);
-
+                roleService.update(roleUpdateReq);
                 mv.addObject("role", roleService.findById(roleUpdateReq.getId()));
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
-                e.printStackTrace();
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 
@@ -148,24 +144,20 @@ public class RoleController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("role", roleSaveReq);
-
         }else {
             try {
                 if (roleService.exist(roleSaveReq.getName())){
                     errorMap.put("msg", "该角色名已存在，请更换再试");
                     mv.addObject("role", roleSaveReq);
                 }else {
-                    roleService.saveByReq(roleSaveReq);
+                    roleService.save(roleSaveReq);
                     errorMap.put("msg", "添加成功");
                 }
-
             } catch (Exception e) {
-                e.printStackTrace();
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("添加失败:{}", e.getMessage());
+                log.error("添加失败:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 

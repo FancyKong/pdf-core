@@ -47,10 +47,6 @@
 				}, {
 					"data" : 'telephone'
 			    }, {
-					"data" : 'position'
-                }, {
-                    "data" : 'hiredate'
-				}, {
 					"data" : 'username'
 				}, {
 					"data" : 'activeStr'
@@ -112,12 +108,6 @@
 					break;
 				case 2:
 					param.orderColumn = "telephone";
-					break;
-				case 3:
-					param.orderColumn = "position";
-					break;
-				case 4:
-					param.orderColumn = "hiredate";
 					break;
 				default:
 					param.orderColumn = "id";

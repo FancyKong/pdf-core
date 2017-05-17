@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      layout:decorate="layout">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Cherish">
+    <title>专著列表</title>
+    <style>
+        .permission-choose{
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .permission-choose li{
+            line-height: 35px;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <!--body wrapper start-->
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- well -->
+                <div class="well">
+                    <div class="row">
+                        <form class="form " action="#">
+                            <div class="col-sm-4 form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"> <label for="ISBN">编号：</label>
+                                    </span> <input name="ISBN" id="ISBN" type="text"
+                                                   class="form-control" placeholder="ISBN编号">
+                                </div>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"> <label for="bookName">专著名：</label>
+                                    </span> <input name="bookName" id="bookName" type="text"
+                                                   class="form-control" placeholder="专著名">
+                                </div>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"> <label for="publishHouse">出版社：</label>
+                                    </span> <input name="publishHouse" id="publishHouse" type="text"
+                                                   class="form-control" placeholder="出版社">
+                                </div>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"> <label for="publishDate">出版日期：</label>
+                                    </span> <input name="publishDate" id="publishDate" type="text"
+                                                   class="form-control" placeholder="出版日期（例：2017-04-15）">
+                                </div>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"> <label for="language">语种：</label>
+                                    </span> <input name="language" id="language" type="text"
+                                                   class="form-control" placeholder="汉语，英语，其他...">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <div class="btn-group">
+                                    <button id="btn_search" type="button" class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                        查询
+                                    </button>
+                                    <button id="btn_reset" type="reset" class="btn btn-warning">
+                                        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+                                        重置
+                                    </button>
+                                    <button id="btn_fresh" type="button" class="btn btn-info">
+                                        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                        刷新
+                                    </button>
+                                </div>
+                                <!-- /input-group -->
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.well -->
+            </div>
+        </div><!-- row end -->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        专著列表
+                        <!--<span class="tools pull-right">
+								<a href="javascript:;" class="fa fa-chevron-down"></a>
+								<a href="javascript:;" class="fa fa-times"></a>
+							</span>-->
+                    </header>
+                    <div class="panel-body">
+                        <button type="button" id="otable_new" class="btn btn-primary">添加 <i class="fa fa-plus"></i>
+                        </button>
+                        <!-- table -->
+                        <table id="otable" class="table" cellspacing="0" width="100%">
+                            <thead>
+                            <tr>
+                                <th>ISBN</th>
+                                <th>专著名称</th>
+                                <th>作者</th>
+                                <th>类别</th>
+                                <th>出版社</th>
+                                <th>出版日期</th>
+                                <th>阅读量</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>ISBN</th>
+                                <th>专著名称</th>
+                                <th>作者</th>
+                                <th>类别</th>
+                                <th>出版社</th>
+                                <th>出版日期</th>
+                                <th>阅读量</th>
+                                <th>操作</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            </tbody>
+
+                        </table>
+                        <!-- table end -->
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!--body wrapper end-->
+    <!-- Modal -->
+    <div class="modal fade" id="permission" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    选择公开的章
+                </div>
+                <div class="modal-body">
+                    <ul class="permission-choose">
+                        <li>
+                            <label>
+                                <input type="checkbox" >
+                            </label>
+                            <span>第一章 - 数理统计基础1</span>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" >
+                            </label>
+                            <span>第二章 - 数理统计基础2</span>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" >
+                            </label>
+                            <span>第三章 - 数理统计进阶1</span>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" >
+                            </label>
+                            <span>第四章 - 数理统计进阶2</span>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" >
+                            </label>
+                            <span>第五章 - 数理统计精通</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--将被layout引入的js-->
+<div layout:fragment="javascript">
+    <script type="text/javascript">
+        $(function () {
+            //菜单的active
+            $('.custom-nav .nav-active').removeClass('nav-active');
+            $('.custom-nav .active').removeClass('active');
+            $("#treatiseMenu").addClass("nav-active");
+            $("#treatiseLi").addClass("active");
+
+
+            $('#publishDate').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                startView: 2,
+                minView: 2
+            });
+        });
+
+    </script>
+    <script src="/js/admin/dataTableConstant.js" type="text/javascript"></script>
+    <script src="/js/admin/treatiseManage.js" type="text/javascript"></script>
+</div>
+
+</body>
+</html>

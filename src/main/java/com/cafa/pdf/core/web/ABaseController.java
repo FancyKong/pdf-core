@@ -1,6 +1,6 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.dal.MResponse;
+import com.cafa.pdf.core.web.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class ABaseController {
 
-	protected Logger LOGGER = LoggerFactory.getLogger(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	protected static final Integer PAGE_SIZE = 20;
 	protected static final Integer NOT_LOGIN_CODE = 100;
@@ -29,23 +29,23 @@ public class ABaseController {
 
 	protected static final String BUSY_MSG = "系统繁忙";
 
-	protected MResponse buildResponse(Integer code, String message, Object data) {
+	protected Response buildResponse(Integer code, String message, Object data) {
 		return buildResponse(code, null, message, data);
 	}
 	
-	protected MResponse buildResponse(Boolean success, String message, Object data) {
+	protected Response buildResponse(Boolean success, String message, Object data) {
 		return buildResponse(null, success, message, data);
 	}
 
-	protected MResponse buildResponse(Integer code, Boolean success, String message, Object data) {
-		return new MResponse(code, success, message, data);
+	protected Response buildResponse(Integer code, Boolean success, String message, Object data) {
+		return new Response(code, success, message, data);
 	}
 
 	protected Map<String, String> getErrors(BindingResult result) {
 		Map<String, String> map = new HashMap<>();
 		List<FieldError> list = result.getFieldErrors();
 		for (FieldError error : list) {
-			LOGGER.debug("error: {} -> {}", error.getField(), error.getDefaultMessage());
+			log.debug("error: {} -> {}", error.getField(), error.getDefaultMessage());
 			map.put(error.getField(), error.getDefaultMessage());
 		}
 		return map;

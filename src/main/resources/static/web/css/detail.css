@@ -1,0 +1,331 @@
+@charset "utf-8";
+.extra-info{
+    font-size: 15px;
+}
+.extra{
+    margin-top: 80px;
+    background-color: #94bbeb;
+    height: 50px;
+    width: 100%;
+    color: white;
+    text-align: center;
+    margin-bottom: 40px;
+}
+.extra-title{
+    line-height: 50px;
+}
+.bookmark{
+    font-size: 16px;
+}
+.operators{
+    margin-left: 5%;
+
+}
+.detailArea{
+    margin-left: 3%;
+}
+.operator_mini{
+    cursor: pointer;
+    font-size: 14px;
+    height: 30px;
+    background: #579bf1;
+    color: #ffffff;
+    border: 0;
+    border-radius: 0;
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.operator{
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-block;
+    margin: 15px 10px 5px 0;
+    height: 36px;
+    line-height: 36px;
+    background: #579bf1;
+    color: #ffffff;
+    position: relative;
+    border: 0;
+    border-radius: 0;
+}
+.title{
+    font-size: 26px;
+    font-weight: bold;
+    color: #427dc9;
+    line-height: 35px;
+}
+.digest{
+    font-size: 14px;
+}
+.english{
+    color: #8e8e8e;
+    line-height: 27px;
+}
+.baseInfo{
+    font-size: 15px;
+}
+.baseInfo li{
+    line-height: 30px;
+    overflow: hidden;
+}
+.info_left {
+    text-align: right;
+    width: 115px;
+    float: left;
+    color: #898989;
+    font-weight: bold;
+}
+.info_right {
+    padding: 0 0 0 5px;
+    margin-left: 115px;
+    color: #417dc9;
+}
+html {
+    *overflow: auto;
+}
+
+#hd {
+    padding: 20px 10px;
+}
+
+#bd {
+    margin-bottom: 40px;
+}
+
+.logo {
+    float: left;
+    margin-right: 30px;
+    height: 33px;
+}
+
+/*input搜索区域*/
+.inputArea {
+    float: left;
+    position: relative;
+}
+
+.inputArea .searchInput {
+    border: 1px solid #bfbfbf;
+    padding: 0 15px;
+    outline: none;
+    height: 35px;
+    *line-height: 35px;
+    width: 350px;
+    background: url(../img/inputbg.png);
+    font-size: 14px;
+}
+
+.inputArea .searchButton {
+    color: #fff;
+    font-size: 2em;
+    position: absolute;
+    left: 389px;
+    top: 0;
+    width: 106px;
+    height: 42px;
+    background-color: #4b8dde;
+    border: none;
+    cursor: pointer;
+}
+
+/*返回高级搜索*/
+.inputArea .advanced {
+    position: absolute;
+    font-size: 14px;
+    left: 500px;
+    top: 12px;
+    width: 60px;
+    text-decoration: underline;
+}
+
+/*分界区域，导航*/
+.nav2 {
+    margin-bottom: 24px;
+    height: 12px;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 5px 0 0 210px;
+}
+
+#container.sideBarHide .nav2 {
+    padding-left: 35px;
+}
+
+/*#main区域样式*/
+#main {
+    padding: 0 215px 0 182px;
+}
+
+#main.sideBarHide {
+    padding-left: 10px;
+}
+
+/*侧边栏搜索条件*/
+.sideBar {
+    position: relative;
+    float: left;
+    margin-left: -182px;
+    width: 182px;
+}
+
+.sideBar .subfieldContext {
+    margin-bottom: 20px;
+    padding-left: 25px;
+}
+
+.sideBar .subfieldContext li {
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.sideBar .subfieldContext input[type=text] {
+    width: 75px;
+}
+
+.sideBar .unit {
+    color: #787878;
+}
+
+/*更多按钮*/
+.sideBar .more a:hover {
+    text-decoration: none;
+}
+
+.sideBar .more .moreIcon {
+    display: inline-block;
+    position: relative;
+    top: -1px;
+    *top: -3px;
+    left: 2px;
+    *left: -1px;
+    width: 9px;
+    height: 5px;
+    background: url(../img/more.png);
+}
+
+.sideBar .more.show .moreIcon {
+    background: url(../img/down.png);
+    top: -2px;
+}
+
+/*siderBar区域显隐控制*/
+.sideBar .sideBarShowHide {
+    position: absolute;
+    right: 0px;
+    top: 20px;
+    height: 177px;
+    width: 1px;
+    background: url(../img/line.png) right;
+}
+
+.sideBar .sideBarShowHide a {
+    position: absolute;
+    top: 70px;
+    left: -11px;
+    display: inline-block;
+    width: 12px;
+    height: 31px;
+    background: url(../img/lr.png);
+}
+
+.sideBar .sideBarShowHide a:hover {
+    background-position: 0 -31px;
+}
+
+/*左侧收起样式*/
+#main.sideBarHide .sideBar {
+    margin-left: -191px;
+    *margin-left: -182px;
+}
+
+#main.sideBarHide .sideBar .sideBarShowHide {
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+#main.sideBarHide .sideBar .sideBarShowHide a {
+    *background: url(../img/ll.png);
+}
+
+#main.sideBarHide .sideBar .sideBarShowHide a:hover {
+    *background-position: 0 -31px;
+}
+
+#main.sideBarHide .sideBar .sideBarShowHide {
+    background: none;
+}
+
+.resultArea .resultTotal .orderOpt a {
+    margin-right: 10px;
+    color: #0080cc;
+}
+
+.resultArea .dependSearch h6 {
+    float: left;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.resultArea .dependSearch p {
+    margin-bottom: 5px;
+}
+
+.resultArea .dependSearch a {
+    display: inline-block;
+    margin-right: 15px;
+    text-decoration: underline;
+    width: 90px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.resultArea .searchInResult .searchButton {
+    left: 417px;
+}
+
+/*历史搜索区域*/
+.historyArea {
+    float: right;
+    margin-right: -212px;
+    width: 188px;
+}
+
+.historyArea h6 {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.historyArea .historyList {
+    margin-bottom: 20px;
+}
+
+.historyArea .historyList li {
+    margin-bottom: 5px;
+}
+
+/*左侧分栏区域*/
+.subfield {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 2px 0 2px 24px;
+}
+
+.subfield:first-child {
+    border-left: 4px solid #4b8dde;
+    padding-left: 20px;
+}
+.inputArea .dataList li {
+    padding: 2px 15px;
+    font-size: 14px;
+}
+
+.inputArea .dataList li:hover {
+    background: #f0f0f0;
+    color: #0080cc;
+    font-weight: bold;
+}

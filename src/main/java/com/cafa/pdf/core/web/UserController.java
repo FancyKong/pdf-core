@@ -1,13 +1,13 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.dal.MResponse;
-import com.cafa.pdf.core.dal.dto.UserDTO;
+import com.cafa.pdf.core.web.response.Response;
+import com.cafa.pdf.core.commom.dto.UserDTO;
 import com.cafa.pdf.core.dal.entity.User;
-import com.cafa.pdf.core.dal.request.BasicSearchReq;
-import com.cafa.pdf.core.dal.request.user.UserModifyPasswordReq;
-import com.cafa.pdf.core.dal.request.user.UserSaveReq;
-import com.cafa.pdf.core.dal.request.user.UserSearchReq;
-import com.cafa.pdf.core.dal.request.user.UserUpdateReq;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.user.UserModifyPasswordReq;
+import com.cafa.pdf.core.web.request.user.UserSaveReq;
+import com.cafa.pdf.core.web.request.user.UserSearchReq;
+import com.cafa.pdf.core.web.request.user.UserUpdateReq;
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.service.UserService;
@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 用户控制器
  * Created by Cherish on 2017/1/6.
  */
 @Controller
@@ -33,12 +34,16 @@ import java.util.Map;
 @RequiresAuthentication
 public class UserController extends ABaseController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @GetMapping
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping({"","/list"})
     @RequiresPermissions("user:show")
-    public ModelAndView index(){
+    public ModelAndView list(){
         ModelAndView mv = new ModelAndView("admin/user/list");
         return mv;
     }
@@ -91,15 +96,12 @@ public class UserController extends ABaseController {
      */
     @GetMapping("/page")
     @ResponseBody
-    public MResponse toPage(BasicSearchReq basicSearchReq, UserSearchReq userSearchReq){
-
+    public Response toPage(BasicSearchReq basicSearchReq, UserSearchReq userSearchReq){
         try {
             Page<UserDTO> page = userService.findAll(userSearchReq, basicSearchReq);
-
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("获取用户列表失败: {}", e.getMessage());
+            log.error("获取用户列表失败: {}", e.getMessage());
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
@@ -112,14 +114,12 @@ public class UserController extends ABaseController {
     @DeleteMapping("/{userId}/delete")
     @ResponseBody
     @RequiresPermissions("user:delete")
-    public MResponse delete(@PathVariable("userId") Long userId){
+    public Response delete(@PathVariable("userId") Long userId){
         try {
             userService.delete(userId);
-
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("删除失败:{}", e.getMessage());
+            log.error("删除失败:{}", e.getMessage());
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
     }
@@ -145,20 +145,16 @@ public class UserController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("user", userUpdateReq);
-
         }else {
             try {
                 userService.updateByReq(userUpdateReq);
-
                 mv.addObject("user", userService.findById(userUpdateReq.getId()));
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
-                e.printStackTrace();
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("修改用户错误:{}", e.getMessage());
+                log.error("修改用户错误:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 
@@ -178,7 +174,6 @@ public class UserController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("user", userSaveReq);
-
         }else {
             try {
                 if (userService.exist(userSaveReq.getUsername())){
@@ -188,14 +183,11 @@ public class UserController extends ABaseController {
                     userService.saveByReq(userSaveReq);
                     errorMap.put("msg", "添加成功");
                 }
-
             } catch (Exception e) {
-                e.printStackTrace();
                 errorMap.put("msg", "系统繁忙");
-                LOGGER.error("添加用户失败:{}", e.getMessage());
+                log.error("添加用户失败:{}", e.getMessage());
             }
         }
-
         return mv;
     }
 
@@ -217,7 +209,6 @@ public class UserController extends ABaseController {
         //表单验证是否通过
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
-
         }else {
             if (StringUtils.isBlank(modifyPasswordReq.getPassword())
                     || StringUtils.isBlank(modifyPasswordReq.getRepeatPassword())
@@ -235,17 +226,13 @@ public class UserController extends ABaseController {
                 }else {
                     user.setPassword(CryptographyUtil.cherishSha1(modifyPasswordReq.getPassword()));
                     userService.update(user);
-
                     errorMap.put("msg" ,"更改成功");
                 }
-
             } catch (Exception e) {
-                e.printStackTrace();
-                LOGGER.error("修改密码失败:{}", e.getMessage());
+                log.error("修改密码失败:{}", e.getMessage());
                 errorMap.put("msg", BUSY_MSG);
             }
         }
-
         return mv;
     }
 

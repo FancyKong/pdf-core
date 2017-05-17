@@ -1,16 +1,16 @@
 package com.cafa.pdf.core.service;
 
-import com.cafa.pdf.core.dal.dto.UserDTO;
-import com.cafa.pdf.core.dal.entity.User;
-import com.cafa.pdf.core.dal.request.BasicSearchReq;
-import com.cafa.pdf.core.dal.request.user.UserSaveReq;
-import com.cafa.pdf.core.dal.request.user.UserSearchReq;
-import com.cafa.pdf.core.dal.request.user.UserUpdateReq;
+import com.cafa.pdf.core.commom.dto.UserDTO;
+import com.cafa.pdf.core.commom.enums.ActiveEnum;
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
-import com.cafa.pdf.core.repository.IBaseDAO;
-import com.cafa.pdf.core.repository.UserDAO;
+import com.cafa.pdf.core.dal.dao.IBaseDAO;
+import com.cafa.pdf.core.dal.dao.UserDAO;
+import com.cafa.pdf.core.dal.entity.User;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
-import lombok.extern.slf4j.Slf4j;
+import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.user.UserSaveReq;
+import com.cafa.pdf.core.web.request.user.UserSearchReq;
+import com.cafa.pdf.core.web.request.user.UserUpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
@@ -23,18 +23,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Scope("prototype")//Shiro的配置影响到了动态代理，现在就这样吧，可以去看MShiroRealm
 @Service
 @Transactional(readOnly = true)
 public class UserService extends ABaseService<User, Long> {
 
-    @Autowired
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
 
-    private static final String UNKNOW = "未知";
-    private static final String AC = "激活/在职";
-    private static final String UN = "冻结/离职";
+    @Autowired
+    public UserService(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     @Override
     protected IBaseDAO<User, Long> getEntityDAO() {
@@ -95,12 +94,7 @@ public class UserService extends ABaseService<User, Long> {
         if (ObjectConvertUtil.objectFieldIsBlank(userSearchReq)){
             log.debug("没有特定搜索条件的");
             List<User> userList = userDAO.listAllPaged(pageRequest);
-            List<UserDTO> userDTOList = userList.stream().map(source -> {
-                UserDTO userDTO = new UserDTO();
-                ObjectConvertUtil.objectCopy(userDTO, source);
-                userDTO.setActiveStr(source.getActive() == null ? UNKNOW : source.getActive() == 1 ? AC : UN);
-                return userDTO;
-            }).collect(Collectors.toList());
+            List<UserDTO> userDTOList = userList.stream().map(this::getUserDTO).collect(Collectors.toList());
 
             //为了计算总数使用缓存，加快搜索速度
             Long count = getCount();
@@ -111,13 +105,20 @@ public class UserService extends ABaseService<User, Long> {
         Page<User> userPage = super.findAllBySearchParams(
                 buildSearchParams(userSearchReq), pageNumber, basicSearchReq.getPageSize());
 
-        return userPage.map(source -> {
-            UserDTO userDTO = new UserDTO();
-            ObjectConvertUtil.objectCopy(userDTO, source);
-            userDTO.setActiveStr(source.getActive() == null ? UNKNOW : source.getActive() == 1 ? AC : UN);
-            return userDTO;
-        });
+        return userPage.map(this::getUserDTO);
 
+    }
+
+    /**
+     * 转成DTO
+     * @param source User
+     * @return UserDTO
+     */
+    private UserDTO getUserDTO(User source) {
+        UserDTO userDTO = new UserDTO();
+        ObjectConvertUtil.objectCopy(userDTO, source);
+        userDTO.setActiveStr(ActiveEnum.getDesc(source.getActive()));
+        return userDTO;
     }
 
 }

@@ -19,7 +19,7 @@
         </h3>
         <ul class="breadcrumb">
             <li>
-                <a href="/user">用户管理</a>
+                <a href="/user/list">用户管理</a>
             </li>
             <li class="active"> 更改用户 </li>
         </ul>
@@ -65,19 +65,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="position" class="control-label col-md-2 col-sm-2">职位：</label>
-                                    <div class="col-md-8 col-sm-8">
-                                        <input type="text" id="position" name="position" class="form-control"
-                                               placeholder="职位名称" minlength="1" maxlength="32" required
-                                               th:value="${user} ? ${user.position}"/>
-                                        <p class="help-block">
-                                            <label class="error-label"
-                                                   th:text="${errorMap} ? ${errorMap['position']}"></label>
-                                        </p>
-                                    </div>
-                                </div>
-
                                 <!--<div class="form-group">
                                     <label for="username" class="control-label col-md-2 col-sm-2">登陆名:</label>
                                     <div class="col-md-8 col-sm-8">
@@ -90,20 +77,6 @@
                                         </p>
                                     </div>
                                 </div>-->
-
-                                <div class="form-group">
-                                    <label for="hiredate" class="control-label col-md-2 col-sm-2">入职时间：</label>
-                                    <div class="col-md-8 col-sm-8">
-                                        <input type="text" id="hiredate" name="hiredate" class="form-control"
-                                               placeholder="入职时间" data-mask="2099-99-99" required
-                                               th:value="${user} ? ${#dates.format(user.hiredate,'yyyy-MM-dd')}
-                                                                    : ${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"/>
-                                        <p class="help-block">
-                                            <label class="error-label"
-                                                   th:text="${errorMap} ? ${errorMap['hiredate']}"></label>
-                                        </p>
-                                    </div>
-                                </div>
 
                                 <div class="form-group">
                                     <label for="active" class="control-label col-md-2 col-sm-2">状态：</label>
