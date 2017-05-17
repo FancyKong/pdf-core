@@ -204,7 +204,7 @@
                                                 <div class="col-md-8 col-sm-8">
                                                     <input type="text" id="keywords" name="keywords"
                                                            class="form-control"
-                                                           placeholder="多个关键词用'|'隔开,如: 数据挖掘|搜索引擎|聚类算法" required
+                                                           placeholder="多个关键词用';'隔开,如: 数据挖掘;搜索引擎;聚类算法" required
                                                            th:value="${treatise} ? ${treatise.keywords}"/>
                                                     <p class="help-block">
                                                         <label class="error-label"
@@ -253,7 +253,7 @@
                             <tr>
                                 <th class="text-center">第几章</th>
                                 <th class="text-center">章标题</th>
-                                <th class="text-center">是否加密</th>
+                                <th class="text-center">是否公开</th>
                                 <th class="text-center">PDF</th>
                                 <th class="text-center">操作</th>
                             </tr>
@@ -274,8 +274,8 @@
                                 <td>
                                     <label>
                                         <select name="privacy" th:value="${chapter.privacy}">
-                                            <option value="1">加密</option>
-                                            <option value="0">不加密</option>
+                                            <option value="1">公开</option>
+                                            <option value="0">不公开</option>
                                         </select>
                                     </label>
                                 </td>
