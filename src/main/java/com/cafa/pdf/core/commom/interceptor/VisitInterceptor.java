@@ -1,8 +1,10 @@
 package com.cafa.pdf.core.commom.interceptor;
 
+import com.cafa.pdf.core.service.SysConfigService;
 import com.cafa.pdf.core.util.IPv4Util;
 import com.cafa.pdf.core.util.MStringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,17 +20,21 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class VisitInterceptor implements HandlerInterceptor {
 
+    @Autowired
+    private SysConfigService sysConfigService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestUri = request.getRequestURI();
-        // TODO
+        // TODO 测试
         log.info("【访问量拦截器】 requestUri: {}", requestUri);
-
         String ipStr = MStringUtils.getIpAddress(request);
         int ipInt = IPv4Util.ipToInt(ipStr);
         log.info("【访问量拦截器】 ipStr: {}", ipStr);
         log.info("【访问量拦截器】 ipInt: {}", ipInt);
 
+        Long visit = sysConfigService.addVisit();
+        log.info("【访问量拦截器】 访问量: {}", visit);
         return true;
     }
 

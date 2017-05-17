@@ -2,6 +2,7 @@ package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
+import com.cafa.pdf.core.service.SysConfigService;
 import com.cafa.pdf.core.util.MStringUtils;
 import com.cafa.pdf.core.util.SessionUtil;
 import com.cafa.pdf.core.util.ValidateCode;
@@ -14,6 +15,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,6 +43,13 @@ import java.util.Map;
 @Controller
 public class BasicController extends ABaseController {
 
+    private final SysConfigService sysConfigService;
+
+    @Autowired
+    public BasicController(SysConfigService sysConfigService) {
+        this.sysConfigService = sysConfigService;
+    }
+
     /**
      * 死机路径
      */
@@ -65,8 +74,11 @@ public class BasicController extends ABaseController {
      */
     @RequiresRoles("admin")
     @GetMapping(value = "admin")
-    public String admin(){
-        return "admin/introduce";
+    public ModelAndView admin(){
+        ModelAndView mv = new ModelAndView("admin/introduce");
+        mv.addObject("customerAmount", sysConfigService.findCustomerAmount());
+        mv.addObject("treatiseAmount", sysConfigService.findTreatiseAmount());
+        return mv;
     }
 
 	/**

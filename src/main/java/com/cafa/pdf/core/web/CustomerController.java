@@ -135,14 +135,14 @@ public class CustomerController extends ABaseController {
     }
 
     /**
-     * 保存新用户
+     * 保存
      * @param customerReq 保存的信息
      * @return ModelAndView
      */
     @RequiresRoles("admin")
     @PostMapping("/save")
     public ModelAndView save(@Validated CustomerReq customerReq, BindingResult bindingResult){
-        log.info("start to handle register param = {}",customerReq);
+        log.info("【保存新会员】 {}",customerReq);
         ModelAndView mv = new ModelAndView("admin/customer/add");
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);

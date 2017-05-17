@@ -27,11 +27,16 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         return new LocalValidatorFactoryBean();
     }
 
+    @Bean
+    public VisitInterceptor visitInterceptor(){
+        return new VisitInterceptor();
+    }
+
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        super.addViewControllers(registry);
 //        registry.addViewController("/index").setViewName("/index");
+        super.addViewControllers(registry);
     }
 
     /**
@@ -39,15 +44,14 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        super.addInterceptors(registry);
         // 访问量拦截器
-        registry.addInterceptor(new VisitInterceptor()).addPathPatterns("/");
+        registry.addInterceptor(visitInterceptor()).addPathPatterns("/");
 
+        super.addInterceptors(registry);
     }
 
     @Override
     public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
-        super.extendHandlerExceptionResolvers(exceptionResolvers);
 
         SimpleMappingExceptionResolver simpleMappingExceptionResolver = new SimpleMappingExceptionResolver();
         Properties properties = new Properties();
@@ -60,6 +64,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         simpleMappingExceptionResolver.setExceptionMappings(properties);
 
         exceptionResolvers.add(simpleMappingExceptionResolver);
+
+        super.extendHandlerExceptionResolvers(exceptionResolvers);
     }
 
 
