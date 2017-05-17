@@ -20,6 +20,7 @@ import com.cafa.pdf.core.web.request.treatise.TreatiseSaveReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
 import com.cafa.pdf.core.web.response.Response;
+import com.google.common.base.Throwables;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -37,7 +38,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author FancyKong
@@ -120,7 +124,7 @@ public class TreatiseController extends ABaseController {
             Page<TreatiseDTO> page = treatiseService.findAll(treatiseSearchReq, basicSearchReq);
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
-            log.error("获取列表失败: {}", e.getMessage());
+            log.error("获取列表失败: {}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
@@ -187,7 +191,7 @@ public class TreatiseController extends ABaseController {
 
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
-            log.error("删除失败:{}", e.getMessage());
+            log.error("删除失败:{}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
     }
@@ -222,7 +226,7 @@ public class TreatiseController extends ABaseController {
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
                 errorMap.put("msg", "系统繁忙");
-                log.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
             }
         }
         return mv;
@@ -246,7 +250,7 @@ public class TreatiseController extends ABaseController {
 
             return buildResponse(Boolean.TRUE, "保存成功", treatise);
         } catch (Exception e) {
-            log.error("添加失败:{}", e.getMessage());
+            log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }

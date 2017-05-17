@@ -1,16 +1,17 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.web.response.Response;
 import com.cafa.pdf.core.commom.dto.UserDTO;
+import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
+import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.dal.entity.User;
+import com.cafa.pdf.core.service.UserService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.user.UserModifyPasswordReq;
 import com.cafa.pdf.core.web.request.user.UserSaveReq;
 import com.cafa.pdf.core.web.request.user.UserSearchReq;
 import com.cafa.pdf.core.web.request.user.UserUpdateReq;
-import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
-import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
-import com.cafa.pdf.core.service.UserService;
+import com.cafa.pdf.core.web.response.Response;
+import com.google.common.base.Throwables;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -101,7 +102,7 @@ public class UserController extends ABaseController {
             Page<UserDTO> page = userService.findAll(userSearchReq, basicSearchReq);
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
-            log.error("获取用户列表失败: {}", e.getMessage());
+            log.error("获取用户列表失败: {}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
@@ -119,7 +120,7 @@ public class UserController extends ABaseController {
             userService.delete(userId);
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
-            log.error("删除失败:{}", e.getMessage());
+            log.error("删除失败:{}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
     }
@@ -152,7 +153,7 @@ public class UserController extends ABaseController {
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
                 errorMap.put("msg", "系统繁忙");
-                log.error("修改用户错误:{}", e.getMessage());
+                log.error("修改用户错误:{}", Throwables.getStackTraceAsString(e));
             }
         }
         return mv;
@@ -185,7 +186,7 @@ public class UserController extends ABaseController {
                 }
             } catch (Exception e) {
                 errorMap.put("msg", "系统繁忙");
-                log.error("添加用户失败:{}", e.getMessage());
+                log.error("添加用户失败:{}", Throwables.getStackTraceAsString(e));
             }
         }
         return mv;
@@ -229,7 +230,7 @@ public class UserController extends ABaseController {
                     errorMap.put("msg" ,"更改成功");
                 }
             } catch (Exception e) {
-                log.error("修改密码失败:{}", e.getMessage());
+                log.error("修改密码失败:{}", Throwables.getStackTraceAsString(e));
                 errorMap.put("msg", BUSY_MSG);
             }
         }

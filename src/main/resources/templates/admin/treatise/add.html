@@ -135,14 +135,14 @@
                                                 <div class="col-md-4 col-sm-4">
                                                     <select class="form-control" onchange="appendChildren(this)">
                                                         <option th:each="category:*{categories}"
-                                                                th:value="${category.id}" th:text="${category.name}"
+                                                                th:value="${category.id}" th:text="${category.classifiedNum}+' '+${category.name}"
                                                         ></option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4 col-sm-4">
                                                     <select id='category' name='category' class='form-control'>
                                                         <option th:each="category:*{childCategories}"
-                                                                th:value="${category.id}" th:text="${category.name}"
+                                                                th:value="${category.id}" th:text="${category.classifiedNum}+' '+${category.name}"
                                                         ></option>
                                                     </select>
                                                 </div>
@@ -601,7 +601,7 @@
                 var selectChild = '';
                 $.each(result,function (i, n) {
                     console.log(n);
-                    selectChild += "<option value='"+n.id+"'>"+n.name+"</option>";
+                    selectChild += "<option value='"+n.id+"'>"+n.classifiedNum+" "+n.name+"</option>";
                 })
                 child.append(selectChild);
             });

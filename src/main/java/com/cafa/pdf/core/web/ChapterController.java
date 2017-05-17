@@ -9,6 +9,7 @@ import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.web.request.chapter.ChapterListReq;
 import com.cafa.pdf.core.web.request.chapter.ChapterReq;
 import com.cafa.pdf.core.web.response.Response;
+import com.google.common.base.Throwables;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfCopy;
@@ -67,7 +68,7 @@ public class ChapterController extends ABaseController {
             chapterService.delete(chapterId);
             return buildResponse(Boolean.TRUE, "删除 成功", null);
         } catch (Exception e) {
-            log.error("删除失败:{}", e.getMessage());
+            log.error("删除失败:{}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
     }
@@ -102,7 +103,7 @@ public class ChapterController extends ABaseController {
             errorMap.put("msg", "修改成功");
         } catch (Exception e) {
             errorMap.put("msg", "系统繁忙");
-            log.error("修改错误:{}", e.getMessage());
+            log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
         }
         return mv;
     }
@@ -127,7 +128,7 @@ public class ChapterController extends ABaseController {
 
             return buildResponse(Boolean.TRUE, "保存成功", null);
         } catch (Exception e) {
-            log.error("添加失败:{}", e.getMessage());
+            log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
@@ -171,7 +172,7 @@ public class ChapterController extends ABaseController {
                     + request.getContextPath() + "/";
             url = basePath + "fileDownload?filename=" + newFIleName;
         } catch (Exception e) {
-            log.error("上传错误 {}", e.getMessage());
+            log.error("上传错误 {}", Throwables.getStackTraceAsString(e));
         }
         return url;
     }

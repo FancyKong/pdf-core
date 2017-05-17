@@ -172,6 +172,7 @@ public class AuthorService extends ABaseService<Author, Long> {
     public boolean active(Long checkId, String key) {
         log.info("【激活著作者】 checkId:{} key:{}", checkId, key);
         Check check = checkDAO.findOne(checkId);
+        log.info("【激活著作者】 check:{}", check);
         if (check == null || !check.getRandomKey().equals(key)) {
             return false;
         }

@@ -1,12 +1,13 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.web.response.Response;
 import com.cafa.pdf.core.commom.dto.CustomerDTO;
 import com.cafa.pdf.core.dal.entity.Customer;
+import com.cafa.pdf.core.service.CustomerService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.customer.CustomerReq;
 import com.cafa.pdf.core.web.request.customer.CustomerSearchReq;
-import com.cafa.pdf.core.service.CustomerService;
+import com.cafa.pdf.core.web.response.Response;
+import com.google.common.base.Throwables;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,7 @@ public class CustomerController extends ABaseController {
             Page<CustomerDTO> page = customerService.findAll(basicSearchReq, customerSearchReq);
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
-            log.error("获取列表失败: {}", e.getMessage());
+            log.error("获取列表失败: {}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
@@ -95,7 +96,7 @@ public class CustomerController extends ABaseController {
             customerService.delete(customerId);
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
-            log.error("删除失败:{}", e.getMessage());
+            log.error("删除失败:{}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
     }
@@ -128,7 +129,7 @@ public class CustomerController extends ABaseController {
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
                 errorMap.put("msg", "系统繁忙");
-                log.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
             }
         }
         return mv;
@@ -156,7 +157,7 @@ public class CustomerController extends ABaseController {
                 errorMap.put("msg", "添加成功");
             } catch (Exception e) {
                 errorMap.put("msg", "系统繁忙");
-                log.error("添加失败:{}", e.getMessage());
+                log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
             }
         }
         return mv;

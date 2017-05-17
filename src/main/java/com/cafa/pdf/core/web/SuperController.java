@@ -1,8 +1,9 @@
 package com.cafa.pdf.core.web;
 
+import com.cafa.pdf.core.service.SuperService;
 import com.cafa.pdf.core.web.request.su.SuperRolePermissionReq;
 import com.cafa.pdf.core.web.request.su.SuperUserRoleReq;
-import com.cafa.pdf.core.service.SuperService;
+import com.google.common.base.Throwables;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -87,7 +88,7 @@ public class SuperController extends ABaseController {
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
                 errorMap.put("msg", "系统繁忙");
-                log.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
             }
         }
         return mv;
@@ -119,7 +120,7 @@ public class SuperController extends ABaseController {
                 errorMap.put("msg", "修改角色权限成功");
             } catch (Exception e) {
                 errorMap.put("msg", "系统繁忙");
-                log.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
             }
         }
         return mv;

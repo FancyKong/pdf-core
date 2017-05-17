@@ -7,6 +7,7 @@ import com.cafa.pdf.core.util.MStringUtils;
 import com.cafa.pdf.core.util.SessionUtil;
 import com.cafa.pdf.core.util.ValidateCode;
 import com.cafa.pdf.core.web.request.LoginReq;
+import com.google.common.base.Throwables;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -37,6 +38,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -204,6 +206,11 @@ public class BasicController extends ABaseController {
         if (!multipartFile.isEmpty()) {
             File directory = new File(FILE_PATH);
 
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int day = calendar.get(Calendar.DAY_OF_MONTH) ;
+
             if (!directory.exists()) {
                 directory.mkdirs();
             }
@@ -211,15 +218,18 @@ public class BasicController extends ABaseController {
             try {
                 String originalFilename = multipartFile.getOriginalFilename();
 
-                String newFIleName = System.currentTimeMillis()//UUID.randomUUID().toString()
+                String newFIleName =
+                        originalFilename.substring(0, originalFilename.lastIndexOf("."))
+                        + year + month + day
                         + originalFilename.substring(originalFilename.lastIndexOf("."));
+
                 multipartFile.transferTo(new File(directory, newFIleName));
 //				FileUtils.copyInputStreamToFile(multipartFile.getInputStream(),
 //				new File(directory,newFIleName));
                 String basePath = MStringUtils.getBasePath(request);
                 url = basePath + "fileDownload?filename=" + newFIleName;
             } catch (IOException e) {
-                log.error("上传错误 {}", e);
+                log.error("上传错误 {}", Throwables.getStackTraceAsString(e));
             }
 
         } // end if
@@ -240,7 +250,7 @@ public class BasicController extends ABaseController {
 
     /**
      * TODO 暂时这样写，这个更改密码的链接会发送到邮箱，点击链接验证跳转来实现
-     * 忘记密码后，重写密码的页面
+     * 找回密码
      */
     @GetMapping(value = "/overridePwd")
     public String forgotPwd(){

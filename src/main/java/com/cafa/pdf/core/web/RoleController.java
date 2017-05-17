@@ -1,12 +1,13 @@
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.web.response.Response;
 import com.cafa.pdf.core.commom.dto.RoleDTO;
 import com.cafa.pdf.core.dal.entity.Role;
+import com.cafa.pdf.core.service.RoleService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.role.RoleSaveReq;
 import com.cafa.pdf.core.web.request.role.RoleUpdateReq;
-import com.cafa.pdf.core.service.RoleService;
+import com.cafa.pdf.core.web.response.Response;
+import com.google.common.base.Throwables;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -74,7 +75,7 @@ public class RoleController extends ABaseController {
             Page<RoleDTO> page = roleService.findAll(basicSearchReq);
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
         } catch (Exception e) {
-            log.error("获取列表失败: {}", e.getMessage());
+            log.error("获取列表失败: {}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, BUSY_MSG, null);
         }
     }
@@ -91,7 +92,7 @@ public class RoleController extends ABaseController {
             roleService.delete(roleId);
             return buildResponse(Boolean.TRUE, "删除成功", null);
         } catch (Exception e) {
-            log.error("删除失败:{}", e.getMessage());
+            log.error("删除失败:{}", Throwables.getStackTraceAsString(e));
             return buildResponse(Boolean.FALSE, "删除失败", null);
         }
     }
@@ -123,7 +124,7 @@ public class RoleController extends ABaseController {
                 errorMap.put("msg", "修改成功");
             } catch (Exception e) {
                 errorMap.put("msg", "系统繁忙");
-                log.error("修改错误:{}", e.getMessage());
+                log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
             }
         }
         return mv;
@@ -155,7 +156,7 @@ public class RoleController extends ABaseController {
                 }
             } catch (Exception e) {
                 errorMap.put("msg", "系统繁忙");
-                log.error("添加失败:{}", e.getMessage());
+                log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
             }
         }
         return mv;
