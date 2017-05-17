@@ -16,6 +16,8 @@ public class CustomerReq implements java.io.Serializable {
 
     private String nickname;
 
+    private String email;
+
     private String telephone;
 
     private String password;

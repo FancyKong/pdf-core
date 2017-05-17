@@ -41,7 +41,6 @@ public class UserService extends ABaseService<User, Long> {
     }
 
     public User findByUsername(String username) {
-        log.debug("username_{}没有缓存", username);
         return userDAO.findByUsername(username);
     }
 
@@ -49,8 +48,10 @@ public class UserService extends ABaseService<User, Long> {
         return userDAO.findByUsername(username) != null;
     }
 
+    public boolean existEmail(String email) {
+        return userDAO.findByEmail(email) != null;
+    }
     public Long getCount() {
-        log.debug("countAllUser没有缓存");
         return userDAO.count();
     }
 
@@ -72,11 +73,9 @@ public class UserService extends ABaseService<User, Long> {
 
     @Transactional
     public void saveByReq(UserSaveReq userSaveReq) {
-
         if (exist(userSaveReq.getUsername())) {
             return;
         }
-
         User user = new User();
         ObjectConvertUtil.objectCopy(user, userSaveReq);
         user.setCreatedTime(new Date());

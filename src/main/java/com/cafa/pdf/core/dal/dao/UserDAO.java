@@ -17,5 +17,7 @@ public interface UserDAO extends IBaseDAO<User,Long> {
     List<User> listAllPaged(Pageable pageable);
 
 
+    User findByEmail(String email);
+
 
 }

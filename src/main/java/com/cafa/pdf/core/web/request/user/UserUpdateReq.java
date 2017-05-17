@@ -3,11 +3,9 @@ package com.cafa.pdf.core.web.request.user;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
-import java.util.Date;
 
 @Data
 public class UserUpdateReq implements java.io.Serializable {
@@ -20,6 +18,8 @@ public class UserUpdateReq implements java.io.Serializable {
 
     @Pattern(regexp = "^[1][34578][0-9]{9}$", message = "请输入正确的手机号码")
     private String telephone;
+
+    private String email;
 
     @Length(min = 1 ,max = 32 ,message = "{user.position}")
     private String position;

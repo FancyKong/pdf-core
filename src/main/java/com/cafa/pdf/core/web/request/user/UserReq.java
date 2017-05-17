@@ -48,6 +48,8 @@ public class UserReq implements java.io.Serializable {
     @Pattern(regexp = "^[1][34578][0-9]{9}$", message = "请输入正确的手机号码")
     private String telephone;
 
+    private String email;
+
     @Length(min = 1 ,max = 32 ,message = "{user.position}")
     private String position;
 

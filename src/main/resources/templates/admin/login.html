@@ -96,8 +96,14 @@
             </div>
             <div class="modal-body">
                 <p>请输入您的邮箱地址找回密码。</p>
-                <input id="email" type="email" name="email" placeholder="邮箱"
-                       autocomplete="off" class="form-control placeholder-no-fix">
+                <form id="retrievePwdForm">
+                    <input id="email" type="email" name="email" placeholder="邮箱"
+                           autocomplete="off" class="form-control placeholder-no-fix">
+                    <div class="text-center">
+                        <input type="radio" name="type" value="ADMIN" checked ><label>管理员</label>
+                        <input type="radio" name="type" value="AUTHOR"><label>著作者</label>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
@@ -141,20 +147,22 @@
         $(btn).on("click", function () {
             var email = modal.find('#email').val();
             console.log("email:" + email);
+            var type = modal.find("input[name='type']:checked").val();
+            console.log("type:" + type);
+
+            var formData = modal.find('#retrievePwdForm').serialize();
+            console.log("formData:" + formData);
 
             if (isEmail(email)){
-                $(btn).unbind();
                 modal.modal("hide");
 
-                //TODO 做Ajax 提交邮箱
-                window.open("/overridePwd");
-                /*$.post("/retrievePwd", "email="+email, function(result){
+                $.post("/retrievePwd", formData, function(result){
                     if(result.success){
-
+                        myModalSuccess(result.message);
                     }else {
-                        retrievePwdModalFail(result.message);
+                        myModalFail(result.message);
                     }
-                });*/
+                });
             }else {
                 alert("请输入正确的邮箱")
             }

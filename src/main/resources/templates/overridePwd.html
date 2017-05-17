@@ -46,8 +46,10 @@
                 <br>
                 <br>
 
-                <form id="modifyPwdForm" class="form-horizontal" action="/modifyPwd" method="post">
+                <form id="modifyPwdForm" class="form-horizontal" action="/overridePwd" method="post">
 
+                    <input type="hidden" name="checkId" th:value="${checkId}"/>
+                    <input type="hidden" name="key" th:value="${key}"/>
                     <div class="form-group">
                         <label for="newPwd" class="control-label col-sm-4">新密码:</label>
                         <div class="col-sm-4">
@@ -66,21 +68,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="validateCode" class="control-label col-sm-4">验证码:</label>
-                        <div class="col-sm-2">
-                            <input type="text" id="validateCode" name="validateCode" class="form-control"
-                                   required minlength="4" maxlength="4">
-                        </div>
-                        <div class="col-sm-2">
-                            <img src="/validateCode?_modifyPwd" onclick="changeCode(this)">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         <div class="text-center">
                             <button class="btn btn-lg btn-primary" type="submit">
                                 <span class="glyphicon glyphicon-saved" aria-hidden="true"></span>
-                                密码更改
+                                确认更改
                             </button>
                         </div>
                     </div>
@@ -109,10 +100,6 @@
 </p>
 
 <script type="text/javascript">
-    function changeCode(img) {
-        $(img).attr("src", "/validateCode?_" + new Date().getTime());
-    }
-
     $(function () {
 
         $('#modifyPwdForm').validate({

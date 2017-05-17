@@ -14,7 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  * @date 2017/4/26 8:22
  */
 @Entity
-@Table(name = "t_register")
+@Table(name = "t_check")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,7 +31,7 @@ public class Check implements java.io.Serializable {
     @Column(name = "random_key", nullable = false)
     private String randomKey;
     /**
-     * 0:会员 或 1:著作者
+     * 0:会员 或 1:著作者 2:管理员
      */
     @Column(name = "active_type", nullable = false)
     private Integer activeType;

@@ -72,15 +72,6 @@ public class UserController extends ABaseController {
     }
 
     /**
-     * 用户查看个人信息的页面
-     */
-    @GetMapping("/profile")
-    public ModelAndView profile(){
-        ModelAndView mv = new ModelAndView("admin/user/profile");
-        return mv;
-    }
-
-    /**
      * 用户修改密码的页面
      */
     @GetMapping("/modifyPassword")
@@ -98,6 +89,7 @@ public class UserController extends ABaseController {
     @GetMapping("/page")
     @ResponseBody
     public Response toPage(BasicSearchReq basicSearchReq, UserSearchReq userSearchReq){
+        log.info("【用户搜索】 {}", userSearchReq);
         try {
             Page<UserDTO> page = userService.findAll(userSearchReq, basicSearchReq);
             return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
@@ -133,7 +125,7 @@ public class UserController extends ABaseController {
     @PostMapping("/update")
     @RequiresPermissions("user:update")
     public ModelAndView update(@Validated UserUpdateReq userUpdateReq, BindingResult bindingResult){
-
+        log.info("【用户修改】 {}", userUpdateReq);
         ModelAndView mv = new ModelAndView("admin/user/edit");
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);
@@ -142,19 +134,24 @@ public class UserController extends ABaseController {
             errorMap.put("msg", "数据错误");
             return mv;
         }
-
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("user", userUpdateReq);
-        }else {
-            try {
-                userService.updateByReq(userUpdateReq);
-                mv.addObject("user", userService.findById(userUpdateReq.getId()));
-                errorMap.put("msg", "修改成功");
-            } catch (Exception e) {
-                errorMap.put("msg", "系统繁忙");
-                log.error("修改用户错误:{}", Throwables.getStackTraceAsString(e));
+            return mv;
+        }
+
+        try {
+            if (userService.existEmail(userUpdateReq.getEmail())){
+                errorMap.put("msg", "该邮箱已注册");
+                mv.addObject("user", userUpdateReq);
+                return mv;
             }
+            userService.updateByReq(userUpdateReq);
+            mv.addObject("user", userService.findById(userUpdateReq.getId()));
+            errorMap.put("msg", "修改成功");
+        } catch (Exception e) {
+            errorMap.put("msg", "系统繁忙");
+            log.error("修改用户错误:{}", Throwables.getStackTraceAsString(e));
         }
         return mv;
     }
@@ -167,7 +164,7 @@ public class UserController extends ABaseController {
     @PostMapping("/save")
     @RequiresPermissions("user:add")
     public ModelAndView save(@Validated UserSaveReq userSaveReq, BindingResult bindingResult){
-
+        log.info("【用户保存】 {}", userSaveReq);
         ModelAndView mv = new ModelAndView("admin/user/add");
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);
@@ -175,19 +172,25 @@ public class UserController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("user", userSaveReq);
-        }else {
-            try {
-                if (userService.exist(userSaveReq.getUsername())){
-                    errorMap.put("msg", "该用户名已存在，请更换再试");
-                    mv.addObject("user", userSaveReq);
-                }else {
-                    userService.saveByReq(userSaveReq);
-                    errorMap.put("msg", "添加成功");
-                }
-            } catch (Exception e) {
-                errorMap.put("msg", "系统繁忙");
-                log.error("添加用户失败:{}", Throwables.getStackTraceAsString(e));
+            return mv;
+        }
+        try {
+            if (userService.existEmail(userSaveReq.getEmail())){
+                errorMap.put("msg", "该邮箱已注册");
+                mv.addObject("user", userSaveReq);
+                return mv;
             }
+            if (userService.exist(userSaveReq.getUsername())){
+                errorMap.put("msg", "该用户名已存在，请更换再试");
+                mv.addObject("user", userSaveReq);
+                return mv;
+            }
+
+            userService.saveByReq(userSaveReq);
+            errorMap.put("msg", "添加成功");
+        } catch (Exception e) {
+            errorMap.put("msg", "系统繁忙");
+            log.error("添加用户失败:{}", Throwables.getStackTraceAsString(e));
         }
         return mv;
     }

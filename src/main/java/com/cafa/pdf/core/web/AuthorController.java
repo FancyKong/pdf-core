@@ -138,6 +138,7 @@ public class AuthorController extends ABaseController {
     @RequiresRoles("admin")
     @PostMapping("/update")
     public ModelAndView update(@Validated AuthorUpdateReq updateReq, BindingResult bindingResult){
+        log.info("【更改信息】 {}", updateReq);
 
         ModelAndView mv = new ModelAndView("admin/author/edit");
         Map<String, Object> errorMap = new HashMap<>();
@@ -151,15 +152,21 @@ public class AuthorController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("author", updateReq);
-        }else {
-            try {
-                authorService.update(updateReq);
-                mv.addObject("author", authorService.findById(updateReq.getId()));
-                errorMap.put("msg", "修改成功");
-            } catch (Exception e) {
-                errorMap.put("msg", "系统繁忙");
-                log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
+            return mv;
+        }
+
+        try {
+            if (authorService.existEmail(updateReq.getEmail())){
+                errorMap.put("msg", "该邮箱已注册");
+                mv.addObject("author", updateReq);
+                return mv;
             }
+            authorService.update(updateReq);
+            mv.addObject("author", authorService.findById(updateReq.getId()));
+            errorMap.put("msg", "修改成功");
+        } catch (Exception e) {
+            errorMap.put("msg", "系统繁忙");
+            log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
         }
         return mv;
     }

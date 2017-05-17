@@ -10,6 +10,8 @@ public interface CustomerDAO extends IBaseDAO<Customer,Long> {
 
     Customer findByTelephone(String telephone);
 
+    Customer findByEmail(String email);
+
     @Query("SELECT c FROM Customer AS c ")
     List<Customer> listAllPaged(Pageable pageable);
 

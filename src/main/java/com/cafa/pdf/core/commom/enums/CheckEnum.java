@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 注册申请类别枚举
+ * 检测类别枚举
  * @author Cherish
  * @version 1.0
  * @date 2017/4/26 8:22
@@ -12,6 +12,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum CheckEnum {
+    ADMIN(2, "管理员"),
     AUTHOR(1, "著作者"),
     CUSTOMER(0, "会员"),
     UNKNOWN(-1, "未知");
@@ -20,8 +21,14 @@ public enum CheckEnum {
     private String desc;
 
     public static String getDesc(Integer num) {
+        return getEnum(num).getDesc();
+    }
+
+    public static CheckEnum getEnum(Integer num) {
         CheckEnum e;
         switch (num) {
+            case 2:
+                e = ADMIN;break;
             case 1:
                 e = AUTHOR;break;
             case 0:
@@ -29,6 +36,6 @@ public enum CheckEnum {
             default:
                 e = UNKNOWN;break;
         }
-        return e.getDesc();
+        return e;
     }
 }

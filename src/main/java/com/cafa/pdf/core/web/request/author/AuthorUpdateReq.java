@@ -19,5 +19,7 @@ public class AuthorUpdateReq implements java.io.Serializable {
     @Range(min = 0, max = 1, message = "{user.active}")
     private Integer active;
 
+    private String email;
+
 
 }

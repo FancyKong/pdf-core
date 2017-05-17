@@ -18,6 +18,8 @@ public class UserDTO implements java.io.Serializable {
 
     private String nickname;
 
+    private String email;
+
     private String telephone;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="UTC")

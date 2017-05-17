@@ -41,6 +41,10 @@ public class Customer implements java.io.Serializable {
     @Column(name = "telephone", unique = true, nullable = false, length = 11)
     private String telephone;
     /**
+     * 邮箱
+     */
+    private String email;
+    /**
      * 籍贯
      */
     private String nativePlace;
