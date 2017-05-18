@@ -52,18 +52,22 @@
                                                    class="form-control" placeholder="出版社">
                                 </div>
                             </div>
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-3 form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon"> <label for="publishDate">出版日期：</label>
                                     </span> <input name="publishDate" id="publishDate" type="text"
                                                    class="form-control" placeholder="出版日期（例：2017-04-15）">
                                 </div>
                             </div>
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-3 form-group">
                                 <div class="input-group">
-                                    <span class="input-group-addon"> <label for="language">语种：</label>
-                                    </span> <input name="language" id="language" type="text"
-                                                   class="form-control" placeholder="汉语，英语，其他...">
+                                    <span class="input-group-addon"> <label for="language">语种：</label></span>
+                                    <select id='language' name='language' class='form-control'>
+                                        <option value="">请选择</option>
+                                        <option th:each="lang:*{language}"
+                                                th:value="${lang.code}" th:text="${lang.desc}"
+                                        ></option>
+                                </select>
                                 </div>
                             </div>
 

@@ -84,7 +84,7 @@
                                                 <div class="col-md-8 col-sm-8">
                                                     <input type="text" id="bookName" name="bookName"
                                                            class="form-control"
-                                                           placeholder="专著名" minlength="1" maxlength="32" autofocus
+                                                           placeholder="专著名" minlength="1" maxlength="32"
                                                            required
                                                            th:value="${treatise} ? ${treatise.bookName}"/>
                                                     <p class="help-block">
@@ -188,7 +188,7 @@
                                                 <div class="col-md-8 col-sm-8">
                                                     <input type="text" id="publishDate" name="publishDate"
                                                            class="form_datetime form-control"
-                                                           placeholder="出版日期" data-mask="9999-99-99" required
+                                                           placeholder="出版日期" required
                                                            th:value="${treatise} ? ${#dates.format(treatise.publishDate,'yyyy-MM-dd')}
                                                                     : ${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"/>
                                                     <p class="help-block">
@@ -322,8 +322,7 @@
                                             <div class="col-md-8 col-sm-8">
                                                 <input type="text" id="price" name="price"
                                                        class="form-control"
-                                                       placeholder="定价" minlength="1" maxlength="32" autofocus
-                                                       required
+                                                       placeholder="定价" minlength="1" maxlength="32"
                                                        th:value="${treatise} ? ${treatise.price}"/>
                                                 <p class="help-block">
                                                     <label class="error-label"
@@ -338,8 +337,7 @@
                                             <div class="col-md-8 col-sm-8">
                                                 <input type="text" id="pageNumber" name="price"
                                                        class="form-control"
-                                                       placeholder="总页数" minlength="1" maxlength="32" autofocus
-                                                       required
+                                                       placeholder="总页数" minlength="1" maxlength="32"
                                                        th:value="${treatise} ? ${treatise.pageNumber}"/>
                                                 <p class="help-block">
                                                     <label class="error-label"
@@ -354,8 +352,7 @@
                                             <div class="col-md-8 col-sm-8">
                                                 <input type="text" id="words" name="words"
                                                        class="form-control"
-                                                       placeholder="字数" minlength="1" maxlength="32" autofocus
-                                                       required
+                                                       placeholder="字数" minlength="1" maxlength="32" 
                                                        th:value="${treatise} ? ${treatise.words}"/>
                                                 <p class="help-block">
                                                     <label class="error-label"
@@ -370,8 +367,7 @@
                                             <div class="col-md-8 col-sm-8">
                                                 <input type="text" id="impression" name="impression"
                                                        class="form-control"
-                                                       placeholder="印次" minlength="1" maxlength="32" autofocus
-                                                       required
+                                                       placeholder="印次" minlength="1" maxlength="32" 
                                                        th:value="${treatise} ? ${treatise.impression}"/>
                                                 <p class="help-block">
                                                     <label class="error-label"
@@ -386,8 +382,7 @@
                                             <div class="col-md-8 col-sm-8">
                                                 <input type="text" id="edition" name="edition"
                                                        class="form-control"
-                                                       placeholder="版次" minlength="1" maxlength="32" autofocus
-                                                       required
+                                                       placeholder="版次" minlength="1" maxlength="32" 
                                                        th:value="${treatise} ? ${treatise.edition}"/>
                                                 <p class="help-block">
                                                     <label class="error-label"
@@ -402,8 +397,7 @@
                                             <div class="col-md-8 col-sm-8">
                                                 <input type="text" id="bookSize" name="bookSize"
                                                        class="form-control"
-                                                       placeholder="开本" minlength="1" maxlength="32" autofocus
-                                                       required
+                                                       placeholder="开本" minlength="1" maxlength="32" 
                                                        th:value="${treatise} ? ${treatise.bookSize}"/>
                                                 <p class="help-block">
                                                     <label class="error-label"
@@ -431,10 +425,10 @@
                                             <label for="recommends"
                                                    class="control-label col-md-2 col-sm-2">系列丛书：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                        <textarea id="series" name="series"
-                                                                  class="form-control"
-                                                                  placeholder="一行一则系列丛书,即每输入一则就按一次回车键" style="height: 200px"
-                                                                  th:text="${treatise} ? ${treatise.series}"></textarea>
+                                                <textarea id="series" name="series"
+                                                          class="form-control"
+                                                          placeholder="一行一则系列丛书,即每输入一则就按一次回车键" style="height: 200px"
+                                                          th:text="${treatise} ? ${treatise.series}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['series']}"></label>
@@ -446,10 +440,10 @@
                                             <label for="recommends"
                                                    class="control-label col-md-2 col-sm-2">推荐书：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                        <textarea id="recommends" name="recommends"
-                                                                  class="form-control"
-                                                                  placeholder="一行一则推荐书,即每输入一则就按一次回车键" style="height: 200px"
-                                                                  th:text="${treatise} ? ${treatise.recommends}"></textarea>
+                                                <textarea id="recommends" name="recommends"
+                                                          class="form-control"
+                                                          placeholder="一行一则推荐书,即每输入一则就按一次回车键" style="height: 200px"
+                                                          th:text="${treatise} ? ${treatise.recommends}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['recommends']}"></label>
@@ -461,10 +455,10 @@
                                             <label for="relatedBooks"
                                                    class="control-label col-md-2 col-sm-2">相关著作书目：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                        <textarea id="relatedBooks" name="relatedBooks"
-                                                                  class="form-control"
-                                                                  placeholder="一行一则相关著作书目,即每输入一则就按一次回车键" style="height: 200px"
-                                                                  th:text="${treatise} ? ${treatise.relatedBooks}"></textarea>
+                                                <textarea id="relatedBooks" name="relatedBooks"
+                                                          class="form-control"
+                                                          placeholder="一行一则相关著作书目,即每输入一则就按一次回车键" style="height: 200px"
+                                                          th:text="${treatise} ? ${treatise.relatedBooks}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['relatedBooks']}"></label>
@@ -476,10 +470,10 @@
                                             <label for="introductory"
                                                    class="control-label col-md-2 col-sm-2">序：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                        <textarea id="introductory" name="introductory"
-                                                                  class="form-control"
-                                                                  placeholder="序" style="height: 150px"
-                                                                  th:text="${treatise} ? ${treatise.introductory}"></textarea>
+                                                <textarea id="introductory" name="introductory"
+                                                          class="form-control"
+                                                          placeholder="序" style="height: 150px"
+                                                          th:text="${treatise} ? ${treatise.introductory}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['introductory']}"></label>
@@ -491,10 +485,10 @@
                                             <label for="preface"
                                                    class="control-label col-md-2 col-sm-2">前言：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                        <textarea id="preface" name="preface"
-                                                                  class="form-control"
-                                                                  placeholder="前言" style="height: 150px"
-                                                                  th:text="${treatise} ? ${treatise.preface}"></textarea>
+                                                <textarea id="preface" name="preface"
+                                                          class="form-control"
+                                                          placeholder="前言" style="height: 150px"
+                                                          th:text="${treatise} ? ${treatise.preface}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['preface']}"></label>
@@ -506,10 +500,10 @@
                                             <label for="exordium"
                                                    class="control-label col-md-2 col-sm-2">绪言：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                        <textarea id="exordium" name="exordium"
-                                                                  class="form-control"
-                                                                  placeholder="绪言" style="height: 150px"
-                                                                  th:text="${treatise} ? ${treatise.exordium}"></textarea>
+                                                <textarea id="exordium" name="exordium"
+                                                          class="form-control"
+                                                          placeholder="绪言" style="height: 150px"
+                                                          th:text="${treatise} ? ${treatise.exordium}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['exordium']}"></label>
@@ -521,10 +515,10 @@
                                             <label for="review"
                                                    class="control-label col-md-2 col-sm-2">书评：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                        <textarea id="review" name="review"
-                                                                  class="form-control"
-                                                                  placeholder="书评" style="height: 150px"
-                                                                  th:text="${treatise} ? ${treatise.review}"></textarea>
+                                                <textarea id="review" name="review"
+                                                          class="form-control"
+                                                          placeholder="书评" style="height: 150px"
+                                                          th:text="${treatise} ? ${treatise.review}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['review']}"></label>
@@ -536,10 +530,10 @@
                                             <label for="postscript"
                                                    class="control-label col-md-2 col-sm-2">跋：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                        <textarea id="postscript" name="description"
-                                                                  class="form-control"
-                                                                  placeholder="跋" style="height: 150px"
-                                                                  th:text="${treatise} ? ${treatise.postscript}"></textarea>
+                                                <textarea id="postscript" name="description"
+                                                          class="form-control"
+                                                          placeholder="跋" style="height: 150px"
+                                                          th:text="${treatise} ? ${treatise.postscript}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['postscript']}"></label>
@@ -551,10 +545,10 @@
                                             <label for="appendix"
                                                    class="control-label col-md-2 col-sm-2">章外后记：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                        <textarea id="appendix" name="appendix"
-                                                                  class="form-control"
-                                                                  placeholder="章外后记" style="height: 150px"
-                                                                  th:text="${treatise} ? ${treatise.appendix}"></textarea>
+                                                <textarea id="appendix" name="appendix"
+                                                          class="form-control"
+                                                          placeholder="章外后记" style="height: 150px"
+                                                          th:text="${treatise} ? ${treatise.appendix}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['appendix']}"></label>

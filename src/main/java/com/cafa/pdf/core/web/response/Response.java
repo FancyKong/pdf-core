@@ -10,7 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class Response<T> implements java.io.Serializable {
     private static final long serialVersionUID = -222983483999088181L;
-    private Integer code;
+    private String code;
     private Boolean success;
     private String message;
     private T data;

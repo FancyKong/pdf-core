@@ -38,14 +38,14 @@ public class ABaseController {
 	}
 
 	protected Response buildResponse(Integer code, Boolean success, String message, Object data) {
-		return new Response(code, success, message, data);
+		return new Response<>(String.valueOf(code), success, message, data);
 	}
 
 	protected Map<String, String> getErrors(BindingResult result) {
 		Map<String, String> map = new HashMap<>();
 		List<FieldError> list = result.getFieldErrors();
 		for (FieldError error : list) {
-			log.debug("error: {} -> {}", error.getField(), error.getDefaultMessage());
+			log.debug("【参数检验】 error: {} -> {}", error.getField(), error.getDefaultMessage());
 			map.put(error.getField(), error.getDefaultMessage());
 		}
 		return map;

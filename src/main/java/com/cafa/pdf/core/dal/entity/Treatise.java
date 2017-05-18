@@ -134,7 +134,7 @@ public class Treatise implements java.io.Serializable {
      * 关键词
      */
     @Column(nullable = false)
-    private String keywords;
+    private String keywords = "";
     /**
      * 参考文献
      */

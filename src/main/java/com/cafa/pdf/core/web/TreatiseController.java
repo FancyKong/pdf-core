@@ -16,11 +16,10 @@ import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
-import com.cafa.pdf.core.web.request.treatise.TreatiseSaveReq;
+import com.cafa.pdf.core.web.request.treatise.TreatiseSaveCoreReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
 import com.cafa.pdf.core.web.response.Response;
-import com.google.common.base.Throwables;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -31,17 +30,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author FancyKong
@@ -120,13 +115,9 @@ public class TreatiseController extends ABaseController {
     @GetMapping("/page")
     @ResponseBody
     public Response toPage(BasicSearchReq basicSearchReq, TreatiseSearchReq treatiseSearchReq) {
-        try {
-            Page<TreatiseDTO> page = treatiseService.findAll(treatiseSearchReq, basicSearchReq);
-            return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
-        } catch (Exception e) {
-            log.error("获取列表失败: {}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, BUSY_MSG, null);
-        }
+        log.info("【分页查询】 {}", treatiseSearchReq);
+        Page<TreatiseDTO> page = treatiseService.findAll(treatiseSearchReq, basicSearchReq);
+        return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
     }
 
     /**
@@ -177,6 +168,7 @@ public class TreatiseController extends ABaseController {
 
     /**
      * 删除
+     * @see com.cafa.pdf.core.web.aop.ControllerAspect
      * @param treatiseId ID
      * @return JSON
      */
@@ -184,16 +176,11 @@ public class TreatiseController extends ABaseController {
     @ResponseBody
     @RequiresPermissions("treatise:delete")
     public Response delete(@PathVariable("treatiseId") Long treatiseId) {
-        try {
-            treatiseService.delete(treatiseId);
-            //TODO 级联删除，著作章节，solr等, 应该放在同一个事务下
-            chapterService.deleteAllByTreatiseId(treatiseId);
+        //TODO 级联删除，著作章节，solr等, 应该放在同一个事务下
+        chapterService.deleteAllByTreatiseId(treatiseId);
+        treatiseService.delete(treatiseId);
 
-            return buildResponse(Boolean.TRUE, "删除成功", null);
-        } catch (Exception e) {
-            log.error("删除失败:{}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, "删除失败", null);
-        }
+        return buildResponse(Boolean.TRUE, "删除成功", null);
     }
 
     /**
@@ -203,58 +190,27 @@ public class TreatiseController extends ABaseController {
      */
     @PostMapping("/update")
     @RequiresPermissions("treatise:update")
-    public ModelAndView update(@Validated TreatiseUpdateReq treatiseUpdateReq, BindingResult bindingResult) {
-        log.info("【更改】 {}", treatiseUpdateReq);
-
-        ModelAndView mv = new ModelAndView("admin/treatise/edit");
-        Map<String, Object> errorMap = new HashMap<>();
-        mv.addObject("errorMap", errorMap);
-
-        if (treatiseUpdateReq == null || treatiseUpdateReq.getId() == null) {
-            errorMap.put("msg", "数据错误");
-            return mv;
-        }
-
-        if (bindingResult.hasErrors()) {
-            errorMap.putAll(getErrors(bindingResult));
-            mv.addObject("treatise", treatiseUpdateReq);
-        } else {
-            try {
-                treatiseService.update(treatiseUpdateReq);
-                mv.addObject("treatise", treatiseService.findById(treatiseUpdateReq.getId()));
-                mv.addObject("chapters", chapterService.findByTreatiseId(treatiseUpdateReq.getId()));
-                errorMap.put("msg", "修改成功");
-            } catch (Exception e) {
-                errorMap.put("msg", "系统繁忙");
-                log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
-            }
-        }
-        return mv;
+    @ResponseBody
+    public Response update(TreatiseUpdateReq treatiseUpdateReq) {
+        log.info("【更改信息】 {}", treatiseUpdateReq);
+        TreatiseDTO treatise = treatiseService.update(treatiseUpdateReq);
+        return buildResponse(Boolean.TRUE, "保存成功", treatise);
     }
 
     /**
-     * 保存
+     * 保存核心信息
+     * @see com.cafa.pdf.core.web.aop.ControllerAspect
      * @param treatiseSaveReq 保存的信息
      * @return ModelAndView
      */
-    @PostMapping("/save")
+    @PostMapping("/saveCore")
     @RequiresPermissions("treatise:add")
     @ResponseBody
-    public Response save(@Validated TreatiseSaveReq treatiseSaveReq, BindingResult bindingResult) {
-        log.info("【保存】 {}", treatiseSaveReq);
-        try {
-            TreatiseDTO treatise = treatiseService.save(treatiseSaveReq);
-            //TODO call this method to save in solr next
-            // 现在测试，没有发到solr
-            // saveTreatiseInSolr("abc");
-
-            return buildResponse(Boolean.TRUE, "保存成功", treatise);
-        } catch (Exception e) {
-            log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, BUSY_MSG, null);
-        }
+    public Response saveCore(TreatiseSaveCoreReq treatiseSaveReq) {
+        log.info("【保存核心信息】 {}", treatiseSaveReq);
+        TreatiseDTO treatise = treatiseService.save(treatiseSaveReq);
+        return buildResponse(Boolean.TRUE, "保存成功", treatise);
     }
-
 
     @GetMapping("pdf")
     public ResponseEntity<byte[]> showPDF() throws IOException {

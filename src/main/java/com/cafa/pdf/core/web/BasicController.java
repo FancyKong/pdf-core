@@ -198,7 +198,7 @@ public class BasicController extends ABaseController {
     }
 
     //文件存放路径
-    private static final String FILE_PATH = "F:/cherish";
+    private static final String FILE_PATH = "F:/pdf-core/file/";
 
     @PostMapping("/imageUpload")
     @ResponseBody

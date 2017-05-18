@@ -59,7 +59,7 @@ public class Author implements java.io.Serializable {
      * 出生年、籍贯、学历、单位、职称、职务
      */
     @Column(name = "birth_year")
-    private String birthYear;
+    private Integer birthYear;
     @Column(name = "birth_place")
     private String birthPlace;
     private String education;

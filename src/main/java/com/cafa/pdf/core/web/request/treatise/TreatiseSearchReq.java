@@ -18,10 +18,7 @@ public class TreatiseSearchReq implements java.io.Serializable {
     private String publishPlace;
     @DateTimeFormat(pattern="yyyy-MM-dd",iso = DateTimeFormat.ISO.DATE)
     private Date publishDate;
-    private Integer pageNum;
     private String language;
-    private String revision;
-    private String description;
 
 
 }

@@ -59,10 +59,10 @@ public class ChapterService extends ABaseService<Chapter, Long> {
     }
 
     @Transactional
-    public void save(ChapterReq chapterReq) {
+    public Chapter save(ChapterReq chapterReq) {
         Chapter chapter = new Chapter();
         ObjectConvertUtil.objectCopy(chapter, chapterReq);
-        this.save(chapter);
+        return this.save(chapter);
     }
 
     @Transactional

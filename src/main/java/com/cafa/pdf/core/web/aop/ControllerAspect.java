@@ -1,13 +1,11 @@
 package com.cafa.pdf.core.web.aop;
 
-import com.cafa.pdf.core.web.response.Response;
 import com.cafa.pdf.core.commom.enums.ErrorCode;
 import com.cafa.pdf.core.commom.exception.ServiceException;
+import com.cafa.pdf.core.web.response.Response;
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +22,8 @@ import java.util.Set;
 @Component
 public class ControllerAspect {
 
-	private final LocalValidatorFactoryBean localValidatorFactoryBean;
-
-	@Autowired
-	public ControllerAspect(LocalValidatorFactoryBean localValidatorFactoryBean) {
-		this.localValidatorFactoryBean = localValidatorFactoryBean;
-	}
-
-	/**
-     * 全局测试
-     */
-	@After("execution(public * com.cafa.pdf.core.web.*Controller.*(..))")
-	public void allAfter(JoinPoint joinPoint) {
-		log.info("ControllerAspect : " + joinPoint);
-	}
+    @Autowired
+	private LocalValidatorFactoryBean localValidatorFactoryBean;
 
     /**
      * 对返回JSON 的做切面，不包括后台模板ModelAndView那种
@@ -72,19 +58,19 @@ public class ControllerAspect {
 				if (throwable instanceof ServiceException) {
 					//逻辑错误
 					ServiceException e = (ServiceException) throwable;
-					response = new Response<>(Integer.valueOf(e.getCode()), Boolean.FALSE, e.getMessage(), null);
+					response = new Response<>(e.getCode(), Boolean.FALSE, e.getMessage(), null);
 					stopwatch.stop();
 					log.info("Failed to call {}, RESULT: {}, ELAPSED: {}", controllerName, response, stopwatch);
 				} else if (throwable instanceof DataAccessException) {
 					//数据库有问题
-					response = new Response<>(Integer.valueOf(ErrorCode.ERROR_CODE_500_002.getCode()), Boolean.FALSE,
+					response = new Response<>(ErrorCode.ERROR_CODE_500_002.getCode(), Boolean.FALSE,
 							ErrorCode.ERROR_CODE_500_002.getDesc(), null);
 					stopwatch.stop();
 					log.info("Failed to call {}, RESULT: {}, ELAPSED: {}", controllerName, response, stopwatch);
 					log.error("Failed to call {}, RESULT: {}, CAUSE: {}", controllerName, response, Throwables.getStackTraceAsString(throwable));
 				} else {
 					//内部错误
-					response = new Response<>(Integer.valueOf(ErrorCode.ERROR_CODE_500_001.getCode()), Boolean.FALSE,
+					response = new Response<>(ErrorCode.ERROR_CODE_500_001.getCode(), Boolean.FALSE,
 							ErrorCode.ERROR_CODE_500_001.getDesc(), null);
 					stopwatch.stop();
 					log.info("Failed to call {}, RESULT: {}, ELAPSED: {}", controllerName, response, stopwatch);
@@ -101,7 +87,7 @@ public class ControllerAspect {
 	 * @throws ServiceException 服务异常
 	 */
 	private <T> void validate(T object, Class<?>... groups) throws ServiceException {
-		Set<ConstraintViolation<T>> constraintViolations = localValidatorFactoryBean.validate(object, groups);
+        Set<ConstraintViolation<T>> constraintViolations = localValidatorFactoryBean.validate(object, groups);
 		if (constraintViolations != null && constraintViolations.size() > 0) {
 			ConstraintViolation c = constraintViolations.iterator().next();
             throw new ServiceException(ErrorCode.ERROR_CODE_400.getCode(), c.getMessage());

@@ -48,7 +48,7 @@ public class AuthorRegisterReq implements java.io.Serializable {
     /**
      * 出生年、籍贯、学历、单位、职称、职务
      */
-    private String birthYear;
+    private Integer birthYear;
     private String birthPlace;
     private String education;
     private String company;

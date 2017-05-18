@@ -1,12 +1,12 @@
 package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.exception.ServiceException;
+import com.cafa.pdf.core.dal.entity.Chapter;
 import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
 import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import com.cafa.pdf.core.dal.solr.repository.ChapterSolrRepository;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.service.ChapterService;
-import com.cafa.pdf.core.web.request.chapter.ChapterListReq;
 import com.cafa.pdf.core.web.request.chapter.ChapterReq;
 import com.cafa.pdf.core.web.response.Response;
 import com.google.common.base.Throwables;
@@ -25,15 +25,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Cherish
@@ -64,13 +60,9 @@ public class ChapterController extends ABaseController {
     @DeleteMapping("/{chapterId}/delete")
     @ResponseBody
     public Response delete(@PathVariable("chapterId") Long chapterId) {
-        try {
-            chapterService.delete(chapterId);
-            return buildResponse(Boolean.TRUE, "删除 成功", null);
-        } catch (Exception e) {
-            log.error("删除失败:{}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, "删除失败", null);
-        }
+        //TODO 同时要删除solr中的数据
+        chapterService.delete(chapterId);
+        return buildResponse(Boolean.TRUE, "删除 成功", null);
     }
 
     /**
@@ -98,6 +90,7 @@ public class ChapterController extends ABaseController {
         }
 
         try {
+            //TODO 同时要更新solr中的数据
             chapterService.update(chapterReq);
             mv.addObject("chapter", chapterService.findById(chapterReq.getId()));
             errorMap.put("msg", "修改成功");
@@ -110,43 +103,51 @@ public class ChapterController extends ABaseController {
 
     /**
      * 保存
-     * @param chapterListReq 保存的信息
-     * @return ModelAndView
+     * @param chapterReq 保存的信息
+     * @return Response
      */
     @PostMapping("/save")
     @ResponseBody
-    public Response save(@Validated @RequestBody ChapterListReq chapterListReq, BindingResult bindingResult) {
-        log.info("【保存】 {}", chapterListReq);
-
-        List<ChapterReq> chapterReqList = chapterListReq.getChapters();
-        if (chapterReqList == null || chapterReqList.isEmpty()) {
-            return buildResponse(Boolean.FALSE, "无章节信息", null);
+    public Response save(ChapterReq chapterReq, @RequestParam("pdf") MultipartFile multipartFile) {
+        log.info("【保存】 {}", chapterReq);
+        if (multipartFile.isEmpty()) {
+            return buildResponse(Boolean.FALSE, "请上传文件", null);
         }
+
+        File directory = new File(FILE_PATH);
+
+//        Calendar calendar = Calendar.getInstance();
+//        int year = calendar.get(Calendar.YEAR);
+//        int month = calendar.get(Calendar.MONTH) + 1;
+//        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        String newFIleName;
         try {
-            // TODO solr 等 其它。。。
-            chapterService.saveChapters(chapterReqList);
-
-            return buildResponse(Boolean.TRUE, "保存成功", null);
+            newFIleName = uploadPdf(multipartFile, chapterReq);
         } catch (Exception e) {
-            log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, BUSY_MSG, null);
+            log.error("【章节上传】 {}", Throwables.getStackTraceAsString(e));
+            throw new ServiceException("500", "文件解析出错");
         }
+        chapterReq.setUrl(newFIleName);
+        Chapter chapter = chapterService.save(chapterReq);
+
+        return buildResponse(Boolean.TRUE, "保存成功", chapter);
     }
 
 
     //TODO 文件存放路径
-    private static final String FILE_PATH = "/pdf-core/file/";
-
-    private static int test = 1;
+    private static final String FILE_PATH = "F:/pdf_core/file/";
     /**
      * 上传章节的pdf
      * @param multipartFile 文件
-     * @param request HttpServletRequest
+     * @param chapterReq ChapterReq
      * @return url 文件存放路径
      */
-    @PostMapping("/uploadPdf")
-    @ResponseBody
-    public String uploadPdf(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request){
+    private String uploadPdf(MultipartFile multipartFile, ChapterReq chapterReq) throws Exception {
         if (multipartFile.isEmpty()) {
             throw new ServiceException("403", "没有文件数据");
         }
@@ -155,33 +156,24 @@ public class ChapterController extends ABaseController {
         if (!".pdf".equals(extendName)) {
             throw new ServiceException("403", "非pdf文件");
         }
-        long treatiseId = Long.parseLong(request.getParameter("treatiseId"));
-        int chapterSeq = Integer.parseInt(request.getParameter("seq"));
+        long treatiseId = chapterReq.getTreatiseId();
+        int chapterSeq = chapterReq.getSeq();
         File directory = new File(FILE_PATH+treatiseId+"/"+chapterSeq+"/");
         if (!directory.exists()) {
             directory.mkdirs();
         }
-        String url = "上传出错";
-        try {
-            String newFIleName = System.currentTimeMillis() + extendName;
-            //multipartFile.transferTo(new File(directory, newFIleName));
-            String solrContent = splitPDFAndGetContent(multipartFile.getInputStream(),
-                    directory);
-            saveChapterInSolr(solrContent,treatiseId,chapterSeq);
-            String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                    + request.getContextPath() + "/";
-            url = basePath + "fileDownload?filename=" + newFIleName;
-        } catch (Exception e) {
-            log.error("上传错误 {}", Throwables.getStackTraceAsString(e));
-        }
-        return url;
+        String newFIleName = System.currentTimeMillis() + extendName;
+        String solrContent = splitPDFAndGetContent(multipartFile.getInputStream(), directory);
+        saveChapterInSolr(solrContent,treatiseId,chapterSeq);
+        return newFIleName;
     }
 
     private void saveChapterInSolr(String solrContent, long treatiseId, int chapterSeq) {
         //TODO　to find treatiseSolrId by treatiseId in mysql
-        String treatiseSolrId = "abc";
+        String treatiseSolrId = treatiseId + "";
+
         ChapterSolrDoc chapter = new ChapterSolrDoc();
-        chapter.setId(UUID.randomUUID().toString().replace("-",""));
+        chapter.setId(UUID.randomUUID().toString().replaceAll("-",""));
         chapter.setTreatiseId(treatiseSolrId);
         chapter.setContent(solrContent);
         chapter.setSeq(chapterSeq);

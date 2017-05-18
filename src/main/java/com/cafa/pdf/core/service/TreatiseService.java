@@ -14,12 +14,11 @@ import com.cafa.pdf.core.dal.dao.TreatiseDAO;
 import com.cafa.pdf.core.dal.entity.Treatise;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
-import com.cafa.pdf.core.web.request.treatise.TreatiseSaveReq;
+import com.cafa.pdf.core.web.request.treatise.TreatiseSaveCoreReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,9 +52,7 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
 
     public Page<TreatiseDTO> findAll(TreatiseSearchReq treatiseSearchReq, BasicSearchReq basicSearchReq) {
         int pageNumber = basicSearchReq.getStartIndex() / basicSearchReq.getPageSize() + 1;
-        PageRequest pageRequest = super.buildPageRequest(pageNumber, basicSearchReq.getPageSize());
 
-        //有了其它搜索条件
         Page<Treatise> treatisePage = super.findAllBySearchParams(
                 buildSearchParams(treatiseSearchReq), pageNumber, basicSearchReq.getPageSize());
 
@@ -75,7 +72,7 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
     }
 
     @Transactional
-    public TreatiseDTO save(TreatiseSaveReq treatiseSaveReq) {
+    public TreatiseDTO save(TreatiseSaveCoreReq treatiseSaveReq) {
         Treatise treatise = new Treatise();
         ObjectConvertUtil.objectCopy(treatise, treatiseSaveReq);
         Treatise save = save(treatise);
@@ -90,7 +87,6 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         treatiseDTO.setLanguage(Language.valueOf(source.getLanguage()).getDesc());
         treatiseDTO.setPublicationMode(PublicationMode.valueOf(source.getPublicationMode()).getDesc());
         treatiseDTO.setISBN(source.getISBN());
-        log.info("isbn = {}",source.getISBN());
         return treatiseDTO;
     }
 

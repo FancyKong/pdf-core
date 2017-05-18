@@ -87,8 +87,6 @@
 		});
 		//重置
 		$("#btn_reset").click(function(){
-			$("#ISBN").val("");
-			$("#bookName").val("");
 			oTable.draw();
 		});
 		//刷新
@@ -97,7 +95,7 @@
 		});
 		
 		// 回车键事件 
-		$("#ISBN").keypress(function(e) { 
+		$("#ISBN").keypress(function(e) {
 	        if(e.keyCode == 13) {
 	    	   $("#btn_search").click();
 	        }
@@ -140,6 +138,9 @@
 			} else {//非模糊查询
 				param.ISBN = $("#ISBN").val();
 				param.bookName = $("#bookName").val();
+				param.publishHouse = $("#publishHouse").val();
+				param.publishDate = $("#publishDate").val();
+				param.language = $("#language").val();
 			}
 			//组装分页参数
 			param.startIndex = data.start;
@@ -184,20 +185,16 @@
     //表格行编辑操作
     $('#otable').on('click', 'a.op_edit', function (e) {
         e.preventDefault();
-        /* Get the row as a parent of the link that was clicked on */
-        //var nRow = $(this).parents('tr')[0];
-        //var id = oTable.row(nRow).id();
-        var id = 1;
+        var nRow = $(this).parents('tr')[0];
+        var id = oTable.row(nRow).id();
         var url = "/treatise/" + id + "/update";
         window.open(url, "_self");
     });
 	//表格行查看操作
     $('#otable').on('click', 'a.op_info', function (e) {
         e.preventDefault();
-		/* Get the row as a parent of the link that was clicked on */
-        //var nRow = $(this).parents('tr')[0];
-        //var id = oTable.row(nRow).id();
-        var id = 1;
+        var nRow = $(this).parents('tr')[0];
+        var id = oTable.row(nRow).id();
         var url = "/treatise/" + id + "/info";
         window.open(url, "_self");
     });
