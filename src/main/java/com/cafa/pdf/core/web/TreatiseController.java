@@ -5,6 +5,7 @@
 package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.dto.ChapterDTO;
+import com.cafa.pdf.core.commom.dto.TreatiseAndChaptersDTO;
 import com.cafa.pdf.core.commom.dto.TreatiseDTO;
 import com.cafa.pdf.core.commom.enums.Language;
 import com.cafa.pdf.core.commom.enums.PublicationMode;
@@ -179,7 +180,6 @@ public class TreatiseController extends ABaseController {
         //TODO 级联删除，著作章节，solr等, 应该放在同一个事务下
         chapterService.deleteAllByTreatiseId(treatiseId);
         treatiseService.delete(treatiseId);
-
         return buildResponse(Boolean.TRUE, "删除成功", null);
     }
 
@@ -244,5 +244,24 @@ public class TreatiseController extends ABaseController {
         return new ResponseEntity<>(
                 FileUtils.readFileToByteArray(file),
                 headers, HttpStatus.OK);
+    }
+
+    /**
+     * 返回修改著作信息
+     */
+    @GetMapping("/{treatiseId}")
+    @ResponseBody
+    public Response info(@PathVariable("treatiseId") Long treatiseId) {
+        TreatiseDTO treatise = treatiseService.findOne(treatiseId);
+        if (treatise == null) {// 404
+            return buildResponse(Boolean.FALSE, "此资源找不到", null);
+        }
+        List<ChapterDTO> chapters = chapterService.findByTreatiseId(treatise.getId());
+
+        TreatiseAndChaptersDTO treatiseAndChaptersDTO = new TreatiseAndChaptersDTO();
+        treatiseAndChaptersDTO.setTreatise(treatise);
+        treatiseAndChaptersDTO.setChapters(chapters);
+
+        return buildResponse(Boolean.TRUE, "", treatiseAndChaptersDTO);
     }
 }

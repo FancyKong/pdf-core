@@ -1,9 +1,12 @@
 package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.dto.AuthorDTO;
+import com.cafa.pdf.core.commom.dto.TreatiseDTO;
 import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.service.AuthorService;
+import com.cafa.pdf.core.service.ChapterService;
+import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorRegisterReq;
 import com.cafa.pdf.core.web.request.author.AuthorSearchReq;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,10 +35,12 @@ import java.util.Map;
 public class AuthorController extends ABaseController {
 
     private final AuthorService authorService;
+    private final TreatiseService treatiseService;
 
     @Autowired
-    public AuthorController(AuthorService authorService) {
+    public AuthorController(AuthorService authorService, TreatiseService treatiseService, ChapterService chapterService) {
         this.authorService = authorService;
+        this.treatiseService = treatiseService;
     }
 
     /**
@@ -45,10 +51,18 @@ public class AuthorController extends ABaseController {
     @GetMapping({"","/","/index"})
     public ModelAndView index(){
         ModelAndView mv = new ModelAndView("author/index");
-        // TODO 查询信息，以及个人的著作信息
-        Author author = authorService.findByUsername(ShiroUserUtil.getUsername());
-        mv.addObject(author);
-
+        // 查询个人信息
+        Author author = authorService.findById(ShiroUserUtil.getUserId());
+        mv.addObject("author", author);
+        // 著作信息
+        List<TreatiseDTO> treatises = treatiseService.findByAuthorId(ShiroUserUtil.getUserId());
+        mv.addObject("treatises", treatises);
+        // 总点击量
+        long sumHits = 0L;
+        for (TreatiseDTO treatise : treatises) {
+            sumHits += treatise.getHits();
+        }
+        mv.addObject("sumHits", sumHits);
         return mv;
     }
     /**
@@ -209,7 +223,7 @@ public class AuthorController extends ABaseController {
         } catch (Exception e) {
             errorMap.put("msg", "系统繁忙");
             log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
-            
+
         }
         return mv;
     }

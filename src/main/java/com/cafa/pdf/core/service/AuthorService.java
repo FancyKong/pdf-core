@@ -148,7 +148,7 @@ public class AuthorService extends ABaseService<Author, Long> {
         }
         return true;
     }
-
+    @Transactional
     public boolean existUsername(String username) {
         Author author = authorDAO.findByUsername(username);
         if (author == null) {

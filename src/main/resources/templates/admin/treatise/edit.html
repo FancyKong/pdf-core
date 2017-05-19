@@ -51,7 +51,7 @@
                                 <div class="widget-block">
                                     <div class="widget-content box-padding">
                                         <form id="treatiseForm" class=" form-horizontal left-align form-well"
-                                              th:action="@{/treatise/save}" method="post">
+                                              th:action="@{/treatise/update}" method="post">
                                             <div class="form-group">
                                                 <label for="ISBN" class="control-label col-md-2 col-sm-2">ISBN：</label>
                                                 <div class="col-md-8 col-sm-8">
@@ -273,9 +273,9 @@
                                 </td>
                                 <td>
                                     <label>
-                                        <select name="privacy" th:value="${chapter.privacy}">
+                                        <select name="privacy">
                                             <option value="1">公开</option>
-                                            <option value="0">不公开</option>
+                                            <option value="0" th:attr="selected=(${chapter.privacy} eq 0)">不公开</option>
                                         </select>
                                     </label>
                                 </td>
@@ -315,7 +315,7 @@
                             <div class="widget-block">
                                 <div class="widget-content box-padding">
                                     <form id="extraInfoForm" class=" form-horizontal left-align form-well"
-                                          th:action="@{/treatise/save}" method="post">
+                                          th:action="@{/treatise/update}" method="post">
                                         <div class="form-group">
                                             <label for="price"
                                                    class="control-label col-md-2 col-sm-2">定价：</label>

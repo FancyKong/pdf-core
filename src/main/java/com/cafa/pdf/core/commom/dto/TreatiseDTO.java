@@ -4,14 +4,11 @@
  */
 package com.cafa.pdf.core.commom.dto;
 
-import com.cafa.pdf.core.commom.enums.Language;
-import com.cafa.pdf.core.commom.enums.PublicationMode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import java.util.Date;
 
 /**
@@ -43,6 +40,10 @@ public class TreatiseDTO implements java.io.Serializable {
      * 作者
      */
     private String author;
+    /**
+     * 简介
+     */
+    private String description;
     /**
      * 类别
      */

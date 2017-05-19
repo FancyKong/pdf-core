@@ -22,6 +22,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author FancyKong
  * @file TreatiseService.java
@@ -90,4 +94,19 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         return treatiseDTO;
     }
 
+    public List<TreatiseDTO> findByAuthorId(Long authorId) {
+        List<Treatise> treatises = treatiseDAO.findByAuthorId(authorId);
+        if (treatises == null || treatises.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return treatises.stream().map(this::getTreatiseDTO).collect(Collectors.toList());
+    }
+
+    public TreatiseDTO findOne(Long treatiseId) {
+        Treatise treatise = treatiseDAO.findOne(treatiseId);
+        if (treatise == null) {
+            return null;
+        }
+        return getTreatiseDTO(treatise);
+    }
 }

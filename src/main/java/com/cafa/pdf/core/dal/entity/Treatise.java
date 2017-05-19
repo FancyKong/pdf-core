@@ -38,17 +38,17 @@ public class Treatise implements java.io.Serializable {
      * 总页数,单位:页
      */
     @Column(name="page_number",nullable = false)
-    private int pageNumber = 0;
+    private Integer pageNumber = 0;
     /**
      * 字数,单位:千字
      */
     @Column(nullable = false)
-    private int words = 0;
+    private Integer words = 0;
     /**
      * 定价,单位:分
      */
     @Column(nullable = false)
-    private int price = 0;
+    private Integer price = 0;
     /**
      * 出版日期
      */
@@ -89,7 +89,7 @@ public class Treatise implements java.io.Serializable {
      * 序
      */
     @Column(nullable = false)
-    private String introductory = "";
+    private String Integerroductory = "";
     /**
      * 前言
      */

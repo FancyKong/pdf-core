@@ -15,7 +15,6 @@
         body{
             background-color: #EFF0F4;
         }
-
     </style>
 </head>
 
@@ -32,7 +31,7 @@
                 <div class="panel-body">
                     <div class="summary">
                         <label>总点击量</label>
-                        <h3 class="red-txt">5,600</h3>
+                        <h3 class="red-txt" th:text="${sumHits}">5,600</h3>
                     </div>
                 </div>
             </section>
@@ -60,7 +59,7 @@
                                     </li>
                                     <li>
                                         <div class="title">性别</div>
-                                        <div class="desk">男</div>
+                                        <div class="desk" th:text="${author.gender}">男</div>
                                     </li>
                                     <li>
                                         <div class="title">出生年份</div>
@@ -104,33 +103,19 @@
                             <header class="panel-heading">我的专著</header>
                             <div class="panel-body">
                                 <div class="list-group">
-                                    <a href="javascript:void(0);" class="list-group-item">
+                                    <!--<a href="javascript:void(0);" class="list-group-item">
                                         <span class="badge">点击量：1444</span>
                                         <h4 class="list-group-item-heading">著作名</h4>
                                         <p class="list-group-item-text">简短信息</p>
-                                    </a>
-                                    <a href="javascript:void(0);" class="list-group-item">
-                                        <span class="badge">点击量：1234</span>
-                                        <h4 class="list-group-item-heading">计算机网络</h4>
-                                        <p class="list-group-item-text">简短信息</p>
-                                    </a>
-                                    <a href="javascript:void(0);" class="list-group-item">
-                                        <span class="badge">点击量：1234</span>
-                                        <h4 class="list-group-item-heading">数据挖掘</h4>
-                                        <p class="list-group-item-text">简短信息</p>
-                                    </a>
-                                    <a href="javascript:void(0);" class="list-group-item">
-                                        <span class="badge">点击量：1234</span>
-                                        <h4 class="list-group-item-heading">时间简史</h4>
-                                        <p class="list-group-item-text">简短信息</p>
-                                    </a>
-                                    <a href="javascript:void(0);" class="list-group-item">......</a>
-
-                                    <!--<a href="javascript:void(0);" class="list-group-item"
-                                        th:each="treatise:treatiseStat:*{treatises}"
-                                        th:name="${treatise.id}">
-                                        ......
                                     </a>-->
+
+                                    <a href="javascript:void(0);" class="list-group-item"
+                                        th:each="treatise,treatiseStat:*{treatises}"
+                                        th:name="${treatise.id}"><!-- 保留ID用于查询详情-->
+                                        <span class="badge" th:text="'点击量：'+${treatise.hits}">点击量：1444</span>
+                                        <h4 class="list-group-item-heading" th:text="${treatise.bookName}">著作名</h4>
+                                        <p class="list-group-item-text" th:text="${treatise.description}">简短信息</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +128,7 @@
 </div>
 
 <!-- Modal -->
-<div id="treatiseModal" class="modal fade" aria-hidden="true"
+<div id="treatiseModal" class="modal fade bs-example-modal-lg" aria-hidden="true"
      aria-labelledby="treatiseModalLabel" role="dialog" tabindex="-1" >
     <div class="modal-dialog">
         <div class="modal-content">
@@ -153,18 +138,16 @@
                 <h4 class="modal-title">著作详情</h4>
             </div>
             <div class="modal-body text-center">
-                <p>这里显示著作的详情</p>
-
-                <table class="table">
-                    <tr><td>ISBN</td><td>国际标准书号（International Standard Book Number）</td></tr>
-                    <tr><td>书名</td><td>著作名称</td></tr>
-                    <tr><td>作者</td><td>Cherish</td></tr>
-                    <tr><td>类别</td><td>计算机科学</td></tr>
-                    <tr><td>出版社</td><td>机械工业出版社</td></tr>
-                    <tr><td>出版日期</td><td>2017-04-01</td></tr>
-                    <tr><td>页码</td><td>666</td></tr>
-                    <tr><td>语种</td><td>中文</td></tr>
-                    <tr><td>版次</td><td>第二版</td></tr>
+                <table class="table table-bordered table-hover">
+                    <tr><td>ISBN</td><td class="isbn">国际标准书号（International Standard Book Number）</td></tr>
+                    <tr><td>书名</td><td class="bookName">著作名称</td></tr>
+                    <tr><td>作者</td><td class="author">Cherish</td></tr>
+                    <tr><td>类别</td><td class="category">计算机科学</td></tr>
+                    <tr><td>出版社</td><td class="publishHouse">机械工业出版社</td></tr>
+                    <tr><td>出版日期</td><td class="publishDate">2017-04-01</td></tr>
+                    <tr><td>页码</td><td class="pageNumber">666</td></tr>
+                    <tr><td>语种</td><td class="language">中文</td></tr>
+                    <tr><td>版次</td><td class="edition">第二版</td></tr>
                 </table>
             </div>
             <div class="modal-footer">
@@ -177,32 +160,25 @@
     <script src="/tools/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script>
         function showModal(treatiseId) {
-            $("#treatiseModal")
-            //show 方法调用之后立即触发该事件
-                .on('show.bs.modal', function (event) {
-                    var modal = $(this);
-                    /*
-                     * ISBN编号ISBN;
-                     * 书名 bookName;
-                     * 作者author;
-                     * 类别category;
-                     * 出版社publishHouse;
-                     * 出版地publishPlace;
-                     * 出版日期publishDate;
-                     * 页码pageNum;
-                     * 语种language;
-                     * 版次revision;
-                     * 简介？description;
-                     */
-                    //TODO 赋值
-                    /*$.getJSON("/treatise/"+treatiseId,function(result){
-                        var treatise = result.data;
-                    });*/
-                    /*var title = "著作详情";
-                    var body = "<p>这里显示著作的详情</p>";
-                    modal.find('.modal-title').text(title);
-                    modal.find('.modal-body').text(body);*/
-                });
+            $.getJSON("/treatise/"+treatiseId,function(result){
+                if (result.success){
+                    var treatise = result.data.treatise;
+                    var chapters = result.data.chapters;
+
+                    var modal = $("#treatiseModal");
+                    $(modal).find('.bookName').text(treatise.bookName);
+                    $(modal).find('.isbn').text(treatise.isbn);
+                    $(modal).find('.author').text(treatise.author);
+                    $(modal).find('.category').text(treatise.category);
+                    $(modal).find('.publishHouse').text(treatise.publishHouse);
+                    $(modal).find('.publishDate').text(treatise.publishDate);
+                    $(modal).find('.pageNumber').text(treatise.pageNumber);
+                    $(modal).find('.language').text(treatise.language);
+                    $(modal).find('.edition').text(treatise.edition);
+                }else {
+                    alert(result.message);
+                }
+            });
 
             $("#treatiseModal").modal({
                 backdrop: true
@@ -210,8 +186,9 @@
         }
 
         $(function () {
-            $(".panel-body").on("click", "a", function () {
+            $(".list-group").on("click", "a", function () {
                 var treatiseId = $(this).attr("name");
+                console.log("treatiseId: ", treatiseId);
                 showModal(treatiseId);
             });
         });
