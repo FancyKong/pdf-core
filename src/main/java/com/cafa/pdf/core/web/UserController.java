@@ -6,7 +6,7 @@ import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.dal.entity.User;
 import com.cafa.pdf.core.service.UserService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
-import com.cafa.pdf.core.web.request.user.UserModifyPasswordReq;
+import com.cafa.pdf.core.web.request.ModifyPasswordReq;
 import com.cafa.pdf.core.web.request.user.UserSaveReq;
 import com.cafa.pdf.core.web.request.user.UserSearchReq;
 import com.cafa.pdf.core.web.request.user.UserUpdateReq;
@@ -204,7 +204,7 @@ public class UserController extends ABaseController {
      * @return ModelAndView
      */
     @PostMapping("/modifyPassword")
-    public ModelAndView modifyPassword(@Validated UserModifyPasswordReq modifyPasswordReq, BindingResult bindingResult) {
+    public ModelAndView modifyPassword(@Validated ModifyPasswordReq modifyPasswordReq, BindingResult bindingResult) {
 
         ModelAndView mv = new ModelAndView("admin/user/modifyPassword");
         Map<String, Object> errorMap = new HashMap<>();

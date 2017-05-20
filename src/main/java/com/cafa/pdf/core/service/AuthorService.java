@@ -14,19 +14,16 @@ import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.util.RequestHolder;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorRegisterReq;
+import com.cafa.pdf.core.web.request.author.AuthorSaveReq;
 import com.cafa.pdf.core.web.request.author.AuthorSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorUpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Scope("prototype")
 @Service
@@ -70,8 +67,18 @@ public class AuthorService extends ABaseService<Author, Long> {
     }
 
     @Transactional
+    public void save(AuthorSaveReq authorSaveReq) {
+        log.info("【新增著作者】 {}", authorSaveReq);
+        Author author = new Author();
+        ObjectConvertUtil.objectCopy(author, authorSaveReq);
+        author.setCreatedTime(new Date());
+        author.setModifiedTime(new Date());
+        this.update(author);
+    }
+
+    @Transactional
     public void update(AuthorUpdateReq authorUpdateReq) {
-        log.info("【著作者更新】 {}", authorUpdateReq);
+        log.info("【更新著作者】 {}", authorUpdateReq);
         Author author = findById(authorUpdateReq.getId());
         ObjectConvertUtil.objectCopy(author, authorUpdateReq);
         author.setModifiedTime(new Date());
@@ -80,7 +87,7 @@ public class AuthorService extends ABaseService<Author, Long> {
 
     @Transactional
     public void register(AuthorRegisterReq authorRegisterReq) {
-        log.info("【著作者新增】 {}", authorRegisterReq);
+        log.info("【注册著作者】 {}", authorRegisterReq);
         Author author = new Author();
         ObjectConvertUtil.objectCopy(author, authorRegisterReq);
         author.setCreatedTime(new Date());
@@ -95,27 +102,10 @@ public class AuthorService extends ABaseService<Author, Long> {
     }
 
     public Page<AuthorDTO> findAll(BasicSearchReq basicSearchReq, AuthorSearchReq authorSearchReq) {
-
         int pageNumber = basicSearchReq.getStartIndex() / basicSearchReq.getPageSize() + 1;
-        PageRequest pageRequest = super.buildPageRequest(pageNumber, basicSearchReq.getPageSize());
-
-        //除了分页条件没有特定搜索条件的，为了缓存count
-        if (ObjectConvertUtil.objectFieldIsBlank(authorSearchReq)) {
-            log.debug("没有特定搜索条件的");
-            List<Author> authorList = authorDAO.listAllPaged(pageRequest);
-            List<AuthorDTO> authorDTOList = authorList.stream().map(this::getAuthorDTO).collect(Collectors.toList());
-
-            //为了计算总数使用缓存，加快搜索速度
-            Long count = getCount();
-            return new PageImpl<>(authorDTOList, pageRequest, count);
-        }
-
-        //有了其它搜索条件
         Page<Author> authorPage = super.findAllBySearchParams(
                 buildSearchParams(authorSearchReq), pageNumber, basicSearchReq.getPageSize());
-
         return authorPage.map(this::getAuthorDTO);
-
     }
 
     /**

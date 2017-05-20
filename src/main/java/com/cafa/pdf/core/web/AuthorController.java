@@ -2,6 +2,7 @@ package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.dto.AuthorDTO;
 import com.cafa.pdf.core.commom.dto.TreatiseDTO;
+import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.service.AuthorService;
@@ -9,10 +10,13 @@ import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorRegisterReq;
+import com.cafa.pdf.core.web.request.author.AuthorSaveReq;
 import com.cafa.pdf.core.web.request.author.AuthorSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorUpdateReq;
+import com.cafa.pdf.core.web.request.ModifyPasswordReq;
 import com.cafa.pdf.core.web.response.Response;
 import com.google.common.base.Throwables;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -135,13 +139,52 @@ public class AuthorController extends ABaseController {
     @DeleteMapping("/{authorId}/delete")
     @ResponseBody
     public Response delete(@PathVariable("authorId") Long authorId){
-        try {
-            authorService.delete(authorId);
-            return buildResponse(Boolean.TRUE, "删除成功", null);
-        } catch (Exception e) {
-            log.error("删除失败:{}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, "删除失败", null);
+        authorService.delete(authorId);
+        return buildResponse(Boolean.TRUE, "删除成功", null);
+    }
+
+    /**
+     * 新增著作者
+     * @param authorSaveReq 参数
+     * @param bindingResult 验证
+     * @return ModelAndView
+     */
+    @RequiresRoles("admin")
+    @PostMapping("/save")
+    public ModelAndView save(@Validated AuthorSaveReq authorSaveReq, BindingResult bindingResult) {
+        log.info("【新增著作者】 {}", authorSaveReq);
+        ModelAndView mv = new ModelAndView("admin/author/add");
+        Map<String, Object> errorMap = new HashMap<>();
+        mv.addObject("errorMap", errorMap);
+
+        if (bindingResult.hasErrors()) {
+            errorMap.putAll(getErrors(bindingResult));
+            mv.addObject("author", authorSaveReq);
+            return mv;
         }
+
+        try {
+            boolean existEmail = authorService.existEmail(authorSaveReq.getEmail());
+            if (existEmail){
+                errorMap.put("msg", "该邮箱已注册");
+                mv.addObject("author", authorSaveReq);
+                return mv;
+            }
+            boolean existUsername = authorService.existUsername(authorSaveReq.getUsername());
+            if (existUsername){
+                errorMap.put("msg", "该登录账号已被注册，请更换");
+                mv.addObject("author", authorSaveReq);
+                return mv;
+            }
+
+            authorSaveReq.setPassword(CryptographyUtil.cherishSha1(authorSaveReq.getPassword()));
+            authorService.save(authorSaveReq);
+            errorMap.put("msg", "添加成功");
+        } catch (Exception e) {
+            errorMap.put("msg", "系统繁忙");
+            log.error("【添加失败】 {}", Throwables.getStackTraceAsString(e));
+        }
+        return mv;
     }
 
     /**
@@ -241,14 +284,43 @@ public class AuthorController extends ABaseController {
         }
         return mv;
     }
-    /**
-     * 提交密码修改请求
-     * @return ModelAndView
-     */
-    @PostMapping("/modifyPassword")
-    public ModelAndView modifyPassword() {
 
-        return null;
+    /**
+     * 提交密码更改请求
+     * @return ResponseBody
+     */
+    @PostMapping("/modifyPwd")
+    @ResponseBody
+    public Response modifyPwd(ModifyPasswordReq modifyPasswordReq) {
+        log.info("【密码更改】 {}", modifyPasswordReq);
+        if (StringUtils.isBlank(modifyPasswordReq.getPassword())
+                || StringUtils.isBlank(modifyPasswordReq.getRepeatPassword())
+                || !StringUtils.equals(modifyPasswordReq.getPassword(), modifyPasswordReq.getRepeatPassword())
+            ) {
+
+            return buildResponse(Boolean.FALSE, "两次输入的密码不一致", null);
+        }
+        Author author = authorService.findById(ShiroUserUtil.getUserId());
+        if (!author.getPassword().equals(CryptographyUtil.cherishSha1(modifyPasswordReq.getOldPassword()))) {
+            return buildResponse(Boolean.FALSE, "密码认证错误", null);
+        } else {
+            author.setPassword(CryptographyUtil.cherishSha1(modifyPasswordReq.getPassword()));
+            authorService.update(author);
+            return buildResponse(Boolean.TRUE, "更改成功", null);
+        }
+    }
+
+    /**
+     * 著作者信息修改请求
+     * @return ResponseBody
+     */
+    @PostMapping("/updateMyself")
+    @ResponseBody
+    public Response updateMyself(AuthorUpdateReq authorUpdateReq) {
+        log.info("【信息修改】 {}", authorUpdateReq);
+        authorUpdateReq.setId(ShiroUserUtil.getUserId());
+        authorService.update(authorUpdateReq);
+        return buildResponse(Boolean.TRUE, "更改成功", null);
     }
 
 
