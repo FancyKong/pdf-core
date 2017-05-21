@@ -89,7 +89,7 @@ public class Treatise implements java.io.Serializable {
      * 序
      */
     @Column(nullable = false)
-    private String Integerroductory = "";
+    private String introductory = "";
     /**
      * 前言
      */

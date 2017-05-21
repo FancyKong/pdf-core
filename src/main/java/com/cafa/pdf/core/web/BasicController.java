@@ -67,14 +67,6 @@ public class BasicController extends ABaseController {
     }
 
     /**
-     * 首页
-     */
-    @GetMapping(value = {"/", "/index"})
-    public String index() {
-        return "redirect:/web/index.html";
-    }
-
-    /**
      * 管理页面
      */
     @RequiresRoles("admin")

@@ -1,12 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>在线阅读</title>
-    <link href="css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="css/read.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/web/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/web/css/read.css" rel="stylesheet" type="text/css"/>
     <link href="/tools/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
@@ -16,7 +15,7 @@
         <div class="inputArea">
             <input type="text" class="searchInput"/>
             <input type="button" class="searchButton" value="搜索"/>
-            <a class="advanced" href="advanced.html">高级搜索</a>
+            <a class="advanced" href="advanced">高级搜索</a>
         </div>
     </div>
     <div class="nav" style="margin-bottom: 24px;">
@@ -114,7 +113,7 @@
                     <input type="button" value="下一章" class="operator seq-down"/>
                 </div>
                 <div class="pdf">
-                    <iframe src="../pdf/web/viewer.html?file=/treatise/page/344/455" width="100%" height="" id="pdf-reader"></iframe>
+                    <iframe src="../static/pdf/web/viewer.html?file=/treatise/page/344/455" width="100%" height="" id="pdf-reader"></iframe>
                 </div>
 
                 <div class="read">
@@ -128,9 +127,9 @@
 
 <div id="foot">Copyright &copy;cafa.com 版权所有</div>
 </body>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/global.js"></script>
-<script type="text/javascript" src="js/pagination.js"></script>
+<script type="text/javascript" src="../static/web/js/jquery.js"></script>
+<script type="text/javascript" src="../static/web/js/global.js"></script>
+<script type="text/javascript" src="../static/web/js/pagination.js"></script>
 <script type="text/javascript">
     $('.searchList').on('click', '.searchItem', function () {
         $('.searchList .searchItem').removeClass('current');

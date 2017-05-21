@@ -13,14 +13,14 @@
     Author: Cherish   Email:785427346@qq.com | Blog:www.caihongwen.cn | GitHub:https://github.com/CherishC
 -->
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="UTF-8" />
     <title>广东科技著作出版服务平台</title>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link href="css/style.css" rel="stylesheet" type="text/css" />
-    <link href="css/index.css" rel="stylesheet" type="text/css" />
+    <link href="../static/web/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="../static/web/css/index.css" rel="stylesheet" type="text/css" />
     <link href="/tools/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -31,7 +31,7 @@
             <span style="color:#4b8dde;font-size: 16px;">欢迎您，小明&nbsp;&nbsp;&nbsp;</span>
             </a>
             <a data-toggle="modal" href="#loginModal">
-                <img src="img/personal.png"/>
+                <img src="../static/web/img/personal.png"/>
             </a>
         </div>
     </div>
@@ -43,8 +43,8 @@
             </h1>
             <div class="inputArea">
             	<input type="text" class="searchInput" placeholder="默认为全文关键字检索"/>
-                <input type="button" class="searchButton" value="搜索" onclick="javascript:window.location='result.html'" />
-                <a class="advanced" href="advanced.html">高级搜索</a>
+                <input type="button" class="searchButton" value="搜索" onclick="javascript:window.location='result'" />
+                <a class="advanced" href="advanced">高级搜索</a>
                 <ul class="dataList">
                 	<li>标题</li>
                     <li>作者</li>
@@ -192,7 +192,7 @@
 </body>
 <script src="/js/jquery-1.12.4.min.js" type="text/javascript"></script>
 <script src="/tools/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="../static/web/js/global.js"></script>
 <script type="text/javascript">
 	$('.searchList').on('click', '.searchItem', function(){
 		$('.searchList .searchItem').removeClass('current');
