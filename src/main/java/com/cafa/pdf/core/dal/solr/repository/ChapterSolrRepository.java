@@ -23,7 +23,7 @@ import java.util.List;
  */
 public interface ChapterSolrRepository extends SolrCrudRepository<ChapterSolrDoc,String>{
 
-    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content"},snipplets = 1,fragsize = 150)
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content"},snipplets = 3,fragsize = 50)
     @Query(fields = {"id","treatiseId","seq"})
     HighlightPage<ChapterSolrDoc> findByContentOrderById(String content, Pageable pageable);
 

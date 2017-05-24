@@ -9,6 +9,7 @@ import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.data.solr.repository.Highlight;
+import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 
 /**
@@ -19,6 +20,7 @@ import org.springframework.data.solr.repository.SolrCrudRepository;
  */
 public interface TreatiseSolrRepository extends SolrCrudRepository<TreatiseSolrDoc,String>{
 
-    @Highlight(prefix = "<b>", postfix = "</b>" , fields = {"content"})
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 50)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
     HighlightPage<TreatiseSolrDoc> findByContentOrderById(String content, Pageable pageable);
 }

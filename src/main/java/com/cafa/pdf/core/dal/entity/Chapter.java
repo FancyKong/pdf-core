@@ -1,5 +1,6 @@
 package com.cafa.pdf.core.dal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -51,6 +52,37 @@ public class Chapter implements java.io.Serializable {
      */
     @Column(name = "is_privacy", nullable = false)
     private Integer privacy;
+    /**
+     * 本章页数
+     */
+    @Column(name = "pages", nullable = false)
+    private Integer pages = 0;
+    /**
+     * 文本
+      */
+    @JsonIgnore
+    @Column(name = "content",nullable = true)
+    private String content = "";
 
-
+    @Override
+    public String toString() {
+        return "Chapter{" +
+                "id=" + id +
+                ", treatiseId=" + treatiseId +
+                ", seq=" + seq +
+                ", title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                ", privacy=" + privacy +
+                ", pages=" + pages +
+                '}';
+    }
+    //c.id,c.pages,c.privacy,c.seq,c.title,c.treatiseId
+    public Chapter(Long id,Integer pages ,Integer privacy,Integer seq, String title,Long treatiseId) {
+        this.id = id;
+        this.treatiseId = treatiseId;
+        this.seq = seq;
+        this.title = title;
+        this.privacy = privacy;
+        this.pages = pages;
+    }
 }

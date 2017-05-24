@@ -1,0 +1,15 @@
+<field name="title" type="chinese_text"  multiValued="false" indexed="true" required="true" stored="true" />
+
+<field name="content" type="chinese_text"  multiValued="false" indexed="true" required="true" stored="true" />
+
+<field name="description" type="chinese_text"  multiValued="false" indexed="true" required="true" stored="true" />
+
+<field name="publishDate" type="date"  multiValued="false" indexed="true" required="true" stored="true" />
+
+<field name="author" type="chinese_text"  multiValued="false" indexed="true" required="true" stored="true" />
+
+<field name="categoryName" type="string"  multiValued="false" indexed="false" required="true" stored="true" />
+
+<field name="categoryId" type="long"  multiValued="false" indexed="true" required="true" stored="true" />
+
+<field name="pCategoryId" type="long"  multiValued="false" indexed="true" required="true" stored="true" />

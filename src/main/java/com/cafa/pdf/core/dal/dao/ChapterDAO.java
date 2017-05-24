@@ -9,11 +9,14 @@ import java.util.List;
 
 public interface ChapterDAO extends IBaseDAO<Chapter, Long> {
 
-    List<Chapter> findByTreatiseIdOrderBySeqAsc(Long treatiseId);
+    @Query("select new Chapter(c.id,c.pages,c.privacy,c.seq,c.title,c.treatiseId) from Chapter c where c.treatiseId = :treatiseId order by c.seq asc ")
+    List<Chapter> findByTreatiseIdOrderBySeqAsc(@Param("treatiseId") Long treatiseId);
 
     @Query("delete from Chapter as c where c.treatiseId=:treatiseId")
     @Modifying
     void deleteByTreatiseId(@Param("treatiseId") Long treatiseId);
 
+    @Query("select c.content from Chapter c where c.id = :treatiseId")
+    String findContentById(@Param("treatiseId")Long treatiseId);
 
 }

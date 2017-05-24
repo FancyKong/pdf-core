@@ -12,6 +12,8 @@ import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
+import java.util.Date;
+
 /**
  * @author FancyKong
  * @file TreatiseSolrDoc.java
@@ -31,5 +33,26 @@ public class TreatiseSolrDoc {
 
     @Field
     private String content;
+
+    @Field
+    private String title;
+
+    @Field
+    private Date publishDate;
+
+    @Field
+    private String author;
+
+    @Field
+    private String categoryName;
+
+    @Field
+    private Long categoryId;
+
+    @Field
+    private Long pCategoryId;
+
+    @Field
+    private String description;
 
 }

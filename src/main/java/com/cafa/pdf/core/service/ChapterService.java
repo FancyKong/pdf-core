@@ -47,6 +47,17 @@ public class ChapterService extends ABaseService<Chapter, Long> {
         return chapters.stream().map(this::getChapterDTO).collect(Collectors.toList());
     }
 
+    public String getContentOfChapter(Long id){
+        return chapterDAO.findContentById(id);
+    }
+
+    @Transactional
+    public void saveContent(String content,Long treatiseId){
+        Chapter chapter = findById(treatiseId);
+        chapter.setContent(content);
+        this.update(chapter);
+    }
+
     public Long getCount() {
         return chapterDAO.count();
     }
@@ -107,5 +118,11 @@ public class ChapterService extends ABaseService<Chapter, Long> {
         return chapterDTO;
     }
 
-
+    @Transactional(readOnly = false)
+    public void delete(Long id) {
+        Chapter chapter = findById(id);
+        if(chapter != null){
+            getEntityDAO().delete(id);
+        }
+    }
 }

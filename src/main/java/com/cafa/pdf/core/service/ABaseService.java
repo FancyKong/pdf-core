@@ -1,6 +1,7 @@
 package com.cafa.pdf.core.service;
 
 import com.cafa.pdf.core.dal.dao.IBaseDAO;
+import com.cafa.pdf.core.dal.entity.Chapter;
 import com.cafa.pdf.core.util.DynamicSpecifications;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.util.Reflections;

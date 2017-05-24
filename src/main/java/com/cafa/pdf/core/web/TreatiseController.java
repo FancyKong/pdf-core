@@ -12,6 +12,9 @@ import com.cafa.pdf.core.commom.enums.PublicationMode;
 import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.dal.entity.Treatise;
 import com.cafa.pdf.core.dal.entity.TreatiseCategory;
+import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
+import com.cafa.pdf.core.dal.solr.repository.ChapterSolrRepository;
+import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.service.AuthorService;
 import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseCategoryService;
@@ -212,6 +215,22 @@ public class TreatiseController extends ABaseController {
         return buildResponse(Boolean.TRUE, "保存成功", treatise);
     }
 
+    /**
+     * 保存章节信息
+     * @see com.cafa.pdf.core.web.aop.ControllerAspect
+     * @param treatiseId 保存的著作id
+     * @return ModelAndView
+     */
+    @PostMapping("/{id}/saveChapter")
+    @RequiresPermissions("treatise:add")
+    @ResponseBody
+    public Response saveChapter(@PathVariable("id") Long treatiseId) {
+        log.info("【保存章节信息的著作】 {}", treatiseId);
+        Treatise treatise = treatiseService.findById(treatiseId);
+        saveTreatiseInSolr(treatise);
+        return buildResponse(Boolean.TRUE, "保存成功", treatise);
+    }
+
     @GetMapping("pdf")
     public ResponseEntity<byte[]> showPDF() throws IOException {
         File file = new File("D:a.pdf");
@@ -263,5 +282,30 @@ public class TreatiseController extends ABaseController {
         treatiseAndChaptersDTO.setChapters(chapters);
 
         return buildResponse(Boolean.TRUE, "", treatiseAndChaptersDTO);
+    }
+    @Autowired
+    private TreatiseSolrRepository treatiseSolrRepository;
+
+    @Autowired
+    private ChapterSolrRepository chapterSolrRepository;
+
+    private void saveTreatiseInSolr(Treatise treatise){
+        List<ChapterDTO> list = chapterService.findByTreatiseId(treatise.getId());
+        TreatiseSolrDoc treatiseSolrDoc = new TreatiseSolrDoc();
+        StringBuilder sb = new StringBuilder();
+        for(ChapterDTO d : list){
+            sb.append(chapterService.getContentOfChapter(d.getId()));
+        }
+        treatiseSolrDoc.setId(String.valueOf(treatise.getId()));
+        treatiseSolrDoc.setAuthor(authorService.findById(treatise.getAuthorId()).getNickname());
+        treatiseSolrDoc.setPublishDate(treatise.getPublishDate());
+        treatiseSolrDoc.setCategoryId(treatise.getCategoryId());
+        treatiseSolrDoc.setPCategoryId(treatiseCategoryService.findById(treatise.getCategoryId()).getPid());
+        treatiseSolrDoc.setDescription(treatise.getDescription());
+        treatiseSolrDoc.setCategoryName(treatiseCategoryService.findById(treatise.getCategoryId()).getName());
+        treatiseSolrDoc.setTitle(treatise.getBookName());
+        treatiseSolrDoc.setContent(sb.toString());
+        log.info("sent to solr treatiseSolrDoc = {}",treatiseSolrDoc);
+        treatiseSolrRepository.save(treatiseSolrDoc);
     }
 }

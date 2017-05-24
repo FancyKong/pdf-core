@@ -126,14 +126,14 @@ public class ChapterController extends ABaseController {
         }
 
         String newFIleName;
+        chapterReq.setUrl("");
+        Chapter chapter = chapterService.save(chapterReq);
         try {
-            newFIleName = uploadPdf(multipartFile, chapterReq);
+            uploadPdf(multipartFile, chapter);
         } catch (Exception e) {
             log.error("【章节上传】 {}", Throwables.getStackTraceAsString(e));
             throw new ServiceException("500", "文件解析出错");
         }
-        chapterReq.setUrl(newFIleName);
-        Chapter chapter = chapterService.save(chapterReq);
 
         return buildResponse(Boolean.TRUE, "保存成功", chapter);
     }
@@ -144,10 +144,9 @@ public class ChapterController extends ABaseController {
     /**
      * 上传章节的pdf
      * @param multipartFile 文件
-     * @param chapterReq ChapterReq
-     * @return url 文件存放路径
+     * @param chapter ChapterReq
      */
-    private String uploadPdf(MultipartFile multipartFile, ChapterReq chapterReq) throws Exception {
+    private void uploadPdf(MultipartFile multipartFile, Chapter chapter) throws Exception {
         if (multipartFile.isEmpty()) {
             throw new ServiceException("403", "没有文件数据");
         }
@@ -156,45 +155,31 @@ public class ChapterController extends ABaseController {
         if (!".pdf".equals(extendName)) {
             throw new ServiceException("403", "非pdf文件");
         }
-        long treatiseId = chapterReq.getTreatiseId();
-        int chapterSeq = chapterReq.getSeq();
+        long treatiseId = chapter.getTreatiseId();
+        int chapterSeq = chapter.getSeq();
         File directory = new File(FILE_PATH+treatiseId+"/"+chapterSeq+"/");
         if (!directory.exists()) {
             directory.mkdirs();
         }
-        String newFIleName = System.currentTimeMillis() + extendName;
-        String solrContent = splitPDFAndGetContent(multipartFile.getInputStream(), directory);
-        saveChapterInSolr(solrContent,treatiseId,chapterSeq);
-        return newFIleName;
+        PdfReader reader = new PdfReader(multipartFile.getInputStream());
+        chapter.setPages(reader.getNumberOfPages());
+        chapterService.save(chapter);
+        String content = splitPDFAndGetContent(reader, directory);
+        //saveChapterInSolr(solrContent,treatiseId,chapterSeq,chapterReq.getId());
+        chapterService.saveContent(content,chapter.getId());
     }
 
-    private void saveChapterInSolr(String solrContent, long treatiseId, int chapterSeq) {
-        //TODO　to find treatiseSolrId by treatiseId in mysql
-        String treatiseSolrId = treatiseId + "";
-
+    private void saveChapterInSolr(String solrContent, long treatiseId, int chapterSeq,long id) {
         ChapterSolrDoc chapter = new ChapterSolrDoc();
-        chapter.setId(UUID.randomUUID().toString().replaceAll("-",""));
-        chapter.setTreatiseId(treatiseSolrId);
+        chapter.setId(String.valueOf(id));
+        chapter.setTreatiseId(String.valueOf(treatiseId));
         chapter.setContent(solrContent);
         chapter.setSeq(chapterSeq);
         chapterSolrRepository.save(chapter);
     }
 
-    private void saveTreatiseInSolr(String treatiseSolrId){
-        List<ChapterSolrDoc> list = chapterSolrRepository.findByTreatiseIdOrderBySeqAsc(treatiseSolrId);
-        TreatiseSolrDoc treatiseSolrDoc = new TreatiseSolrDoc();
-        StringBuilder sb = new StringBuilder();
-        for(ChapterSolrDoc d : list){
-            sb.append(d.getContent());
-        }
-        treatiseSolrDoc.setId(treatiseSolrId);
-        treatiseSolrDoc.setContent(sb.toString());
-        treatiseSolrRepository.save(treatiseSolrDoc);
-    }
 
-
-    private String splitPDFAndGetContent(InputStream in, File filePath) throws IOException, DocumentException {
-        PdfReader pdfReader = new PdfReader(in);
+    private String splitPDFAndGetContent(PdfReader pdfReader, File filePath) throws IOException, DocumentException {
         int pages = pdfReader.getNumberOfPages();
         StringBuilder solrContent = new StringBuilder();
         for (int i = 1; i < pages + 1; i++) {
@@ -206,8 +191,10 @@ public class ChapterController extends ABaseController {
             PdfImportedPage page = copy.getImportedPage(pdfReader, i);
             solrContent.append(PdfTextExtractor.getTextFromPage(pdfReader,i));
             copy.addPage(page);
+            copy.close();
             document.close();
         }
+        pdfReader.close();
         return solrContent.toString();
     }
 
