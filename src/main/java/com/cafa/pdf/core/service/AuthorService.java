@@ -18,14 +18,12 @@ import com.cafa.pdf.core.web.request.author.AuthorSaveReq;
 import com.cafa.pdf.core.web.request.author.AuthorSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorUpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-@Scope("prototype")
 @Service
 @Transactional(readOnly = true)
 public class AuthorService extends ABaseService<Author, Long> {

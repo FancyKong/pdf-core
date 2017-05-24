@@ -21,6 +21,7 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -190,7 +191,8 @@ public class BasicController extends ABaseController {
     }
 
     //文件存放路径
-    private static final String FILE_PATH = "F:/pdf-core/file/";
+    @Value("${file.path}")
+    private String FILE_PATH;
 
     @PostMapping("/imageUpload")
     @ResponseBody

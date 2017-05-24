@@ -3,7 +3,6 @@ package com.cafa.pdf.core.web;
 import com.cafa.pdf.core.commom.exception.ServiceException;
 import com.cafa.pdf.core.dal.entity.Chapter;
 import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
-import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import com.cafa.pdf.core.dal.solr.repository.ChapterSolrRepository;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.service.ChapterService;
@@ -18,6 +17,7 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -28,8 +28,8 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Cherish
@@ -139,8 +139,8 @@ public class ChapterController extends ABaseController {
     }
 
 
-    //TODO 文件存放路径
-    private static final String FILE_PATH = "F:/pdf_core/file/";
+    @Value("${file.path}")
+    private String FILE_PATH;
     /**
      * 上传章节的pdf
      * @param multipartFile 文件
