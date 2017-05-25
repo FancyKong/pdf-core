@@ -18,7 +18,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Author implements java.io.Serializable {
 
     private static final long serialVersionUID = -2352745039383411872L;
-    /*姓名、性别、出生年、电话、籍贯、单位、学历、职称、职务、邮箱*/
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -49,23 +48,40 @@ public class Author implements java.io.Serializable {
      */
     private String gender;
     /**
-     * -1: 申请状态
-     * 0：冻结
-     * 1：激活
+     * -1: 申请状态 0：冻结 1：激活
      */
     @Column(name = "is_active", nullable = false)
     private Integer active;
     /**
-     * 出生年、籍贯、学历、单位、职称、职务
+     * 出生年
      */
     @Column(name = "birth_year")
     private Integer birthYear;
+    /**
+     * 籍贯
+     */
     @Column(name = "birth_place")
     private String birthPlace;
+    /**
+     * 学历
+     */
     private String education;
+    /**
+     * 单位
+     */
     private String company;
+    /**
+     * 职称
+     */
     private String job;
+    /**
+     * 职务
+     */
     private String duties;
+    /**
+     * 申请时的ip
+     */
+    private Integer ip;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_time", nullable = false, length = 19)

@@ -56,11 +56,11 @@ public class AuthorService extends ABaseService<Author, Long> {
         return authorDAO.count();
     }
 
-    @Transactional(readOnly = false)
-    public void delete(Long id) {
-        // 并不是真正的删除，只是冻结账户
-        Author author = findById(id);
-        author.setActive(0);
+    @Transactional
+    public void freezeOrActive(Long authorId) {
+        Author author = findById(authorId);
+        Integer active = author.getActive();
+        author.setActive(1 - active);
         update(author);
     }
 
@@ -204,7 +204,6 @@ public class AuthorService extends ABaseService<Author, Long> {
         mailComponent.sendHtmlMail(author.getEmail(), subject, sb.toString());
         return true;
     }
-
 
 
 }

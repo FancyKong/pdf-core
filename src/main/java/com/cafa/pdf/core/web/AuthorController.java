@@ -8,6 +8,9 @@ import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.service.AuthorService;
 import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseService;
+import com.cafa.pdf.core.util.IPv4Util;
+import com.cafa.pdf.core.util.MStringUtils;
+import com.cafa.pdf.core.util.RequestHolder;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorRegisterReq;
 import com.cafa.pdf.core.web.request.author.AuthorSaveReq;
@@ -121,13 +124,8 @@ public class AuthorController extends ABaseController {
     @GetMapping("/page")
     @ResponseBody
     public Response toPage(BasicSearchReq basicSearchReq, AuthorSearchReq authorSearchReq){
-        try {
-            Page<AuthorDTO> page = authorService.findAll(basicSearchReq, authorSearchReq);
-            return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
-        } catch (Exception e) {
-            log.error("获取列表失败: {}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, BUSY_MSG, null);
-        }
+        Page<AuthorDTO> page = authorService.findAll(basicSearchReq, authorSearchReq);
+        return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
     }
 
     /**
@@ -142,7 +140,18 @@ public class AuthorController extends ABaseController {
         authorService.delete(authorId);
         return buildResponse(Boolean.TRUE, "删除成功", null);
     }
-
+    /**
+     * 冻结或激活
+     * @param authorId ID
+     * @return JSON
+     */
+    @RequiresRoles("admin")
+    @GetMapping("/{authorId}/freezeOrActive")
+    @ResponseBody
+    public Response freezeOrActive(@PathVariable("authorId") Long authorId){
+        authorService.freezeOrActive(authorId);
+        return buildResponse(Boolean.TRUE, "操作成功", null);
+    }
     /**
      * 新增著作者
      * @param authorSaveReq 参数
@@ -162,7 +171,6 @@ public class AuthorController extends ABaseController {
             mv.addObject("author", authorSaveReq);
             return mv;
         }
-
         try {
             boolean existEmail = authorService.existEmail(authorSaveReq.getEmail());
             if (existEmail){
@@ -176,8 +184,9 @@ public class AuthorController extends ABaseController {
                 mv.addObject("author", authorSaveReq);
                 return mv;
             }
-
+            // 设置密码 此时的ip
             authorSaveReq.setPassword(CryptographyUtil.cherishSha1(authorSaveReq.getPassword()));
+            authorSaveReq.setIp(IPv4Util.ipToInt(MStringUtils.getIpAddress(RequestHolder.getRequest())));
             authorService.save(authorSaveReq);
             errorMap.put("msg", "添加成功");
         } catch (Exception e) {
@@ -196,7 +205,6 @@ public class AuthorController extends ABaseController {
     @PostMapping("/update")
     public ModelAndView update(@Validated AuthorUpdateReq updateReq, BindingResult bindingResult){
         log.info("【更改信息】 {}", updateReq);
-
         ModelAndView mv = new ModelAndView("admin/author/edit");
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);
@@ -205,19 +213,12 @@ public class AuthorController extends ABaseController {
             errorMap.put("msg", "数据错误");
             return mv;
         }
-
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("author", updateReq);
             return mv;
         }
-
         try {
-            if (authorService.existEmail(updateReq.getEmail())){
-                errorMap.put("msg", "该邮箱已注册");
-                mv.addObject("author", updateReq);
-                return mv;
-            }
             authorService.update(updateReq);
             mv.addObject("author", authorService.findById(updateReq.getId()));
             errorMap.put("msg", "修改成功");
@@ -246,7 +247,12 @@ public class AuthorController extends ABaseController {
             mv.addObject("author", authorRegisterReq);
             return mv;
         }
-
+        if (StringUtils.isBlank(authorRegisterReq.getPassword())
+                ||!StringUtils.equals(authorRegisterReq.getPassword(), authorRegisterReq.getRepeatPwd())) {
+            errorMap.put("msg", "两处密码不一致");
+            mv.addObject("author", authorRegisterReq);
+            return mv;
+        }
         try {
             boolean existEmail = authorService.existEmail(authorRegisterReq.getEmail());
             if (existEmail){
@@ -261,16 +267,24 @@ public class AuthorController extends ABaseController {
                 return mv;
             }
 
+            // 设置密码 此时的ip
+            authorRegisterReq.setPassword(CryptographyUtil.cherishSha1(authorRegisterReq.getPassword()));
+            authorRegisterReq.setIp(IPv4Util.ipToInt(MStringUtils.getIpAddress(RequestHolder.getRequest())));
             authorService.register(authorRegisterReq);
             errorMap.put("msg", "信息提交成功，请登录您的邮箱激活账号");
         } catch (Exception e) {
             errorMap.put("msg", "系统繁忙");
             log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
-
         }
         return mv;
     }
 
+    /**
+     * 发送到邮箱的链接激活
+     * @param checkId Check的ID
+     * @param key   随机生成的字符串
+     * @return ModelAndView
+     */
     @GetMapping("/{checkId}/active")
     public ModelAndView active(@PathVariable Long checkId, @RequestParam String key){
         ModelAndView mv = new ModelAndView("admin/login");
@@ -297,17 +311,17 @@ public class AuthorController extends ABaseController {
                 || StringUtils.isBlank(modifyPasswordReq.getRepeatPassword())
                 || !StringUtils.equals(modifyPasswordReq.getPassword(), modifyPasswordReq.getRepeatPassword())
             ) {
-
             return buildResponse(Boolean.FALSE, "两次输入的密码不一致", null);
         }
+
         Author author = authorService.findById(ShiroUserUtil.getUserId());
         if (!author.getPassword().equals(CryptographyUtil.cherishSha1(modifyPasswordReq.getOldPassword()))) {
             return buildResponse(Boolean.FALSE, "密码认证错误", null);
-        } else {
-            author.setPassword(CryptographyUtil.cherishSha1(modifyPasswordReq.getPassword()));
-            authorService.update(author);
-            return buildResponse(Boolean.TRUE, "更改成功", null);
         }
+
+        author.setPassword(CryptographyUtil.cherishSha1(modifyPasswordReq.getPassword()));
+        authorService.update(author);
+        return buildResponse(Boolean.TRUE, "更改成功", null);
     }
 
     /**
@@ -322,7 +336,6 @@ public class AuthorController extends ABaseController {
         authorService.update(authorUpdateReq);
         return buildResponse(Boolean.TRUE, "更改成功", null);
     }
-
 
 
 }

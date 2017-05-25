@@ -49,5 +49,9 @@ public class AuthorSaveReq implements java.io.Serializable {
     private String company;
     private String job;
     private String duties;
+    /**
+     * 申请时的ip
+     */
+    private Integer ip;
 
 }
