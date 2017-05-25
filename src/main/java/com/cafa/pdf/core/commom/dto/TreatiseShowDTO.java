@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Date;
 
@@ -21,6 +22,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TreatiseShowDTO implements java.io.Serializable {
+    /**
+     * ID
+     */
+    private Long id;
     /**
      * 标题
      */

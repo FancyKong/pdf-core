@@ -20,7 +20,7 @@ import org.springframework.data.solr.repository.SolrCrudRepository;
  */
 public interface TreatiseSolrRepository extends SolrCrudRepository<TreatiseSolrDoc,String>{
 
-    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 50)
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
     @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
     HighlightPage<TreatiseSolrDoc> findByContentOrderById(String content, Pageable pageable);
 }

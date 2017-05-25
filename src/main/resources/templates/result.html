@@ -4,8 +4,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>查询结果</title>
-    <link href="../static/web/css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/web/css/result.css" rel="stylesheet" type="text/css"/>
+    <link href="/web/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/web/css/result.css" rel="stylesheet" type="text/css"/>
     <link href="/tools/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <style>
         .subfieldContext a {
@@ -43,58 +43,12 @@
             <div class="sideBar">
                 <div class="subfield">专著分类</div>
                 <ul class="subfieldContext">
-                    <li>
-                        <span class="name">数据挖掘</span>
-                        <span class="unit">(9862)</span>
-                    </li>
-                    <li>
-                        <span class="name">后台开发</span>
-                        <span class="unit">(485)</span>
-                    </li>
-                    <li>
-                        <span class="name">前端开发</span>
-                        <span class="unit">(1564)</span>
-                    </li>
-                    <li>
-                        <span class="name">机器学习</span>
-                        <span class="unit">(485)</span>
-                    </li>
-                    <li>
-                        <span class="name">神经网络</span>
-                        <span class="unit">(485)</span>
-                    </li>
-                    <li>
-                        <span class="name">信息计算</span>
-                        <span class="unit">(485)</span>
-                    </li>
-                    <li>
-                        <span class="name">信息安全</span>
-                        <span class="unit">(485)</span>
-                    </li>
-                    <li>
-                        <span class="name">游戏开发</span>
-                        <span class="unit">(485)</span>
-                    </li>
-                    <li>
-                        <span class="name">数据挖掘</span>
-                        <span class="unit">(9862)</span>
-                    </li>
-                    <li>
-                        <span class="name">后台开发</span>
-                        <span class="unit">(485)</span>
-                    </li>
-                    <li>
-                        <span class="name">前端开发</span>
-                        <span class="unit">(1564)</span>
-                    </li>
-                    <li>
-                        <span class="name">机器学习</span>
-                        <span class="unit">(485)</span>
+                    <li th:each="category:*{categories}">
+                        <a th:href="'/result?q='+${category.id}+'&t=category'"><span class="name" th:text="${category.name}">数据挖掘</span></a>
                     </li>
                     <li class="more">
                         <span class="text">更多</span>
                         <i class="moreIcon"></i>
-                        </a>
                     </li>
                 </ul>
                 <div class="sideBarShowHide">
@@ -109,22 +63,20 @@
                     </span>
                 </p>
                 <div class="resultList">
-                    <div class="resultItem">
+                    <div class="resultItem" th:each="treatise:*{treatises}">
                         <div class="itemHead">
-                            <a href="detail" target="_blank" class="title"><span class="keyWord">数据挖掘</span>章标题 -
-                                数据挖掘专著四</a>
+                            <a th:href="'/'+${treatise.id}+'/detail'" target="_blank" class="title" th:utext="${treatise.title}" ></a>
                             <span class="divsion">-</span>
                             <span class="fileType">
-                                <span class="value">信息安全</span>
+                                <span class="value" th:text="${treatise.categoryName}"></span>
                             </span>
                         </div>
-                        <div class="itemBody">
-                            <span class="keyWord">数据挖掘</span>针对煤矿企业未对安全信息进行深入挖掘的问题,设计了煤矿安全信息管理系统,利用数据仓库和数据挖掘技术对井下实时安全信息进行深入分析,以关联规则为例对煤矿监测数据进行挖掘,分析挖掘结果表明安全参数之间存在紧密联系,由此得到对隐患预测...
+                        <div class="itemBody" th:utext="${treatise.highlighted}">
                         </div>
                         <div class="itemFoot">
                         	<span class="info">
                             	<label>作者：</label>
-                                <span class="value">小明</span>
+                                <span class="value" th:text="${treatise.author}">小明</span>
                             </span>
                             <!--<span class="info">
                             	<label>搜索引擎：</label>
@@ -132,101 +84,7 @@
                             </span>-->
                             <span class="info">
                             	<label>发布时间：</label>
-                                <span class="value">2013-12-12 12:12</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="resultItem">
-                        <div class="itemHead">
-                            <a href="detail" target="_blank" class="title"><span class="keyWord">数据挖掘</span>章标题一 -
-                                数据挖掘专著二</a>
-                            <span class="divsion">-</span>
-                            <span class="fileType">
-                                <span class="value">信息计算</span>
-                            </span>
-                            <!--<span class="dependValue">
-                            	<span class="label">相关度：</span>
-                                <span class="value">91.78%</span>
-                            </span>-->
-                        </div>
-                        <div class="itemBody">
-                            不管这个<span class="keyWord">数据挖掘</span>通过对电子商务和移动电商的内涵分析，结合当下移动电商的发展情况，本文认为可以通过精准定位客户、寻找相关APP软件进行合作、充分利用现有各种社交软件、多渠道跨界挖掘数据等方式，从而有利的推动移动电商的推广。
-                        </div>
-                        <div class="itemFoot">
-                        	<span class="info">
-                            	<label>作者：</label>
-                                <span class="value">何松云</span>
-                            </span>
-                            <!--<span class="info">
-                            	<label>搜索引擎：</label>
-                                <span class="value">Google</span>
-                            </span>-->
-                            <span class="info">
-                            	<label>发布时间：</label>
-                                <span class="value">2013-12-12 12:12</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="resultItem">
-                        <div class="itemHead">
-                            <a href="detail" target="_blank" class="title"><span class="keyWord">数据挖掘</span>标题二 -
-                                数据挖掘专著一</a>
-                            <span class="divsion">-</span>
-                            <span class="fileType">
-                                <span class="value">应用数学</span>
-                            </span>
-                            <!--<span class="dependValue">
-                            	<span class="label">相关度：</span>
-                                <span class="value">91.78%</span>
-                            </span>-->
-                        </div>
-                        <div class="itemBody">
-                            从工具选择、数据采集、数据预处理、数据挖掘、结果翻译5个方面对中医病案数据挖掘研究现状进行概述,发现中医病案数据挖掘的信息主要包括症状、证型、方剂等,涉及的挖掘方法有关联规则、复杂网络、聚类、分类等.本研究可为中医临床数据挖掘...
-                        </div>
-                        <div class="itemFoot">
-                        	<span class="info">
-                            	<label>作者：</label>
-                                <span class="value">FancyKong</span>
-                            </span>
-                            <!--<span class="info">
-                            	<label>搜索引擎：</label>
-                                <span class="value">360搜索</span>
-                            </span>-->
-                            <span class="info">
-                            	<label>发布时间：</label>
-                                <span class="value">2013-12-13 14:50</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="resultItem">
-                        <div class="itemHead">
-                            <a href="detail" target="_blank" class="title"><span class="keyWord">数据挖掘</span>章标题 -
-                                数据挖掘专著一
-                            </a>
-                            <span class="divsion">-</span>
-                            <span class="fileType">
-                                <span class="value">统计学</span>
-                            </span>
-                            <!--<span class="dependValue">
-                            	<span class="label">相关度：</span>
-                                <span class="value">91.78%</span>
-                            </span>-->
-                        </div>
-                        <div class="itemBody">
-                            不管这个<span class="keyWord">数据挖掘</span>摘要：针对网络热点事件舆论分析的需求,研究了开放式、参与式的网络信息扩散模式下,网络中用户之间的新型互动行为及其在热点事件传播过程中的时空特征.利用网络数据挖掘技术,通过对网络热点事件评论的挖掘,提取关注热点事件的时空信息.通过网络热点
-                        </div>
-                        <div class="itemFoot">
-                        	<span class="info">
-                            	<label>作者：</label>
-                                <span class="value">小洪</span>
-                            </span>
-                            <!--<span class="info">
-                            	<label>搜索引擎：</label>
-                                <span class="value">百度搜索</span>
-                            </span>-->
-                            <span class="info">
-                            	<label>发布时间：</label>
-                                <span class="value">2013-12-12 12:12</span>
+                                <span class="value" th:text="${#dates.format(treatise.publishDate, 'yyyy-MM-dd')}"></span>
                             </span>
                         </div>
                     </div>
@@ -275,8 +133,8 @@
 </body>
 <script src="/js/jquery-1.12.4.min.js" type="text/javascript"></script>
 <script src="/tools/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../static/web/js/global.js"></script>
-<script type="text/javascript" src="../static/web/js/pagination.js"></script>
+<script type="text/javascript" src="/web/js/global.js"></script>
+<script type="text/javascript" src="/web/js/pagination.js"></script>
 <script type="text/javascript">
     $('.searchList').on('click', '.searchItem', function () {
         $('.searchList .searchItem').removeClass('current');
@@ -317,14 +175,22 @@
     });
 
     //分页
-    $(".pagination").pagination(500, {
-        current_page: 0, //当前页码
-        items_per_page: 9,
+    $(".pagination").pagination([[${total+100}]], {
+        current_page: [[${current-1}]], //当前页码
+        items_per_page: [[${size}]],
         display_msg: true,
         callback: pageselectCallback
     });
     function pageselectCallback(page_id, jq) {
-        alert("当前页id(由0开始)：" + page_id + "，\n每页显示：" + this.items_per_page + "条数据");
+        //alert("当前页id(由0开始)：" + page_id + "，\n每页显示：" + this.items_per_page + "条数据");
+        alert(window.location.href);
+        window.location.href = "/result?"+"p="+(page_id+1)+"&s="+this.items_per_page+"&q="+getQueryString("q")+"&t="+getQueryString("t");
+    }
+    function getQueryString(name)
+    {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  encodeURIComponent(r[2]); return '';
     }
 
     setHeight();
