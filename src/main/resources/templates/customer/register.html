@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="description" content="">
-    <meta name="customer" content="Cherish">
+    <meta name="author" content="Cherish">
     <title>会员申请</title>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 
@@ -130,7 +130,7 @@
 
                             <div class="col-sm-4">
                                 <label for="duties">职务：</label>
-                                <input type="text" id="duties" name="job" class="form-control"
+                                <input type="text" id="duties" name="duties" class="form-control"
                                        placeholder="职务"
                                        th:value="${customer} ? ${customer.duties}"/>
                             </div>
@@ -139,6 +139,7 @@
                     </fieldset>
 
                     <fieldset title="登录信息">
+
                         <div class="form-group">
                             <div class="col-sm-4">
                                 <label for="username">登录账号：</label>

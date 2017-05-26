@@ -90,13 +90,8 @@ public class UserController extends ABaseController {
     @ResponseBody
     public Response toPage(BasicSearchReq basicSearchReq, UserSearchReq userSearchReq){
         log.info("【用户搜索】 {}", userSearchReq);
-        try {
-            Page<UserDTO> page = userService.findAll(userSearchReq, basicSearchReq);
-            return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
-        } catch (Exception e) {
-            log.error("获取用户列表失败: {}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, BUSY_MSG, null);
-        }
+        Page<UserDTO> page = userService.findAll(userSearchReq, basicSearchReq);
+        return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
     }
 
     /**
@@ -108,13 +103,8 @@ public class UserController extends ABaseController {
     @ResponseBody
     @RequiresPermissions("user:delete")
     public Response delete(@PathVariable("userId") Long userId){
-        try {
-            userService.delete(userId);
-            return buildResponse(Boolean.TRUE, "删除成功", null);
-        } catch (Exception e) {
-            log.error("删除失败:{}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, "删除失败", null);
-        }
+        userService.delete(userId);
+        return buildResponse(Boolean.TRUE, "删除成功", null);
     }
 
     /**

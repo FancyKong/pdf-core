@@ -8,6 +8,36 @@ $(document).ready(function() { $.ajaxSetup ({ cache: false  }); });
  */
 
 /**
+ * 同步ajax的GET方法
+ * @param url_get
+ * @returns {string}
+ */
+function getAjax(url_get) {
+    var result="" ;
+    $.ajax({
+        type: 'GET',
+        url : url_get,
+        success : function(result1) { result = result1; },
+        error : function(XMLHttpRequest, textStatus, errorThrown) { },
+        async: false
+    });
+    return result;
+}
+/**
+ * 异步的ajax的GET方法
+ * @param url_get
+ * @param callback
+ */
+function getAjaxAsync(url_get, callback) {
+    $.ajax({
+        type: 'GET',
+        url : url_get,
+        success : callback,
+        async: true
+    });
+}
+
+/**
  * 同步ajax的DELETE方法
  * @param url_del
  * @returns {string}
@@ -81,7 +111,6 @@ function postAjaxNoDataAsync(url_post, callback) {
  * 返回值：JSON格式的数据
  * 同步
  */
-
 function postAjax(url_post, data) {
 	var result="" ;
 	$.ajax({
@@ -95,6 +124,27 @@ function postAjax(url_post, data) {
 		async: false
 	});
 	return result;
+}
+
+/**
+ * ajax的POST方法，提交form的序列化数据
+ * 参数：url, application/x-www-form-urlencoded格式的data
+ * 返回值：JSON格式的数据
+ * 同步
+ */
+function postForm(url_post, formData) {
+    var result="" ;
+    $.ajax({
+        type : 'POST',
+        contentType : "application/x-www-form-urlencoded; charset=utf-8",
+        url : url_post,
+        data : formData,
+        success : function(result1) { result = result1; },
+        dataType : 'json',
+        error : function(XMLHttpRequest, textStatus, errorThrown) { },
+        async: false
+    });
+    return result;
 }
 
 /**

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="description" content="">
-    <meta name="author" content="Cherish">
+    <meta name="customer" content="Cherish">
     <title>会员中心</title>
 
     <link href="/css/style.css" rel="stylesheet"/>
@@ -21,7 +21,7 @@
 <body>
 <div class="container">
     <div class="page-heading">
-        <h1 style="color: #49586e;">会员中心</h1>
+        <h1 style="color: #49586e;">会员中心<small>&nbsp;<a href="/customer/logout">登出</a></small></h1>
         <ul class="breadcrumb">
             <li class="active"></li>
         </ul>
@@ -42,39 +42,39 @@
                                 <ul class="p-info">
                                     <li>
                                         <div class="title">姓名</div>
-                                        <div class="desk">陈小明</div>
+                                        <div class="desk" th:text="${customer.nickname}">陈小明</div>
                                     </li>
                                     <li>
                                         <div class="title">性别</div>
-                                        <div class="desk">男</div>
+                                        <div class="desk" th:text="${customer.gender}">男</div>
                                     </li>
                                     <li>
                                         <div class="title">出生年份</div>
-                                        <div class="desk">1970</div>
+                                        <div class="desk" th:text="${customer.birthYear}">1970</div>
                                     </li>
                                     <li>
                                         <div class="title">籍贯</div>
-                                        <div class="desk">广东广州</div>
+                                        <div class="desk" th:text="${customer.birthPlace}">广东广州</div>
                                     </li>
                                     <li>
                                         <div class="title">单位</div>
-                                        <div class="desk">华南理工大学</div>
+                                        <div class="desk" th:text="${customer.company}">华南理工大学</div>
                                     </li>
                                     <li>
                                         <div class="title">职称</div>
-                                        <div class="desk">教授</div>
+                                        <div class="desk" th:text="${customer.job}">教授</div>
                                     </li>
                                     <li>
                                         <div class="title">职务</div>
-                                        <div class="desk">副院长</div>
+                                        <div class="desk" th:text="${customer.duties}">副院长</div>
                                     </li>
                                     <li>
                                         <div class="title">手机号码</div>
-                                        <div class="desk">1888888888</div>
+                                        <div class="desk" th:text="${#strings.substring(customer.telephone,0,3)}+'****'+${#strings.substring(customer.telephone,7,11)}">1888888888</div>
                                     </li>
                                     <li>
                                         <div class="title">个人邮箱</div>
-                                        <div class="desk">823382133@qq.com</div>
+                                        <div class="desk" th:text="${customer.email}">823382133@qq.com</div>
                                     </li>
                                 </ul>
                             </div>
@@ -90,10 +90,10 @@
                         <div class="panel">
                             <header class="panel-heading"><h3>信息修改</h3></header>
                             <div class="panel-body">
-                                <form id="updateForm" class="form-horizontal" action="/customer/update" method="post">
+                                <form id="updateForm" class="form-horizontal" action="/customer/updateMyself" method="post">
 
                                     <div class="form-group">
-                                        <label for="password" class="control-label col-sm-3">学历:</label>
+                                        <label for="education" class="control-label col-sm-3">学历:</label>
                                         <div class="col-sm-7">
                                             <select id="education" name="education" class="form-control"
                                                     th:value="${customer} ? ${customer.education}">
@@ -109,8 +109,7 @@
                                         <label for="telephone" class="control-label col-sm-3">手机:</label>
                                         <div class="col-sm-7">
                                             <input type="text" id="telephone" name="telephone" class="form-control"
-                                                   placeholder="手机号码" minlength="11" maxlength="11" required
-                                                   th:value="${customer} ? ${customer.telephone}"/>
+                                                    minlength="11" maxlength="11"/>
                                         </div>
                                     </div>
 
@@ -118,41 +117,34 @@
                                         <label for="email" class="control-label col-sm-3">邮箱:</label>
                                         <div class="col-sm-7">
                                             <input type="email" id="email" name="email" class="form-control"
-                                                   placeholder="个人邮箱" required
-                                                   th:value="${customer} ? ${customer.email}"/>
+                                                   placeholder="用于找回密码" />
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="company" class="control-label col-sm-3">单位:</label>
                                         <div class="col-sm-7">
-                                            <input type="text" id="company" name="company" class="form-control"
-                                                   placeholder="工作单位"
-                                                   th:value="${customer} ? ${customer.company}"/>
+                                            <input type="text" id="company" name="company" class="form-control" />
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="job" class="control-label col-sm-3">职称:</label>
                                         <div class="col-sm-7">
-                                            <input type="text" id="job" name="job" class="form-control"
-                                                   placeholder="职称"
-                                                   th:value="${customer} ? ${customer.job}"/>
+                                            <input type="text" id="job" name="job" class="form-control" />
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="duties" class="control-label col-sm-3">职务:</label>
                                         <div class="col-sm-7">
-                                            <input type="text" id="duties" name="job" class="form-control"
-                                                   placeholder="职务"
-                                                   th:value="${customer} ? ${customer.duties}"/>
+                                            <input type="text" id="duties" name="duties" class="form-control" />
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <div class="text-center">
-                                            <button class="btn btn-lg btn-primary" type="submit">
+                                            <button id="btn_updateMyself" class="btn btn-lg btn-primary" type="button">
                                                 <span class="glyphicon glyphicon-saved" aria-hidden="true"></span>
                                                 信息修改
                                             </button>
@@ -193,7 +185,7 @@
 
                                     <div class="form-group">
                                         <div class="text-center">
-                                            <button class="btn btn-lg btn-primary" type="submit">
+                                            <button id="btn_modifyPwd" class="btn btn-lg btn-primary" type="button">
                                                 <span class="glyphicon glyphicon-saved" aria-hidden="true"></span>
                                                 密码更改
                                             </button>
@@ -212,8 +204,37 @@
 
 
 <script src="/tools/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/ajax.js" type="text/javascript"></script>
+<script src="/js/myModal.js" type="text/javascript"></script>
 <script>
     $(function () {
+
+        // 信息更改
+        $("#btn_updateMyself").click(function () {
+            var data = $("#updateForm").serialize();
+            var result = postForm("/customer/updateMyself", data);
+            if (result.success) {
+                myModalSuccess(result.message);
+                window.location.reload();
+            } else {
+                myModalFail(result.message);
+            }
+
+        });
+
+        // 密码更改
+        $("#btn_modifyPwd").click(function () {
+            var data = $("#modifyPwdForm").serialize();
+            var result = postForm("/customer/modifyPwd", data);
+            if (result.success) {
+                myModalSuccess(result.message);
+                window.location.reload();
+            } else {
+                myModalFail(result.message);
+            }
+
+
+        });
     });
 </script>
 </body>

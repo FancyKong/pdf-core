@@ -64,6 +64,7 @@ public class Author implements java.io.Serializable {
     private String birthPlace;
     /**
      * 学历
+     * @see com.cafa.pdf.core.commom.enums.Education
      */
     private String education;
     /**

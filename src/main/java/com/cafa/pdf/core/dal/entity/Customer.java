@@ -1,5 +1,6 @@
 package com.cafa.pdf.core.dal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,72 +19,78 @@ public class Customer implements java.io.Serializable {
 
 	private static final long serialVersionUID = 2285174464789310329L;
 
-	@Id
+    @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
     /**
      * 姓名
      */
-    @Column(name = "name", nullable = false, length = 32)
     private String nickname;
     /**
-     * 出生年
+     * 手机
      */
-    private int birthYear;
-    /**
-     * 性别
-     */
-    private String gender;
-    /**
-     * 电话
-     */
-    @Column(name = "telephone", unique = true, nullable = false, length = 11)
     private String telephone;
     /**
      * 邮箱
      */
     private String email;
     /**
+     * 登录账号
+     */
+    private String username;
+    /**
+     * 密码
+     */
+    @JsonIgnore
+    private String password;
+    /**
+     * 性别
+     */
+    private String gender;
+    /**
+     * -1: 申请状态 0：冻结 1：激活
+     */
+    @Column(name = "is_active", nullable = false)
+    private Integer active;
+    /**
+     * 出生年
+     */
+    @Column(name = "birth_year")
+    private Integer birthYear;
+    /**
      * 籍贯
      */
-    private String nativePlace;
-    /**
-     * 单位
-     */
-    private String company;
+    @Column(name = "birth_place")
+    private String birthPlace;
     /**
      * 学历
      * @see com.cafa.pdf.core.commom.enums.Education
      */
     private String education;
     /**
+     * 单位
+     */
+    private String company;
+    /**
      * 职称
      */
-    private String professionalTitle;
+    private String job;
     /**
      * 职务
      */
-    private String position;
+    private String duties;
     /**
-     * 登录账号
+     * 申请时的ip
      */
-    private String username;
-    @Column(name = "password", nullable = false, length = 40)
-    private String password;
+    private Integer ip;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_time", nullable = false, length = 19)
     private Date createdTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modified_time", length = 19)
+    @Column(name = "modified_time", nullable = false, length = 19)
     private Date modifiedTime;
-    /**
-     * 账户是否激活可用
-     */
-	@Column(name = "is_active", nullable = false)
-	private Integer active;
-
 
 }

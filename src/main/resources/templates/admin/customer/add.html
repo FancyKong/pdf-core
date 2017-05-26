@@ -6,21 +6,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="description" content="">
-    <meta name="author" content="Cherish">
-    <title>手动添加客户</title>
+    <title>手动添加会员</title>
 </head>
 <body>
 <div layout:fragment="content">
     <!-- page heading start-->
     <div class="page-heading">
         <h3>
-            添加客户
+            添加会员
         </h3>
         <ul class="breadcrumb">
             <li>
-                <a href="/customer/list">客户管理</a>
+                <a href="/customer/list">会员管理</a>
             </li>
-            <li class="active"> 新增客户 </li>
+            <li class="active"> 新增会员 </li>
         </ul>
     </div>
     <!-- page heading end-->
@@ -40,7 +39,7 @@
                                     <label for="nickname" class="control-label col-md-2 col-sm-2">呢称:</label>
                                     <div class="col-md-8 col-sm-8">
                                         <input type="text" id="nickname" name="nickname" class="form-control"
-                                               placeholder="呢称" minlength="1" maxlength="16" required autofocus
+                                               placeholder="会员呢称" minlength="1" maxlength="16" required autofocus
                                                th:value="${customer} ? ${customer.nickname}" />
                                         <p class="help-block">
                                             <label class="error-label"
@@ -48,9 +47,79 @@
                                         </p>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="birthYear" class="control-label col-md-2 col-sm-2">出生年:</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        <input type="number" id="birthYear" name="birthYear" class="form-control"
+                                               placeholder="会员出生年份" min="1901" maxlength="2037" required
+                                               th:value="${customer} ? ${customer.birthYear}" />
+                                        <p class="help-block">
+                                            <label class="error-label"
+                                                   th:text="${errorMap} ? ${errorMap['birthYear']}"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="birthPlace" class="control-label col-md-2 col-sm-2">籍贯:</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        <input type="text" id="birthPlace" name="birthPlace" class="form-control"
+                                               placeholder="籍贯/出生地" required
+                                               th:value="${customer} ? ${customer.birthPlace}" />
+                                        <p class="help-block">
+                                            <label class="error-label"
+                                                   th:text="${errorMap} ? ${errorMap['birthPlace']}"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="education" class="control-label col-md-2 col-sm-2">学历:</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        <select id="education" name="education" class="form-control"
+                                                th:value="${customer} ? ${customer.education}">
+                                            <option value="DOCTOR">博士</option>
+                                            <option value="MASTER">硕士</option>
+                                            <option value="BACHELOR">学士</option>
+                                            <option value="OTHER">其它</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="company" class="control-label col-md-2 col-sm-2">单位:</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        <input type="text" id="company" name="company" class="form-control"
+                                               placeholder="单位/工作单位" required
+                                               th:value="${customer} ? ${customer.company}" />
+                                        <p class="help-block">
+                                            <label class="error-label"
+                                                   th:text="${errorMap} ? ${errorMap['company']}"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="job" class="control-label col-md-2 col-sm-2">职称:</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        <input type="text" id="job" name="job" class="form-control" required
+                                               th:value="${customer} ? ${customer.job}" />
+                                        <p class="help-block">
+                                            <label class="error-label"
+                                                   th:text="${errorMap} ? ${errorMap['job']}"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="duties" class="control-label col-md-2 col-sm-2">职务:</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        <input type="text" id="duties" name="duties" class="form-control" required
+                                               th:value="${customer} ? ${customer.duties}" />
+                                        <p class="help-block">
+                                            <label class="error-label"
+                                                   th:text="${errorMap} ? ${errorMap['duties']}"></label>
+                                        </p>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
-                                    <label for="telephone" class="control-label col-md-2 col-sm-2">手机号码:</label>
+                                    <label for="telephone" class="control-label col-md-2 col-sm-2">手机:</label>
                                     <div class="col-md-8 col-sm-8">
                                         <input type="number" id="telephone" name="telephone" class="form-control"
                                                placeholder="手机号码" minlength="11" maxlength="11" required
@@ -61,7 +130,30 @@
                                         </p>
                                     </div>
                                 </div>
-
+                                <div class="form-group">
+                                    <label for="email" class="control-label col-md-2 col-sm-2">邮箱:</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        <input type="email" id="email" name="email" class="form-control"
+                                               placeholder="个人邮箱（用于找回密码）" required
+                                               th:value="${customer} ? ${customer.email}" />
+                                        <p class="help-block">
+                                            <label class="error-label"
+                                                   th:text="${errorMap} ? ${errorMap['email']}"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="username" class="control-label col-md-2 col-sm-2">账号:</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        <input type="text" id="username" name="username" class="form-control"
+                                               placeholder="登陆账号" minlength="6" maxlength="16" required
+                                               th:value="${customer} ? ${customer.username}" />
+                                        <p class="help-block">
+                                            <label class="error-label"
+                                                   th:text="${errorMap} ? ${errorMap['username']}"></label>
+                                        </p>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="password" class="control-label col-md-2 col-sm-2">密码:</label>
                                     <div class="col-md-8 col-sm-8">
@@ -76,6 +168,16 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="gender" class="control-label col-md-2 col-sm-2">性别：</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        <select id="gender" name="gender" class="form-control"
+                                                th:value="${customer} ? ${customer.gender}">
+                                            <option value="男">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="active" class="control-label col-md-2 col-sm-2">状态：</label>
                                     <div class="col-md-8 col-sm-8">
                                         <select id="active" name="active" class="form-control"
@@ -85,7 +187,6 @@
                                         </select>
                                     </div>
                                 </div>
-
 
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-8 col-sm-8">

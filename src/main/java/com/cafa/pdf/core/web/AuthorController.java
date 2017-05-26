@@ -6,17 +6,16 @@ import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.service.AuthorService;
-import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.util.IPv4Util;
 import com.cafa.pdf.core.util.MStringUtils;
 import com.cafa.pdf.core.util.RequestHolder;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.ModifyPasswordReq;
 import com.cafa.pdf.core.web.request.author.AuthorRegisterReq;
 import com.cafa.pdf.core.web.request.author.AuthorSaveReq;
 import com.cafa.pdf.core.web.request.author.AuthorSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorUpdateReq;
-import com.cafa.pdf.core.web.request.ModifyPasswordReq;
 import com.cafa.pdf.core.web.response.Response;
 import com.google.common.base.Throwables;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +44,7 @@ public class AuthorController extends ABaseController {
     private final TreatiseService treatiseService;
 
     @Autowired
-    public AuthorController(AuthorService authorService, TreatiseService treatiseService, ChapterService chapterService) {
+    public AuthorController(AuthorService authorService, TreatiseService treatiseService) {
         this.authorService = authorService;
         this.treatiseService = treatiseService;
     }
@@ -267,11 +266,9 @@ public class AuthorController extends ABaseController {
                 return mv;
             }
 
-            // 设置密码 此时的ip
-            authorRegisterReq.setPassword(CryptographyUtil.cherishSha1(authorRegisterReq.getPassword()));
-            authorRegisterReq.setIp(IPv4Util.ipToInt(MStringUtils.getIpAddress(RequestHolder.getRequest())));
             authorService.register(authorRegisterReq);
             errorMap.put("msg", "信息提交成功，请登录您的邮箱激活账号");
+            mv.setViewName("login");
         } catch (Exception e) {
             errorMap.put("msg", "系统繁忙");
             log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
@@ -303,6 +300,7 @@ public class AuthorController extends ABaseController {
      * 提交密码更改请求
      * @return ResponseBody
      */
+    @RequiresRoles("author")
     @PostMapping("/modifyPwd")
     @ResponseBody
     public Response modifyPwd(ModifyPasswordReq modifyPasswordReq) {
@@ -328,6 +326,7 @@ public class AuthorController extends ABaseController {
      * 著作者信息修改请求
      * @return ResponseBody
      */
+    @RequiresRoles("author")
     @PostMapping("/updateMyself")
     @ResponseBody
     public Response updateMyself(AuthorUpdateReq authorUpdateReq) {

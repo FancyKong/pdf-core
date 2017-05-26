@@ -45,11 +45,13 @@ public class ControllerAspect {
 		//获得参数列表
 		Object[] args = joinPoint.getArgs();
 		if (args != null) {
-			Object argObject = args[0];
-			log.info("Start to handle {}, PARAMETER: {}", controllerName, argObject);
 			try {
-				//参数校验
-				validate(argObject);
+				if (args.length > 0) {
+                    Object argObject = args[0];
+					log.info("Start to handle {}, PARAMETER: {}", controllerName, argObject);
+					//参数校验
+					validate(argObject);
+				}
 				//业务执行
 				response = (Response) joinPoint.proceed();
 				stopwatch.stop();

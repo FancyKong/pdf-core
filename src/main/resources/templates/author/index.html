@@ -22,7 +22,7 @@
 <div class="container">
     <!-- page heading start-->
     <div class="page-heading">
-        <h1 style="color: #49586e;">著作者中心</h1>
+        <h1 style="color: #49586e;">著作者中心<small>&nbsp;<a href="/logout">登出</a></small></h1>
         <ul class="breadcrumb">
             <li class="active"></li>
         </ul>
@@ -131,7 +131,7 @@
                                 <form id="updateForm" class="form-horizontal" action="/author/updateMyself" method="post">
 
                                     <div class="form-group">
-                                        <label for="password" class="control-label col-sm-3">学历:</label>
+                                        <label for="education" class="control-label col-sm-3">学历:</label>
                                         <div class="col-sm-7">
                                             <select id="education" name="education" class="form-control" >
                                                 <option value="DOCTOR">博士</option>
@@ -145,7 +145,7 @@
                                         <label for="telephone" class="control-label col-sm-3">手机:</label>
                                         <div class="col-sm-7">
                                             <input type="text" id="telephone" name="telephone" class="form-control"
-                                                   minlength="11" maxlength="11" required />
+                                                   minlength="11" maxlength="11" />
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -163,7 +163,7 @@
                                     <div class="form-group">
                                         <label for="duties" class="control-label col-sm-3">职务:</label>
                                         <div class="col-sm-7">
-                                            <input type="text" id="duties" name="job" class="form-control" />
+                                            <input type="text" id="duties" name="duties" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="form-group">

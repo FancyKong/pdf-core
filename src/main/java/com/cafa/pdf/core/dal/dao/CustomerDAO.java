@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface CustomerDAO extends IBaseDAO<Customer,Long> {
+public interface CustomerDAO extends IBaseDAO<Customer, Long> {
 
     Customer findByTelephone(String telephone);
 
@@ -15,6 +15,6 @@ public interface CustomerDAO extends IBaseDAO<Customer,Long> {
     @Query("SELECT c FROM Customer AS c ")
     List<Customer> listAllPaged(Pageable pageable);
 
-
+    Customer findByUsername(String username);
 
 }

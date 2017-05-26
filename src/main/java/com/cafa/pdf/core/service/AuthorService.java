@@ -9,6 +9,7 @@ import com.cafa.pdf.core.dal.dao.CheckDAO;
 import com.cafa.pdf.core.dal.dao.IBaseDAO;
 import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.dal.entity.Check;
+import com.cafa.pdf.core.util.IPv4Util;
 import com.cafa.pdf.core.util.MStringUtils;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.util.RequestHolder;
@@ -90,7 +91,9 @@ public class AuthorService extends ABaseService<Author, Long> {
         ObjectConvertUtil.objectCopy(author, authorRegisterReq);
         author.setCreatedTime(new Date());
         author.setModifiedTime(new Date());
+        // 设置密码 ip
         author.setPassword(CryptographyUtil.cherishSha1(author.getPassword()));
+        author.setIp(IPv4Util.ipToInt(MStringUtils.getIpAddress(RequestHolder.getRequest())));
         // 待邮箱激活
         author.setActive(ActiveEnum.UN_CHECK_EMAIL.getNum());
 
