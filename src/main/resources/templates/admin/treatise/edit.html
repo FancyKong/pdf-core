@@ -807,12 +807,20 @@
             if($(thisTr).find("[name='modified']").val()==="0"){
                 //process move
                 now += move;
+                now = now>=100?100:now;
                 var progress = $("#uploadProgress");
                 progress.attr('aria-valuenow', "" + now);
                 progress.css('width', "" + now + "%");
                 progress.html("" + now + "%");
                 if (now >= 100) {
-                    indexing(progress);
+                    if(deleted){
+                        indexing(progress);
+                    }else {
+                        $("#modal-content").html("文件上传中,请勿关闭网页!");
+                        progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
+                        $('#uploadModel').modal('hide');
+                        myModalSuccess("章节信息保存成功");
+                    }
                     return;
                 }
                 uploadRow(now,move,$(thisTr).next()[0]);

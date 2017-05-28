@@ -15,4 +15,5 @@ public interface ChapterDAO extends IBaseDAO<Chapter, Long> {
     @Modifying
     void deleteByTreatiseId(@Param("treatiseId") Long treatiseId);
 
+    Chapter findByTreatiseIdAndSeq(Long treatise, Integer seq);
 }

@@ -4,17 +4,14 @@
  */
 package com.cafa.pdf.core.web;
 
+import com.cafa.pdf.core.commom.dto.ChapterDTO;
 import com.cafa.pdf.core.commom.dto.TreatiseShowDTO;
-import com.cafa.pdf.core.dal.entity.Treatise;
-import com.cafa.pdf.core.dal.entity.TreatiseCategory;
-import com.cafa.pdf.core.dal.entity.TreatiseReading;
+import com.cafa.pdf.core.commom.enums.Language;
+import com.cafa.pdf.core.dal.entity.*;
 import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
 import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
-import com.cafa.pdf.core.service.CheckService;
-import com.cafa.pdf.core.service.SysConfigService;
-import com.cafa.pdf.core.service.TreatiseCategoryService;
-import com.cafa.pdf.core.service.TreatiseService;
+import com.cafa.pdf.core.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.query.SolrPageRequest;
@@ -48,10 +45,27 @@ public class PortalController {
     private TreatiseCategoryService treatiseCategoryService;
     @Autowired
     private TreatiseService treatiseService;
+    @Autowired
+    private ChapterService chapterService;
+    @Autowired
+    private AuthorService authorService;
 
     @GetMapping("{id}/detail")
     public ModelAndView detail(@PathVariable("id") Long id){
         ModelAndView modelAndView = new ModelAndView("detail");
+        Treatise treatise = treatiseService.findById(id);
+        treatise.setDescription(treatise.getDescription().replaceAll("\\r\n","<br/>"));
+
+        modelAndView.addObject("treatise",treatise);
+        modelAndView.addObject("language", Language.valueOf(treatise.getLanguage()));
+        List<ChapterDTO> chapters = chapterService.findByTreatiseId(treatise.getId());
+        modelAndView.addObject("chapters",chapters);
+        TreatiseCategory category = treatiseCategoryService.findById(treatise.getCategoryId());
+        modelAndView.addObject("category",category);
+        Author author = authorService.findById(treatise.getAuthorId());
+        modelAndView.addObject("author",author);
+        String[] keywords = treatise.getKeywords().split(";");
+        modelAndView.addObject("keywords",keywords);
         return modelAndView;
     }
 
@@ -136,4 +150,18 @@ public class PortalController {
         return mv;
     }
 
+    @RequestMapping("/reading/{treatiseId}/{chapterSeq}")
+    public ModelAndView readChapter(@PathVariable("treatiseId") Long treatiseId,
+                                    @PathVariable("chapterSeq") Integer chapterSeq){
+        ModelAndView mv = new ModelAndView("read");
+        Treatise treatise = treatiseService.findById(treatiseId);
+        mv.addObject("treatise",treatise);
+        int page = 1;
+        for (int i = 1; i < chapterSeq; i++) {
+            Chapter c = chapterService.findByTreatiseAndSeq(treatiseId,chapterSeq);
+            page+=c.getPage();
+        }
+        mv.addObject("page",page);
+        return mv;
+    }
 }

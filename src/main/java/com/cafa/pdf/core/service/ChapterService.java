@@ -62,6 +62,10 @@ public class ChapterService extends ABaseService<Chapter, Long> {
         return chapters.stream().map(this::getChapterDTO).collect(Collectors.toList());
     }
 
+    public Chapter findByTreatiseAndSeq(Long treatise,Integer seq){
+        return chapterDAO.findByTreatiseIdAndSeq(treatise,seq);
+    }
+
     public Long getCount() {
         return chapterDAO.count();
     }
@@ -81,7 +85,6 @@ public class ChapterService extends ABaseService<Chapter, Long> {
         if (!directory.exists()) {
             directory.mkdirs();
         }
-        chapter = this.save(chapter);
         try {
             uploadPdf(multipartFile, chapter);
         } catch (Exception e) {
@@ -115,6 +118,8 @@ public class ChapterService extends ABaseService<Chapter, Long> {
             directory.mkdirs();
         }
         PdfReader reader = new PdfReader(multipartFile.getInputStream());
+        chapter.setPage(reader.getNumberOfPages());
+        chapter = this.save(chapter);
         ChapterFileInfo chapterFileInfo = new ChapterFileInfo(chapter.getId(),
                 chapter.getTreatiseId(),
                 chapter.getSeq(),

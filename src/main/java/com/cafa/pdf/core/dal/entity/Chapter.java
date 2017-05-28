@@ -47,5 +47,11 @@ public class Chapter implements java.io.Serializable {
      */
     @Column(name = "is_privacy", nullable = false)
     private Integer privacy;
+    /**
+     * 是否被加密
+     */
+    @Column(name = "page", nullable = false)
+    private Integer page;
+
 
 }

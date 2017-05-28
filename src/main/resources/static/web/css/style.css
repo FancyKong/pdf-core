@@ -109,7 +109,7 @@ a:hover {
     width: 460px;
     height: 47px;
     padding: 0 5px;
-    background: url(../img/logo.png) no-repeat center center #fff;
+    background: url(/web/img/logo.png) no-repeat center center #fff;
 }
 
 /*choose样式*/

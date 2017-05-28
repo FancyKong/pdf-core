@@ -174,6 +174,12 @@ public class TreatiseController extends ABaseController {
         return mv;
     }
 
+    @ResponseBody
+    @RequestMapping("/{treatiseId}/jsonInfo")
+    public Treatise getTreatiseById(@PathVariable("treatiseId") Long treatiseId){
+        return treatiseService.findById(treatiseId);
+    }
+
     /**
      * 删除
      * @see com.cafa.pdf.core.web.aop.ControllerAspect
@@ -249,7 +255,7 @@ public class TreatiseController extends ABaseController {
     }
 
     @Value("${file.path}")
-    private static final String FILE_PATH = "";
+    private String FILE_PATH = "/usr/local/tomcat8kjgl/kjgl/pdf_file/";
 
     @GetMapping("page/{treatiseId}/{pageNumber}")
     public ResponseEntity<byte[]> page(@PathVariable("treatiseId")Long treatiseId,@PathVariable("pageNumber") int pageNumber) throws IOException {
