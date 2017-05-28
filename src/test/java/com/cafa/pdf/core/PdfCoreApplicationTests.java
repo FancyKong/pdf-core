@@ -1,11 +1,13 @@
 package com.cafa.pdf.core;
 
+import com.cafa.pdf.core.dal.dao.TreatiseDAO;
 import com.cafa.pdf.core.dal.solr.document.Article;
 import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
 import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import com.cafa.pdf.core.dal.solr.repository.ArticleRepository;
 import com.cafa.pdf.core.dal.solr.repository.ChapterSolrRepository;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
+import com.cafa.pdf.core.service.TreatiseService;
 import com.sun.codemodel.internal.JForEach;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -26,7 +28,18 @@ import java.util.UUID;
 public class PdfCoreApplicationTests {
 
     @Autowired
+    private TreatiseService treatiseService;
+
+    @Autowired
     private ArticleRepository repository;
+
+    @Autowired
+    private TreatiseDAO treatiseDAO;
+
+    @Test
+    public void testHot(){
+        log.info("hots = {}",treatiseService.treatisesHot());
+    }
 
     @Test
     public void solrSave() {

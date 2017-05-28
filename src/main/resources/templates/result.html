@@ -29,9 +29,10 @@
 <body>
 <div id="container">
     <div id="hd" class="ue-clear">
-        <div class="logo"></div>
+        <a href="/index"><div class="logo"></div></a>
         <div class="inputArea">
-            <input type="text" class="searchInput"/>
+            <input type="text" class="searchInput" th:value="${typeName}" id="searchInput"/>
+            <input type="hidden" id="query" th:value="'q='+${query}+'&t='+${type}">
             <input type="button" class="searchButton" value="搜索"/>
             <a class="advanced" href="advanced">高级搜索</a>
         </div>
@@ -115,13 +116,7 @@
                 <div class="mySearch">
                     <h6>专著阅读热度排行榜</h6>
                     <ul class="historyList">
-                        <li><a href="javascript:void(0);">矩阵数学</a></li>
-                        <li><a href="javascript:void(0);">机器学习</a></li>
-                        <li><a href="javascript:void(0);">概率论与数理统计</a></li>
-                        <li><a href="javascript:void(0);">离散数学</a></li>
-                        <li><a href="javascript:void(0);">线性代数</a></li>
-                        <li><a href="javascript:void(0);">计算机视觉</a></li>
-                        <li><a href="javascript:void(0);">机器学习</a></li>
+                        <li th:each="treatise*{treatisesTop}"><a th:href="${treatise.id}+'/detail'" th:text="${treatise.bookName}"></a></li>
                     </ul>
                 </div>
             </div>
@@ -175,7 +170,7 @@
     });
 
     //分页
-    $(".pagination").pagination([[${total+100}]], {
+    $(".pagination").pagination([[${total}]], {
         current_page: [[${current-1}]], //当前页码
         items_per_page: [[${size}]],
         display_msg: true,
@@ -184,7 +179,7 @@
     function pageselectCallback(page_id, jq) {
         //alert("当前页id(由0开始)：" + page_id + "，\n每页显示：" + this.items_per_page + "条数据");
         alert(window.location.href);
-        window.location.href = "/result?"+"p="+(page_id+1)+"&s="+this.items_per_page+"&q="+getQueryString("q")+"&t="+getQueryString("t");
+        window.location.href = "/result?"+"p="+(page_id+1)+"&s="+this.items_per_page+"&q=[[${query}]]&t=[[${type}]]";
     }
     function getQueryString(name)
     {

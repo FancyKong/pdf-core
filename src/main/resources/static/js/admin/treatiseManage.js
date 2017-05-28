@@ -67,8 +67,6 @@
                     "data" : 'publishHouse'
 				}, {
 					"data" : 'publishDate'
-                },{
-                    "data" : "hits"
                 },
 				operator
 				],

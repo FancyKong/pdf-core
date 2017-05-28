@@ -30,6 +30,11 @@ public class Treatise implements java.io.Serializable {
 
     private static final long serialVersionUID = 2855297224736248527L;
 
+    public Treatise(Long id,String bookName) {
+        this.id = id;
+        this.bookName = bookName;
+    }
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -177,9 +182,4 @@ public class Treatise implements java.io.Serializable {
      */
     @Column(nullable = false)
     private String language = Language.CHN.getCode();
-    /**
-     * 点击量
-      */
-    @Column(nullable = false)
-    private Long hits = 0L;
 }

@@ -17,6 +17,7 @@
             display: none;
         }
     </style>
+    <script src="/js/ajaxfileupload.js" type="text/javascript"></script>
 </head>
 <body>
 <div layout:fragment="content">
@@ -97,7 +98,7 @@
                                             <div class="form-group">
                                                 <label for="author" class="control-label col-md-2 col-sm-2">作者：</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <select id='author' name='author' class='form-control'>
+                                                    <select id='author' name='authorId' class='form-control'>
                                                         <option th:each="author:*{authors}"
                                                                 th:value="${author.id}" th:text="${author.nickname}"
                                                                 th:attr="selected=${author} ?(${author.id} eq ${treatise.authorId})"
@@ -171,7 +172,7 @@
                                                 <label for="publishPlace"
                                                        class="control-label col-md-2 col-sm-2">出版地：</label>
                                                 <div class="col-md-8 col-sm-8">
-                                                    <input type="text" id="publishPlace" name="publishHouse"
+                                                    <input type="text" id="publishPlace" name="publishPlace"
                                                            class="form-control"
                                                            placeholder="出版地" required
                                                            th:value="${treatise} ? ${treatise.publishPlace}"/>
@@ -259,21 +260,22 @@
                             </tr>
                             </thead>
                             <tbody id="tBody">
-                            <tr th:each="chapter:*{chapters}">
+                            <tr th:each="chapter:*{chapters}" th:id="${chapter.id}">
                                 <td>
                                     <label>
                                         <input class="text-center" type="number" name="seq" th:value="${chapter.seq}"
-                                               min="1" max="99" style="width:60px;"/>
+                                               min="1" max="99" style="width:60px;" onchange="toggle(this)"/>
+                                    </label>
+                                    <input type="hidden" value="0" name="modified" >
+                                </td>
+                                <td>
+                                    <label>
+                                        <input type="text" name="title" th:value="${chapter.title}" onchange="toggle(this)"/>
                                     </label>
                                 </td>
                                 <td>
                                     <label>
-                                        <input type="text" name="title" th:value="${chapter.title}"/>
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <select name="privacy">
+                                        <select name="privacy" onchange="toggle(this)">
                                             <option value="1">公开</option>
                                             <option value="0" th:attr="selected=(${chapter.privacy} eq 0)">不公开</option>
                                         </select>
@@ -282,7 +284,7 @@
                                 <td>
                                     <label>
                                         <input type="hidden" name="url" th:value="${chapter.url}"/>
-                                        <input type="file" accept="application/pdf" style="display:none;">
+                                        <input type="file" th:id="'pdf'+${chapter.seq}" name="pdf" accept="application/pdf" onchange="toggle(this)" style="display: none"/>
                                         <a href="javascript:void(0)" onclick="showFile(this)"><span>您已上传过文件,点击重新上传</span></a>
                                     </label>
                                 </td>
@@ -335,7 +337,7 @@
                                             <label for="pageNumber"
                                                    class="control-label col-md-2 col-sm-2">总页数：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <input type="text" id="pageNumber" name="price"
+                                                <input type="text" id="pageNumber" name="pageNumber"
                                                        class="form-control"
                                                        placeholder="总页数" minlength="1" maxlength="32"
                                                        th:value="${treatise} ? ${treatise.pageNumber}"/>
@@ -530,7 +532,7 @@
                                             <label for="postscript"
                                                    class="control-label col-md-2 col-sm-2">跋：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <textarea id="postscript" name="description"
+                                                <textarea id="postscript" name="postscript"
                                                           class="form-control"
                                                           placeholder="跋" style="height: 150px"
                                                           th:text="${treatise} ? ${treatise.postscript}"></textarea>
@@ -580,7 +582,7 @@
                     <h4 class="modal-title">保存目录信息</h4>
                 </div>
                 <div class="modal-body" id="uploadModalBody">
-                    <h3>文件上传中,请勿关闭网页!</h3>
+                    <h3 id="modal-content">文件上传中,请勿关闭网页!</h3>
                     <div class="progress">
                         <div id="uploadProgress" class="progress-bar" role="progressbar" aria-valuenow="0"
                              aria-valuemin="0" aria-valuemax="100" style="width: 0;min-width: 2em;">
@@ -597,15 +599,177 @@
 
 <div layout:fragment="javascript">
     <script type="text/javascript">
+        var seq = [[${lastSeq}]];//章节表格的章序号
+
+        var treatiseId = [[${treatise.id}]];
+        $(function () {
+            //初始化时间控件
+            $('.form_datetime').datetimepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN',
+                startView: 2,
+                minView: 2
+            });
+            //修改核心信息
+            $("#next-0").click(function () {
+                var treatiseData = $("#treatiseForm").serialize();
+                if(treatiseId !== 0){
+                    treatiseData += "&id="+treatiseId;
+                    $.post("/treatise/update", treatiseData, function (result) {
+                        if (result.success) {
+                            // 隐藏基本信息，显示章节录入
+                            $("#chapterSection").removeClass("inactive");
+                            $("#coreInfoSection").addClass("inactive");
+                        } else {
+                            myModalFail(result.message);
+                        }
+                    });
+                }
+            });
+            //返回核心信息
+            $("#prev-1").click(function () {
+                $("#coreInfoSection").removeClass("inactive");
+                $("#chapterSection").addClass("inactive");
+            });
+            /*保存章节信息*/
+            $("#next-1").click(function () {
+                //逐章上传
+                var tbody = document.getElementById('tBody');
+                var flag = true;
+                $.each(tbody.getElementsByTagName('tr'),function (i, thisTr) {
+                    var seq = $(thisTr).find("[name='seq']").val();
+                    if (seq === null || seq ===""){
+                        myModalWarning("第"+(i+1)+"行中，请填写章序号！");
+                        flag = false;
+                        return false;
+                    }
+                    var title = $(thisTr).find("[name='title']").val();
+                    if (title === null || title ===""){
+                        myModalWarning("第"+(i+1)+"行中，请填写章标题！");
+                        flag = false;
+                        return false;
+                    }
+                    if(!$(thisTr).attr('id')){
+                        //需要对file进行验证
+                        var pdf = $(thisTr).find("[name='pdf']").val();
+                        if (pdf === null || pdf ===""){
+                            myModalWarning("第"+(i+1)+"行中，请选择文件！");
+                            flag = false;
+                            return false;
+                        }
+                    }
+                });
+                if(!flag){
+                    return;
+                }
+                var length = tbody.getElementsByTagName('tr').length;
+                var move = Math.ceil(100/length);
+                var now = 0;
+                showModal();
+                //上传首行，然后回调函数里递归
+                uploadRow(now,move,tbody.getElementsByTagName('tr')[0]);
+                // 章节隐藏，显示额外信息录入
+                $("#extraInfoSection").removeClass("inactive");
+                $("#chapterSection").addClass("inactive");
+            });
+            //返回章节信息
+            $("#prev-2").click(function () {
+                $("#chapterSection").removeClass("inactive");
+                $("#extraInfoSection").addClass("inactive");
+            });
+            // 添加新行
+            $("#newRow").on("click", function () {
+                var tBody = $("#tBody");
+                var tr =
+                    '<tr>'+
+                    '<td>'+
+                    '<label>'+
+                    '<input class="text-center" type="number" onchange="toggle(this)" name="seq" value="'+(++seq)+'" min="1" max="99" style="width:60px;"/>'+
+                    '</label>'+
+                    '<input type="hidden" value="1" name="modified" >'+
+                    '</td>'+
+                    '<td>'+
+                    '<label>'+
+                    '<input type="text" name="title" onchange="toggle(this)"/>'+
+                    '</label>'+
+                    '</td>'+
+                    '<td>'+
+                    '<label>'+
+                    '<select name="privacy" onchange="toggle(this)">'+
+                    '<option value="1" selected="selected">公开</option>'+
+                    '<option value="0">不公开</option>'+
+                    '</select>'+
+                    '</label>'+
+                    '</td>'+
+                    '<td>'+
+                    '<label>'+
+                    '<input type="file" name="pdf" id="pdf'+getIdValue()+'" accept="application/pdf" onchange="toggle(this)"/>'+
+                    '</label>'+
+                    '</td>'+
+                    '<td>'+
+                    '<div class="btn-group btn-group-sm" role="group" aria-label="操作">'+
+                    '<a href="javascript:void(0);" class="op_delete btn btn-danger" role="button">删除</a>'+
+                    '</div>'+
+                    '</td>'+
+                    '</tr>';
+                tBody.append(tr);
+            });
+
+            // 删除该行
+            $("#tBody").on("click", ".op_delete", function () {
+                var thisTr = $(this).closest('tr');
+                var chapterId = $(thisTr).attr("id");
+                console.log("chapterId: " + chapterId);
+                if (chapterId === null || chapterId === ""){
+                    //删除页面中的原有行
+                    $(thisTr).remove();
+                }else {
+                    //向服务器提交删除请求
+                    var url = "/chapter/"+chapterId+"/delete";
+                    var result = delAjax(url);
+                    if(result.success){
+                        myModalSuccess(result.message);
+                        //删除页面中的原有行
+                        $(thisTr).remove();
+                    }else{
+                        myModalFail(result.message);
+                    }
+                }
+            });
+
+            // 额外信息保存
+            $("#persist").click(function () {
+                var extraInfoData = $("#extraInfoForm").serialize();
+                extraInfoData += "&id=" + treatiseId;// 附带上著作ID
+                console.log("extraInfoData: " + extraInfoData);
+                $.post("/treatise/update", extraInfoData, function (result) {
+                    if (result.success) {
+                        myModalSuccess(result.message);
+                        setTimeout(function () {
+                            window.location.href ="/treatise";
+                        },3000);
+                    } else {
+                        myModalFail(result.message);
+                    }
+                });
+            });
+        });
+        /**
+         * 点击出现上传按钮
+         * @param that
+         */
         function showFile(that) {
             $(that).attr('class','inactive');
             $(that).prev().css({
                 "display":"inline-block"
             })
         }
+        /**
+         * 为一级菜单拉取其子菜单
+         * @param select
+         */
         function appendChildren(select){
             var pid = select.options[select.selectedIndex].value;
-
             $.getJSON('/treatise/'+pid+'/children',function (result) {
                 var child = $("#category");
                 child.empty();
@@ -613,65 +777,135 @@
                 $.each(result,function (i, n) {
                     console.log(n);
                     selectChild += "<option value='"+n.id+"'>"+n.classifiedNum+" "+n.name+"</option>";
-                })
+                });
                 child.append(selectChild);
             });
-
         }
-        function showModal() {
-            $('#uploadModel').modal({backdrop: 'static'});
-            var now = 0;
-            var interval = setInterval(function () {
-                now += 10;
+        /**
+         * 上传一行
+         */
+        function uploadRow(now,move,thisTr) {
+            if(thisTr === undefined){
+                return;
+            }
+            //没有修改到这一行
+            if($(thisTr).find("[name='modified']").val()==="0"){
+                //process move
+                now += move;
                 var progress = $("#uploadProgress");
                 progress.attr('aria-valuenow', "" + now);
                 progress.css('width', "" + now + "%");
                 progress.html("" + now + "%");
-                if (now === 100) {
+                if (now >= 100) {
                     progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
                     $('#uploadModel').modal('hide');
-                    clearInterval(interval);
                     myModalSuccess("章节信息保存成功");
+                    return;
                 }
-            }, 1000);
-        }
-        $("#next-0").click(function () {
-            $("#chapterSection").removeClass("inactive");
-            $("#coreInfoSection").addClass("inactive");
-        });
-        $("#prev-1").click(function () {
-            $("#coreInfoSection").removeClass("inactive");
-            $("#chapterSection").addClass("inactive");
-        });
-        $("#next-1").click(function () {
-            showModal();
-            $("#extraInfoSection").removeClass("inactive");
-            $("#chapterSection").addClass("inactive");
-        });
-        $("#prev-2").click(function () {
-            $("#chapterSection").removeClass("inactive");
-            $("#extraInfoSection").addClass("inactive");
-        });
-        $(".upload-btn").click(function (that) {
-            $("#picker-0").click();
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            //timepicker
-            $('.form_datetime').datetimepicker({
-                format: 'yyyy-mm-dd',
-                language: 'zh-CN',
-                startView: 2,
-                minView: 2
+                uploadRow(now,move,$(thisTr).next()[0]);
+                return;
+            }
+            var chapter = {};
+            var seq = $(thisTr).find("[name='seq']").val();
+            var title = $(thisTr).find("[name='title']").val();
+            var privacy = $(thisTr).find("[name='privacy']").val();
+            var pdf = $(thisTr).find("[name='pdf']").val();
+            chapter.seq = seq;
+            chapter.title = title;
+            chapter.privacy = privacy;
+            chapter.treatiseId = treatiseId;// 全局的著作ID
+            if($(thisTr).attr('id')){
+                chapter.id = $(thisTr).attr('id');
+            }
+            //没有修改到file
+            if($(thisTr).find("[name='pdf']").val() === ""){
+                $.ajax({
+                    type: "POST",
+                    url: '/chapter/updateNoFile',
+                    data: JSON.stringify(chapter),
+                    contentType: 'application/json',
+                    dataType: "json",
+                    success: function(data){
+                        //process move
+                        now += move;
+                        now = now>=100? 100:now;
+                        var progress = $("#uploadProgress");
+                        progress.attr('aria-valuenow', "" + now);
+                        progress.css('width', "" + now + "%");
+                        progress.html("" + now + "%");
+                        if (now === 100) {
+                            myModalSuccess("章节信息保存成功");
+                        }
+                        uploadRow(now,move,$(thisTr).next()[0]);
+                    }
+                });
+                return;
+            }
+            var pdfId = $(thisTr).find("[name='pdf']").attr("id");
+            // 执行上传
+            $.ajaxFileUpload({
+                url: '/chapter/save', //用于文件上传的服务器端请求地址
+                type: 'post',
+                secureuri: false, //一般设置为false
+                fileElementId: pdfId, //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                data : chapter,
+                dataType: 'JSON', //返回值类型
+                success: function (result, status){//服务器成功响应处理函数
+                    //console.log("result: " + result);
+                    var start = result.indexOf("{");
+                    var end = result.lastIndexOf("}") + 1;
+                    result = result.substring(start, end);
+                    console.log("result: " + result);
+                    result = $.parseJSON(result);
+                    if (result.success) {
+                        $(thisTr).attr("id", result.data.id);//赋值章ID，用于删除
+                    } else {
+                        myModalFail(result.message);
+                    }
+                    //process move
+                    now += move;
+                    now = now>=100? 100:now;
+                    var progress = $("#uploadProgress");
+                    progress.attr('aria-valuenow', "" + now);
+                    progress.css('width', "" + now + "%");
+                    progress.html("" + now + "%");
+                    $("#modal-content").html("正在为该著作建立索引...");
+                    $.post("/treatise/"+treatiseId+"/saveChapter", function (result) {
+                        if (result.success) {
+                            $("#modal-content").html("文件上传中,请勿关闭网页!");
+                            if (now === 100) {
+                                progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
+                                $('#uploadModel').modal('hide');
+                                myModalSuccess("章节信息保存成功");
+                            }
+                            uploadRow(now,move,$(thisTr).next()[0]);
+                        } else {
+                            myModalFail(result.message);
+                        }
+                    });
+                },
+                error: function (data, status,e){//服务器响应失败处理函数
+                    console.log(e);
+                    myModalFail(e);
+                }
             });
-            //菜单的active
-            $('.custom-nav .nav-active').removeClass('nav-active');
-            $('.custom-nav .active').removeClass('active');
-            $("#treatiseMenu").addClass("nav-active");
-            $("#treatiseLi").addClass("active");
-
-        });
+        }
+        /**
+         * 表示此行被修改了
+         * @param that
+         */
+        function toggle(that) {
+            $(that).closest('tr').find("[name='modified']").val("1");
+        }
+        /**
+         * 弹出上传模态窗
+         */
+        function showModal() {
+            $('#uploadModel').modal({backdrop: 'static'});
+        }
+        function getIdValue() {
+            return Math.ceil(Math.random()*100)+999
+        }
     </script>
     <p class="msg-block" th:if="${errorMap}">
         <script th:if="${errorMap['msg']}" th:inline="javascript">

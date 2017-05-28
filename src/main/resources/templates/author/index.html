@@ -107,7 +107,7 @@
                                     <a href="javascript:void(0);" class="list-group-item"
                                         th:each="treatise,treatiseStat:*{treatises}"
                                         th:name="${treatise.id}"><!-- 保留ID用于查询详情-->
-                                        <span class="badge" th:text="'点击量：'+${treatise.hits}">点击量：1444</span>
+                                        <!--<span class="badge" th:text="'点击量：'+${treatise.hits}">点击量：1444</span>-->
                                         <h4 class="list-group-item-heading" th:text="${treatise.bookName}">著作名</h4>
                                         <p class="list-group-item-text" th:text="${treatise.description}">简短信息</p>
                                     </a>

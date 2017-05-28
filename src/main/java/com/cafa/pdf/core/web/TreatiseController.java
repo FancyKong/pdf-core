@@ -28,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -54,7 +55,9 @@ import java.util.List;
 public class TreatiseController extends ABaseController {
 
     private final TreatiseService treatiseService;
+
     private final TreatiseCategoryService treatiseCategoryService;
+
     private final ChapterService chapterService;
 
     private final AuthorService authorService;
@@ -149,6 +152,7 @@ public class TreatiseController extends ABaseController {
         mv.addObject("childCategories",treatiseCategoryService.findChildren(category.getPid()));
         List<ChapterDTO> chapters = chapterService.findByTreatiseId(treatiseId);
         mv.addObject("chapters", chapters);
+        mv.addObject("lastSeq",chapters.get(chapters.size()-1).getSeq());
         return mv;
     }
 
@@ -201,6 +205,20 @@ public class TreatiseController extends ABaseController {
     }
 
     /**
+     * 更改著作核心信息
+     * @param treatiseUpdateReq 更新信息
+     * @return ModelAndView
+     */
+    @PostMapping("/updateCore")
+    @RequiresPermissions("treatise:update")
+    @ResponseBody
+    public Response updateCore(TreatiseUpdateReq treatiseUpdateReq) {
+        log.info("【更改信息】 {}", treatiseUpdateReq);
+        TreatiseDTO treatise = treatiseService.updateCore(treatiseUpdateReq);
+        return buildResponse(Boolean.TRUE, "保存成功", treatise);
+    }
+
+    /**
      * 保存核心信息
      * @see com.cafa.pdf.core.web.aop.ControllerAspect
      * @param treatiseSaveReq 保存的信息
@@ -211,7 +229,7 @@ public class TreatiseController extends ABaseController {
     @ResponseBody
     public Response saveCore(TreatiseSaveCoreReq treatiseSaveReq) {
         log.info("【保存核心信息】 {}", treatiseSaveReq);
-        TreatiseDTO treatise = treatiseService.save(treatiseSaveReq);
+        TreatiseDTO treatise = treatiseService.saveCore(treatiseSaveReq);
         return buildResponse(Boolean.TRUE, "保存成功", treatise);
     }
 
@@ -226,24 +244,12 @@ public class TreatiseController extends ABaseController {
     @ResponseBody
     public Response saveChapter(@PathVariable("id") Long treatiseId) {
         log.info("【保存章节信息的著作】 {}", treatiseId);
-        Treatise treatise = treatiseService.findById(treatiseId);
-        saveTreatiseInSolr(treatise);
+        Treatise treatise = treatiseService.saveChapter(treatiseId);
         return buildResponse(Boolean.TRUE, "保存成功", treatise);
     }
 
-    @GetMapping("pdf")
-    public ResponseEntity<byte[]> showPDF() throws IOException {
-        File file = new File("D:a.pdf");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentDispositionFormData("attachment", "D:a.pdf");
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        return new ResponseEntity<>(
-                FileUtils.readFileToByteArray(file),
-                headers, HttpStatus.OK);
-    }
-
-    //TODO 文件存放路径
-    private static final String FILE_PATH = "/pdf-core/file/";
+    @Value("${file.path}")
+    private static final String FILE_PATH = "";
 
     @GetMapping("page/{treatiseId}/{pageNumber}")
     public ResponseEntity<byte[]> page(@PathVariable("treatiseId")Long treatiseId,@PathVariable("pageNumber") int pageNumber) throws IOException {
@@ -283,29 +289,5 @@ public class TreatiseController extends ABaseController {
 
         return buildResponse(Boolean.TRUE, "", treatiseAndChaptersDTO);
     }
-    @Autowired
-    private TreatiseSolrRepository treatiseSolrRepository;
 
-    @Autowired
-    private ChapterSolrRepository chapterSolrRepository;
-
-    private void saveTreatiseInSolr(Treatise treatise){
-        List<ChapterDTO> list = chapterService.findByTreatiseId(treatise.getId());
-        TreatiseSolrDoc treatiseSolrDoc = new TreatiseSolrDoc();
-        StringBuilder sb = new StringBuilder();
-        for(ChapterDTO d : list){
-            sb.append(chapterService.getContentOfChapter(d.getId()));
-        }
-        treatiseSolrDoc.setId(String.valueOf(treatise.getId()));
-        treatiseSolrDoc.setAuthor(authorService.findById(treatise.getAuthorId()).getNickname());
-        treatiseSolrDoc.setPublishDate(treatise.getPublishDate());
-        treatiseSolrDoc.setCategoryId(treatise.getCategoryId());
-        treatiseSolrDoc.setPCategoryId(treatiseCategoryService.findById(treatise.getCategoryId()).getPid());
-        treatiseSolrDoc.setDescription(treatise.getDescription());
-        treatiseSolrDoc.setCategoryName(treatiseCategoryService.findById(treatise.getCategoryId()).getName());
-        treatiseSolrDoc.setTitle(treatise.getBookName());
-        treatiseSolrDoc.setContent(sb.toString());
-        log.info("sent to solr treatiseSolrDoc = {}",treatiseSolrDoc);
-        treatiseSolrRepository.save(treatiseSolrDoc);
-    }
 }

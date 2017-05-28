@@ -66,7 +66,8 @@ public class AuthorController extends ABaseController {
         // 总点击量
         long sumHits = 0L;
         for (TreatiseDTO treatise : treatises) {
-            sumHits += treatise.getHits();
+
+            sumHits += treatiseService.getHitsOfTreatise(treatise.getId());
         }
         mv.addObject("sumHits", sumHits);
         return mv;

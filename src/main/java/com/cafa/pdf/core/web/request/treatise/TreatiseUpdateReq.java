@@ -30,15 +30,15 @@ public class TreatiseUpdateReq implements java.io.Serializable {
     /**
      * 总页数,单位:页
      */
-    private int pageNumber = 0;
+    private Integer pageNumber;
     /**
      * 字数,单位:千字
      */
-    private int words = 0;
+    private Integer words;
     /**
      * 定价,单位:分
      */
-    private int price = 0;
+    private Integer price;
     /**
      * 出版日期
      */
@@ -136,15 +136,11 @@ public class TreatiseUpdateReq implements java.io.Serializable {
      * 出版形式
      * @see com.cafa.pdf.core.commom.enums.PublicationMode
      */
-    private String publicationMode = PublicationMode.DC.getCode();
+    private String publicationMode;
     /**
      * 语种
      * @see com.cafa.pdf.core.commom.enums.Language
      */
-    private String language = Language.CHN.getCode();
-    /**
-     * 点击量
-     */
-    private Long hits;
+    private String language;
 
 }

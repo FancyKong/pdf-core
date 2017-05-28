@@ -4,14 +4,17 @@
  */
 package com.cafa.pdf.core.service;
 
+import com.cafa.pdf.core.commom.dto.ChapterDTO;
 import com.cafa.pdf.core.commom.dto.TreatiseDTO;
 import com.cafa.pdf.core.commom.enums.Language;
 import com.cafa.pdf.core.commom.enums.PublicationMode;
-import com.cafa.pdf.core.dal.dao.AuthorDAO;
-import com.cafa.pdf.core.dal.dao.IBaseDAO;
-import com.cafa.pdf.core.dal.dao.TreatiseCategoryDAO;
-import com.cafa.pdf.core.dal.dao.TreatiseDAO;
+import com.cafa.pdf.core.dal.dao.*;
+import com.cafa.pdf.core.dal.entity.ChapterFileInfo;
 import com.cafa.pdf.core.dal.entity.Treatise;
+import com.cafa.pdf.core.dal.entity.TreatiseHits;
+import com.cafa.pdf.core.dal.entity.TreatiseReading;
+import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
+import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSaveCoreReq;
@@ -42,16 +45,32 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
 
     private final TreatiseCategoryDAO categoryDAO;
 
+    private final ReadingDAO readingDAO;
+
+    private final HitsDAO hitsDAO;
+
+    private final ChapterService chapterService;
+
+    private final TreatiseSolrRepository treatiseSolrRepository;
+
     @Autowired
-    public TreatiseService(TreatiseDAO treatiseDAO, AuthorDAO authorDAO, TreatiseCategoryDAO categoryDAO) {
+    public TreatiseService(TreatiseDAO treatiseDAO, AuthorDAO authorDAO, TreatiseCategoryDAO categoryDAO, ReadingDAO readingDAO, HitsDAO hitsDAO, ChapterService chapterService, TreatiseSolrRepository treatiseSolrRepository) {
         this.treatiseDAO = treatiseDAO;
         this.authorDAO = authorDAO;
         this.categoryDAO = categoryDAO;
+        this.readingDAO = readingDAO;
+        this.hitsDAO = hitsDAO;
+        this.chapterService = chapterService;
+        this.treatiseSolrRepository = treatiseSolrRepository;
     }
 
     @Override
     protected IBaseDAO<Treatise, Long> getEntityDAO() {
         return treatiseDAO;
+    }
+
+    public Long getHitsOfTreatise(Long treatiseId){
+        return hitsDAO.findOne(treatiseId).getCount();
     }
 
     public Page<TreatiseDTO> findAll(TreatiseSearchReq treatiseSearchReq, BasicSearchReq basicSearchReq) {
@@ -67,6 +86,9 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         return treatiseDAO.count();
     }
 
+    public List<TreatiseReading> treatisesHot(){
+        return readingDAO.findTop10ByOrderByCount();
+    }
     @Transactional
     public TreatiseDTO update(TreatiseUpdateReq treatiseUpdateReq) {
         Treatise treatise = findById(treatiseUpdateReq.getId());
@@ -76,10 +98,14 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
     }
 
     @Transactional
-    public TreatiseDTO save(TreatiseSaveCoreReq treatiseSaveReq) {
+    public TreatiseDTO saveCore(TreatiseSaveCoreReq treatiseSaveReq) {
         Treatise treatise = new Treatise();
         ObjectConvertUtil.objectCopy(treatise, treatiseSaveReq);
         Treatise save = save(treatise);
+        TreatiseReading reading = new TreatiseReading(save.getId(),save.getBookName(),0L);
+        TreatiseHits hits = new TreatiseHits(save.getId(), save.getBookName(),0L);
+        hitsDAO.save(hits);
+        readingDAO.save(reading);
         return getTreatiseDTO(save);
     }
 
@@ -108,5 +134,42 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
             return null;
         }
         return getTreatiseDTO(treatise);
+    }
+
+    public Treatise saveChapter(Long treatiseId) {
+        Treatise treatise = findById(treatiseId);
+        saveTreatiseInSolr(treatise);
+        return treatise;
+    }
+    @Autowired
+    private ChapterFileInfoDAO fileInfoDAO;
+    private void saveTreatiseInSolr(Treatise treatise){
+        TreatiseSolrDoc treatiseSolrDoc = new TreatiseSolrDoc();
+        StringBuilder sb = new StringBuilder();
+        List<ChapterFileInfo> list = fileInfoDAO.findByTreatiseIdOrderBySeqAsc(treatise.getId());
+        for(ChapterFileInfo d : list){
+            sb.append(d.getContent());
+        }
+        treatiseSolrDoc.setId(String.valueOf(treatise.getId()));
+        treatiseSolrDoc.setAuthor(authorDAO.findOne(treatise.getAuthorId()).getNickname());
+        treatiseSolrDoc.setPublishDate(treatise.getPublishDate());
+        treatiseSolrDoc.setCategoryId(treatise.getCategoryId());
+        treatiseSolrDoc.setPCategoryId(categoryDAO.findById(treatise.getCategoryId()).getPid());
+        treatiseSolrDoc.setDescription(treatise.getDescription());
+        treatiseSolrDoc.setCategoryName(categoryDAO.findById(treatise.getCategoryId()).getName());
+        treatiseSolrDoc.setTitle(treatise.getBookName());
+        treatiseSolrDoc.setContent(sb.toString());
+        log.info("sent to solr treatiseSolrDoc = {}",treatiseSolrDoc);
+        treatiseSolrRepository.save(treatiseSolrDoc);
+    }
+
+    public TreatiseDTO updateCore(TreatiseUpdateReq treatiseUpdateReq) {
+        Treatise treatise = findById(treatiseUpdateReq.getId());
+        treatise.setISBN(treatiseUpdateReq.getISBN());
+        treatise.setNo(treatiseUpdateReq.getNo());
+        treatise.setBookName(treatiseUpdateReq.getBookName());
+        treatise.setAuthorId(treatiseUpdateReq.getAuthorId());
+        treatise.setLanguage(treatiseUpdateReq.getLanguage());
+        return null;
     }
 }

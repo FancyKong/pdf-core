@@ -5,13 +5,16 @@
 package com.cafa.pdf.core.web;
 
 import com.cafa.pdf.core.commom.dto.TreatiseShowDTO;
+import com.cafa.pdf.core.dal.entity.Treatise;
 import com.cafa.pdf.core.dal.entity.TreatiseCategory;
+import com.cafa.pdf.core.dal.entity.TreatiseReading;
 import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
 import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.service.CheckService;
 import com.cafa.pdf.core.service.SysConfigService;
 import com.cafa.pdf.core.service.TreatiseCategoryService;
+import com.cafa.pdf.core.service.TreatiseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.query.SolrPageRequest;
@@ -43,6 +46,8 @@ public class PortalController {
     private TreatiseSolrRepository treatiseSolrRepository;
     @Autowired
     private TreatiseCategoryService treatiseCategoryService;
+    @Autowired
+    private TreatiseService treatiseService;
 
     @GetMapping("{id}/detail")
     public ModelAndView detail(@PathVariable("id") Long id){
@@ -59,6 +64,14 @@ public class PortalController {
         return treatiseCategoryService.findParent();
     }
 
+    /**
+     * 全局返回阅读热度排行榜
+     * @return List<Treatise>
+     */
+    @ModelAttribute("treatisesTop")
+    public List<TreatiseReading> treatisesTop(){
+        return treatiseService.treatisesHot();
+    }
     /**
      * 首页的检索
      * @param type 检索方式
@@ -98,20 +111,29 @@ public class PortalController {
                 dto.setId(Long.parseLong(d.getId()));
                 list.add(dto);
             }
+            mv.addObject("typeName",query);
             mv.addObject("total",docs.getTotalElements());//总个数
             mv.addObject("totalPage",docs.getTotalPages());//总页数
             mv.addObject("treatises",list);
         }else if("keywords".equals(type)){
             //查询关键词
+            mv.addObject("typeName","关键词:"+query);
+            mv.addObject("total",100);
         }else if("author".equals(type)){
-            //查询类别
-            Long categoryId = Long.parseLong(query);
-
+            //查询作者
+            //Long categoryId = Long.parseLong(query);
+            mv.addObject("typeName","作者:"+query);
+            mv.addObject("total",10);
         }else if("title".equals(type)){
             //查询书名
+            mv.addObject("typeName","著作名:"+query);
+            mv.addObject("total",10);
         }
         mv.addObject("current",page);//当前页数，总是为1
         mv.addObject("size",size);
+        mv.addObject("query",query);
+        mv.addObject("type",type);
         return mv;
     }
+
 }

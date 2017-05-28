@@ -139,8 +139,4 @@ public class TreatiseDTO implements java.io.Serializable {
      * @see com.cafa.pdf.core.commom.enums.Language
      */
     private String language;
-    /**
-     * 点击量
-     */
-    private Long hits;
 }
