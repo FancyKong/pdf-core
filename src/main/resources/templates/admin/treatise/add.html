@@ -491,6 +491,7 @@
     <script type="text/javascript">
         var seq = 1;//章节表格的章序号
         var treatiseId = 0;
+        var deleted = false;
         function toggle(that) {
             $(that).closest('tr').find("[name='modified']").val("1");
         }
@@ -510,6 +511,20 @@
         }
         function showModal() {
             $('#uploadModel').modal({backdrop: 'static'});
+        }
+        /*建立索引*/
+        function indexing(progress) {
+            $("#modal-content").html("正在为著作建立索引...");
+            $.post("/treatise/"+treatiseId+"/saveChapter", function (result) {
+                if (result.success) {
+                    $("#modal-content").html("文件上传中,请勿关闭网页!");
+                    progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
+                    $('#uploadModel').modal('hide');
+                    myModalSuccess("章节信息保存成功");
+                } else {
+                    myModalFail(result.message);
+                }
+            });
         }
         $(function () {
             $('.form_datetime').datetimepicker({
@@ -645,18 +660,22 @@
                 if(thisTr === undefined){
                     return;
                 }
-                console.log(thisTr);
                 if($(thisTr).find("[name='modified']").val()==="0"){
                     //process move
                     now += move;
+                    now = now>=100?100:now;
                     var progress = $("#uploadProgress");
                     progress.attr('aria-valuenow', "" + now);
                     progress.css('width', "" + now + "%");
                     progress.html("" + now + "%");
                     if (now >= 100) {
-                        progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
-                        $('#uploadModel').modal('hide');
-                        myModalSuccess("章节信息保存成功");
+                        if(!deleted){
+                            progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
+                            $('#uploadModel').modal('hide');
+                            myModalSuccess("章节信息保存成功");
+                        }else{
+                            indexing(progress);
+                        }
                         return;
                     }
                     uploadRow(now,move,$(thisTr).next()[0]);
@@ -741,6 +760,7 @@
                     $(thisTr).remove();
                 }else {
                     //向服务器提交删除请求
+                    deleted = true;
                     var url = "/chapter/"+chapterId+"/delete";
                     var result = delAjax(url);
                     if(result.success){

@@ -600,7 +600,7 @@
 <div layout:fragment="javascript">
     <script type="text/javascript">
         var seq = [[${lastSeq}]];//章节表格的章序号
-
+        var deleted = false;
         var treatiseId = [[${treatise.id}]];
         $(function () {
             //初始化时间控件
@@ -724,6 +724,7 @@
                     //删除页面中的原有行
                     $(thisTr).remove();
                 }else {
+                    deleted = true;
                     //向服务器提交删除请求
                     var url = "/chapter/"+chapterId+"/delete";
                     var result = delAjax(url);
@@ -747,7 +748,7 @@
                         myModalSuccess(result.message);
                         setTimeout(function () {
                             window.location.href ="/treatise";
-                        },3000);
+                        },2000);
                     } else {
                         myModalFail(result.message);
                     }
@@ -781,6 +782,20 @@
                 child.append(selectChild);
             });
         }
+        /*建立索引*/
+        function indexing(progress) {
+            $("#modal-content").html("正在为著作建立索引...");
+            $.post("/treatise/"+treatiseId+"/saveChapter", function (result) {
+                if (result.success) {
+                    $("#modal-content").html("文件上传中,请勿关闭网页!");
+                    progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
+                    $('#uploadModel').modal('hide');
+                    myModalSuccess("章节信息保存成功");
+                } else {
+                    myModalFail(result.message);
+                }
+            });
+        }
         /**
          * 上传一行
          */
@@ -797,9 +812,7 @@
                 progress.css('width', "" + now + "%");
                 progress.html("" + now + "%");
                 if (now >= 100) {
-                    progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
-                    $('#uploadModel').modal('hide');
-                    myModalSuccess("章节信息保存成功");
+                    indexing(progress);
                     return;
                 }
                 uploadRow(now,move,$(thisTr).next()[0]);
@@ -834,7 +847,9 @@
                         progress.css('width', "" + now + "%");
                         progress.html("" + now + "%");
                         if (now === 100) {
-                            myModalSuccess("章节信息保存成功");
+                            if(!deleted)
+                                myModalSuccess("章节信息保存成功");
+                            else indexing(progress);
                         }
                         uploadRow(now,move,$(thisTr).next()[0]);
                     }
@@ -869,14 +884,19 @@
                     progress.attr('aria-valuenow', "" + now);
                     progress.css('width', "" + now + "%");
                     progress.html("" + now + "%");
-                    $("#modal-content").html("正在为该著作建立索引...");
+                    $("#modal-content").html("正在为上传的章节建立索引...");
                     $.post("/treatise/"+treatiseId+"/saveChapter", function (result) {
                         if (result.success) {
                             $("#modal-content").html("文件上传中,请勿关闭网页!");
                             if (now === 100) {
-                                progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
-                                $('#uploadModel').modal('hide');
-                                myModalSuccess("章节信息保存成功");
+                                if(deleted){
+                                    indexing(progress);
+                                }else{
+                                    progress.attr('aria-valuenow', "0").css('width', "0%").html("0%");
+                                    $('#uploadModel').modal('hide');
+                                    myModalSuccess("章节信息保存成功");
+                                }
+
                             }
                             uploadRow(now,move,$(thisTr).next()[0]);
                         } else {
