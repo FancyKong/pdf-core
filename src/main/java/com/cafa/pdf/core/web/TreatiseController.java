@@ -4,22 +4,19 @@
  */
 package com.cafa.pdf.core.web;
 
-import com.cafa.pdf.core.commom.dto.ChapterDTO;
-import com.cafa.pdf.core.commom.dto.TreatiseAndChaptersDTO;
-import com.cafa.pdf.core.commom.dto.TreatiseDTO;
+import com.cafa.pdf.core.commom.dto.*;
 import com.cafa.pdf.core.commom.enums.Language;
 import com.cafa.pdf.core.commom.enums.PublicationMode;
 import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.dal.entity.Treatise;
 import com.cafa.pdf.core.dal.entity.TreatiseCategory;
-import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
-import com.cafa.pdf.core.dal.solr.repository.ChapterSolrRepository;
-import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.service.AuthorService;
 import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.statistics.HitsSearchReq;
+import com.cafa.pdf.core.web.request.statistics.ReadingSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSaveCoreReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
@@ -295,5 +292,55 @@ public class TreatiseController extends ABaseController {
 
         return buildResponse(Boolean.TRUE, "", treatiseAndChaptersDTO);
     }
+
+
+    /*
+            统计量信息，点击量、阅读量
+     */
+    /**
+     * 返回点击量的页面
+     */
+    @GetMapping("/hits/list")
+    @RequiresPermissions("treatise:show")
+    public ModelAndView hitsList() {
+        ModelAndView mv = new ModelAndView("admin/statistics/hits");
+        return mv;
+    }
+    /**
+     * 返回阅读量的页面
+     */
+    @GetMapping("/reading/list")
+    @RequiresPermissions("treatise:show")
+    public ModelAndView readingList() {
+        ModelAndView mv = new ModelAndView("admin/statistics/reading");
+        return mv;
+    }
+    /**
+     * 点击量分页查询
+     * @param basicSearchReq 基本搜索条件
+     * @return JSON
+     * @date 2016年8月30日 下午5:30:18
+     */
+    @GetMapping("/hits/page")
+    @ResponseBody
+    public Response hitsPage(BasicSearchReq basicSearchReq, HitsSearchReq hitsSearchReq) {
+        log.info("【点击量分页查询】 {}", hitsSearchReq);
+        Page<HitsDTO> page = treatiseService.findHitsPage(hitsSearchReq, basicSearchReq);
+        return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
+    }
+    /**
+     * 阅读量分页查询
+     * @param basicSearchReq 基本搜索条件
+     * @return JSON
+     * @date 2016年8月30日 下午5:30:18
+     */
+    @GetMapping("/reading/page")
+    @ResponseBody
+    public Response readingPage(BasicSearchReq basicSearchReq, ReadingSearchReq readingSearchReq) {
+        log.info("【阅读量分页查询】 {}", readingSearchReq);
+        Page<ReadingDTO> page = treatiseService.findReadingPage(readingSearchReq, basicSearchReq);
+        return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
+    }
+
 
 }

@@ -4,7 +4,8 @@
  */
 package com.cafa.pdf.core.service;
 
-import com.cafa.pdf.core.commom.dto.ChapterDTO;
+import com.cafa.pdf.core.commom.dto.HitsDTO;
+import com.cafa.pdf.core.commom.dto.ReadingDTO;
 import com.cafa.pdf.core.commom.dto.TreatiseDTO;
 import com.cafa.pdf.core.commom.enums.Language;
 import com.cafa.pdf.core.commom.enums.PublicationMode;
@@ -17,11 +18,15 @@ import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
+import com.cafa.pdf.core.web.request.statistics.HitsSearchReq;
+import com.cafa.pdf.core.web.request.statistics.ReadingSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSaveCoreReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -172,4 +177,68 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         treatise.setLanguage(treatiseUpdateReq.getLanguage());
         return null;
     }
+
+    /**
+     * 搜索著作点击量
+     * @param hitsSearchReq 其他条件
+     * @param basicSearchReq 基本条件
+     * @return Page<HitsDTO>
+     */
+    public Page<HitsDTO> findHitsPage(HitsSearchReq hitsSearchReq, BasicSearchReq basicSearchReq) {
+        int pageNumber = basicSearchReq.getStartIndex() / basicSearchReq.getPageSize() + 1;
+        PageRequest pageRequest = new PageRequest(pageNumber - 1, basicSearchReq.getPageSize(), new Sort(Sort.Direction.DESC, "count"));
+
+        //除了分页条件没有特定搜索条件的，为了缓存count
+        if (ObjectConvertUtil.objectFieldIsBlank(hitsSearchReq)){
+            log.debug("没有特定搜索条件的");
+            Page<TreatiseHits> hitsPage = hitsDAO.findAll(pageRequest);
+            return hitsPage.map(this::getHitsDTO);
+        }
+
+        //有了其它搜索条件，先搜索出著作，再查询对应著作的点击量
+        Page<Treatise> treatisePage = super.findAllBySearchParams(
+                buildSearchParams(hitsSearchReq), pageNumber, basicSearchReq.getPageSize());
+
+        return treatisePage.map(treatise -> {
+            TreatiseHits hits = hitsDAO.findOne(treatise.getId());
+            return getHitsDTO(hits);
+        });
+    }
+    private HitsDTO getHitsDTO(TreatiseHits source) {
+        HitsDTO hitsDTO = new HitsDTO();
+        ObjectConvertUtil.objectCopy(hitsDTO, source);
+        return hitsDTO;
+    }
+    /**
+     * 搜索著作阅读量
+     * @param readingSearchReq 其他条件
+     * @param basicSearchReq 基本条件
+     * @return Page<HitsDTO>
+     */
+    public Page<ReadingDTO> findReadingPage(ReadingSearchReq readingSearchReq, BasicSearchReq basicSearchReq) {
+        int pageNumber = basicSearchReq.getStartIndex() / basicSearchReq.getPageSize() + 1;
+        PageRequest pageRequest = new PageRequest(pageNumber - 1, basicSearchReq.getPageSize(), new Sort(Sort.Direction.DESC, "count"));
+
+        //除了分页条件没有特定搜索条件的，为了缓存count
+        if (ObjectConvertUtil.objectFieldIsBlank(readingSearchReq)){
+            log.debug("没有特定搜索条件的");
+            Page<TreatiseReading> readingPage = readingDAO.findAll(pageRequest);
+            return readingPage.map(this::getReadingDTO);
+        }
+
+        //有了其它搜索条件，先搜索出著作，再查询对应著作的点击量
+        Page<Treatise> treatisePage = super.findAllBySearchParams(
+                buildSearchParams(readingSearchReq), pageNumber, basicSearchReq.getPageSize());
+
+        return treatisePage.map(treatise -> {
+            TreatiseReading reading = readingDAO.findOne(treatise.getId());
+            return getReadingDTO(reading);
+        });
+    }
+    private ReadingDTO getReadingDTO(TreatiseReading source) {
+        ReadingDTO readingDTO = new ReadingDTO();
+        ObjectConvertUtil.objectCopy(readingDTO, source);
+        return readingDTO;
+    }
+
 }
