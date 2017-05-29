@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>在线阅读</title>
+    <title>按章阅读</title>
     <link href="/web/css/style.css" rel="stylesheet" type="text/css"/>
     <link href="/web/css/read.css" rel="stylesheet" type="text/css"/>
     <link href="/tools/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +49,21 @@
                 </div>
             </div>
             <div class="center">
-                <div class="title" th:text="${treatise.bookName}">
+                <div class="title" th:text="${treatise.bookName}+'&nbsp;&nbsp;-&nbsp;&nbsp;'+${chapter.title}">
                     数据挖掘技术在移动电商推广中的应用
                 </div>
                 <br>
                 <div class="read">
+                    <input type="button" value="上一章" class="operator seq-up"/>
                     <input type="button" value="上一页" class="operator page-up"/>
-                    <input type="number" style="height: 30px;width: 60px; text-align: center;border-color: #579bf1;" th:value="${curPage}" id="curPage"/>
-                    <span th:text="'/'+${totalPage}"></span>
+                    <input type="number" style="height: 30px;width: 60px; text-align: center;border-color: #579bf1;" th:value="1" id="curPage"/>
+                    <span th:text="'/'+${chapter.page}"></span>
                     &nbsp;
                     <input type="button" value="下一页" class="operator page-down"/>
+                    <input type="button" value="下一章" class="operator seq-down" />
                 </div>
                 <div class="pdf">
-                    <iframe th:src="'/pdf/web/viewer.html?file=/treatise/page/'+${treatise.id}+'/'+${curPage}" width="100%" height="" id="pdf-reader"></iframe>
+                    <iframe th:src="'/pdf/web/viewer.html?file=/treatise/page/'+${treatise.id}+'/1'" width="100%" height="" id="pdf-reader"></iframe>
                 </div>
 
                 <div class="read">
@@ -79,24 +81,33 @@
 <script type="text/javascript" src="/web/js/global.js"></script>
 <script type="text/javascript" src="/web/js/pagination.js"></script>
 <script type="text/javascript">
-    var curPage = 1;
-    var totalPage = [[${totalPage}]];
-    var publicPage = [[${publicPage}]];
-    var status = [[${status}]];
-    $(".page-up").css('background-color','#9f9f9f').attr('disabled','disabled');
 
-    $(".page-down").click(function () {
-        $("#curPage").val(++curPage);
-        pageChange();
-    });
-    $(".page-up").click(function(){
-        $("#curPage").val(--curPage);
-        pageChange();
-    });
+    var basePage = [[${basePage}]];
+    var curPage = 1;
+    var lastSeq = [[${lastSeq}]];
+    var curSeq = [[${chapter.seq}]];
+    var bound = [[${chapter.page}]];
+    $(".page-up").css('background-color','#9f9f9f').attr('disabled','disabled');
+    if(curSeq === 1){
+        //上一章不可用
+        $(".seq-up").css('background-color','#9f9f9f').attr('disabled','disabled');
+    }else{
+        $(".seq-up").click(function () {
+            window.location.href = '/reading/[[${treatise.id}]]/[[${chapter.seq}-1]]';
+        });
+    }
+    if(curSeq === lastSeq){
+        //下一章不可用
+        $(".seq-down").css('background-color','#9f9f9f').attr('disabled','disabled');
+    }else{
+        $(".seq-down").click(function () {
+            window.location.href = '/reading/[[${treatise.id}]]/[[${chapter.seq}+1]]';
+        });
+    }
     $("#curPage").change(function () {
         var page = $(this).val();
         if(page < 1) page = 1;
-        if(page > [[${totalPage}]]) page = totalPage;
+        if(page > bound) page = bound;
         curPage = page;
         $(this).val(page);
         pageChange();
@@ -107,22 +118,20 @@
         if(curPage <= 1){
             $(".page-up").css('background-color','#9f9f9f').attr('disabled','disabled');
         }
-        if(curPage >= totalPage){
+        if(curPage >= [[${chapter.page}]]){
             $(".page-down").css('background-color','#9f9f9f').attr('disabled','disabled');
         }
-        if(parseInt(curPage) > publicPage){
-            $.post("/customer/isLogin",null,function (result) {
-                if(!result.data){
-                    alert("十分抱歉，剩余内容需要登录后才可阅读哦！点击右上角登录或注册");
-                }else{
-                    $("#pdf-reader").attr('src','/pdf/web/viewer.html?file=/treatise/page/[[${treatise.id}]]/'+curPage);
-                }
-            });
-            return;
-        }
-        $("#pdf-reader").attr('src','/pdf/web/viewer.html?file=/treatise/page/[[${treatise.id}]]/'+curPage);
-
+        var page = parseInt(curPage)+basePage;
+        $("#pdf-reader").attr('src','/pdf/web/viewer.html?file=/treatise/page/[[${treatise.id}]]/'+page);
     }
+    $(".page-down").click(function () {
+        $("#curPage").val(++curPage);
+        pageChange();
+    });
+    $(".page-up").click(function(){
+        $("#curPage").val(--curPage);
+        pageChange();
+    });
 
     $('.searchList').on('click', '.searchItem', function () {
         $('.searchList .searchItem').removeClass('current');

@@ -12,6 +12,7 @@ import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
 import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.service.*;
+import com.cafa.pdf.core.util.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.query.SolrPageRequest;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,18 +152,63 @@ public class PortalController {
         return mv;
     }
 
+    @RequestMapping("/reading/{treatiseId}")
+    public ModelAndView readOnline(@PathVariable("treatiseId") Long treatiseId){
+        ModelAndView mv = new ModelAndView("read");
+        Treatise treatise = treatiseService.findById(treatiseId);
+        List<Chapter> chapters = chapterService.getByTreatiseId(treatiseId);
+        Customer customer = SessionUtil.getCustomer();
+        if(customer == null){
+            mv.addObject("status",0);
+        }else{
+            mv.addObject("status",1);
+        }
+        mv.addObject("treatise",treatise);
+        int page = 1;
+        int totalPage = 0;
+        int publicPage = 0;
+        for(int seq = 1 ; seq <= chapters.size();seq++){
+            Chapter cur = chapters.get(seq-1);
+            if(cur.getPrivacy() == 1){
+                publicPage += cur.getPage();
+            }
+            totalPage+=cur.getPage();
+        }
+        mv.addObject("curPage",page);
+        mv.addObject("totalPage",totalPage);
+        mv.addObject("publicPage",publicPage);
+        mv.addObject("lastSeq",chapters.size());
+        return mv;
+    }
+
     @RequestMapping("/reading/{treatiseId}/{chapterSeq}")
     public ModelAndView readChapter(@PathVariable("treatiseId") Long treatiseId,
                                     @PathVariable("chapterSeq") Integer chapterSeq){
-        ModelAndView mv = new ModelAndView("read");
+        ModelAndView mv = new ModelAndView("readChapter");
         Treatise treatise = treatiseService.findById(treatiseId);
-        mv.addObject("treatise",treatise);
-        int page = 1;
-        for (int i = 1; i < chapterSeq; i++) {
-            Chapter c = chapterService.findByTreatiseAndSeq(treatiseId,chapterSeq);
-            page+=c.getPage();
+        List<Chapter> chapters = chapterService.getByTreatiseId(treatiseId);
+        Chapter chapter = chapters.get(chapterSeq-1);
+        Customer customer = SessionUtil.getCustomer();
+        if(chapter.getPrivacy()== 0 && customer == null){
+            //改章节加密并且 未登录
+            ModelAndView loginMv = new ModelAndView("redirect:/customer/login");
+            SessionUtil.add("url","/reading/"+treatise+"/"+chapterSeq);
+            return loginMv;
         }
-        mv.addObject("page",page);
+        mv.addObject("treatise",treatise);
+        mv.addObject("chapter",chapter);
+        int page = 0;
+        int totalPage = 0;
+        for(int seq = 1 ; seq <= chapters.size();seq++){
+            Chapter cur = chapters.get(seq-1);
+            if(chapterSeq > cur.getSeq()){
+                page+=cur.getPage();
+            }
+            totalPage+=cur.getPage();
+        }
+        mv.addObject("basePage",page);
+        mv.addObject("totalPage",totalPage);
+        mv.addObject("lastSeq",chapters.size());
         return mv;
     }
 }

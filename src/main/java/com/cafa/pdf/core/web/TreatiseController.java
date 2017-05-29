@@ -8,6 +8,7 @@ import com.cafa.pdf.core.commom.dto.*;
 import com.cafa.pdf.core.commom.enums.Language;
 import com.cafa.pdf.core.commom.enums.PublicationMode;
 import com.cafa.pdf.core.dal.entity.Author;
+import com.cafa.pdf.core.dal.entity.Chapter;
 import com.cafa.pdf.core.dal.entity.Treatise;
 import com.cafa.pdf.core.dal.entity.TreatiseCategory;
 import com.cafa.pdf.core.service.AuthorService;
@@ -71,6 +72,7 @@ public class TreatiseController extends ABaseController {
 
     /**
      * 全局返回著作类别
+     *
      * @return List<TreatiseCategory>
      */
     @ModelAttribute("categories")
@@ -94,11 +96,11 @@ public class TreatiseController extends ABaseController {
     }
 
     @ModelAttribute("authors")
-    public List<Author> authors(){
+    public List<Author> authors() {
         return authorService.findAll();
     }
 
-    @GetMapping({"","/list"})
+    @GetMapping({"", "/list"})
     @RequiresPermissions("treatise:show")
     public ModelAndView list() {
         ModelAndView mv = new ModelAndView("admin/treatise/list");
@@ -107,11 +109,13 @@ public class TreatiseController extends ABaseController {
 
     @GetMapping("{pid}/children")
     @ResponseBody
-    public List<TreatiseCategory> children(@PathVariable("pid") Long pid){
+    public List<TreatiseCategory> children(@PathVariable("pid") Long pid) {
         return treatiseCategoryService.findChildren(pid);
     }
+
     /**
      * 分页查询
+     *
      * @param basicSearchReq 基本搜索条件
      * @return JSON
      * @date 2016年8月30日 下午5:30:18
@@ -144,12 +148,12 @@ public class TreatiseController extends ABaseController {
         Treatise treatise = treatiseService.findById(treatiseId);
         mv.addObject("treatise", treatise);
         TreatiseCategory category = treatiseCategoryService.findById(treatise.getCategoryId());
-        mv.addObject("thisCategory",category);
-        mv.addObject("categories",treatiseCategoryService.findParent());
-        mv.addObject("childCategories",treatiseCategoryService.findChildren(category.getPid()));
+        mv.addObject("thisCategory", category);
+        mv.addObject("categories", treatiseCategoryService.findParent());
+        mv.addObject("childCategories", treatiseCategoryService.findChildren(category.getPid()));
         List<ChapterDTO> chapters = chapterService.findByTreatiseId(treatiseId);
         mv.addObject("chapters", chapters);
-        mv.addObject("lastSeq",chapters.get(chapters.size()-1).getSeq());
+        mv.addObject("lastSeq", chapters.get(chapters.size() - 1).getSeq());
         return mv;
     }
 
@@ -163,9 +167,9 @@ public class TreatiseController extends ABaseController {
         Treatise treatise = treatiseService.findById(treatiseId);
         mv.addObject("treatise", treatise);
         TreatiseCategory category = treatiseCategoryService.findById(treatise.getCategoryId());
-        mv.addObject("thisCategory",category);
-        mv.addObject("categories",treatiseCategoryService.findParent());
-        mv.addObject("childCategories",treatiseCategoryService.findChildren(category.getPid()));
+        mv.addObject("thisCategory", category);
+        mv.addObject("categories", treatiseCategoryService.findParent());
+        mv.addObject("childCategories", treatiseCategoryService.findChildren(category.getPid()));
         List<ChapterDTO> chapters = chapterService.findByTreatiseId(treatiseId);
         mv.addObject("chapters", chapters);
         return mv;
@@ -173,15 +177,16 @@ public class TreatiseController extends ABaseController {
 
     @ResponseBody
     @RequestMapping("/{treatiseId}/jsonInfo")
-    public Treatise getTreatiseById(@PathVariable("treatiseId") Long treatiseId){
+    public Treatise getTreatiseById(@PathVariable("treatiseId") Long treatiseId) {
         return treatiseService.findById(treatiseId);
     }
 
     /**
      * 删除
-     * @see com.cafa.pdf.core.web.aop.ControllerAspect
+     *
      * @param treatiseId ID
      * @return JSON
+     * @see com.cafa.pdf.core.web.aop.ControllerAspect
      */
     @DeleteMapping("/{treatiseId}/delete")
     @ResponseBody
@@ -195,6 +200,7 @@ public class TreatiseController extends ABaseController {
 
     /**
      * 更改著作信息
+     *
      * @param treatiseUpdateReq 更新信息
      * @return ModelAndView
      */
@@ -209,6 +215,7 @@ public class TreatiseController extends ABaseController {
 
     /**
      * 更改著作核心信息
+     *
      * @param treatiseUpdateReq 更新信息
      * @return ModelAndView
      */
@@ -223,9 +230,10 @@ public class TreatiseController extends ABaseController {
 
     /**
      * 保存核心信息
-     * @see com.cafa.pdf.core.web.aop.ControllerAspect
+     *
      * @param treatiseSaveReq 保存的信息
      * @return ModelAndView
+     * @see com.cafa.pdf.core.web.aop.ControllerAspect
      */
     @PostMapping("/saveCore")
     @RequiresPermissions("treatise:add")
@@ -238,9 +246,10 @@ public class TreatiseController extends ABaseController {
 
     /**
      * 保存章节信息
-     * @see com.cafa.pdf.core.web.aop.ControllerAspect
+     *
      * @param treatiseId 保存的著作id
      * @return ModelAndView
+     * @see com.cafa.pdf.core.web.aop.ControllerAspect
      */
     @PostMapping("/{id}/saveChapter")
     @RequiresPermissions("treatise:add")
@@ -255,17 +264,16 @@ public class TreatiseController extends ABaseController {
     private String FILE_PATH = "/usr/local/tomcat8kjgl/kjgl/pdf_file/";
 
     @GetMapping("page/{treatiseId}/{pageNumber}")
-    public ResponseEntity<byte[]> page(@PathVariable("treatiseId")Long treatiseId,@PathVariable("pageNumber") int pageNumber) throws IOException {
-        //TODO　select from chapter where treatiseId is order by seq
-        List<Integer> pageNums = Arrays.asList(100,100,100,100,100,100,13);
+    public ResponseEntity<byte[]> page(@PathVariable("treatiseId") Long treatiseId, @PathVariable("pageNumber") int pageNumber) throws IOException {
+        List<Chapter> chapters = chapterService.getByTreatiseId(treatiseId);
         int seq = 1;
-        for(Integer i : pageNums) {
-            if(pageNumber>i){
-                pageNumber-=i;
+        for (Chapter i : chapters) {
+            if (pageNumber > i.getPage()) {
+                pageNumber -= i.getPage();
                 seq++;
-            }else break;
+            } else break;
         }
-        File file = new File(FILE_PATH+treatiseId+"/"+seq+"/"+pageNumber+".pdf");
+        File file = new File(FILE_PATH + treatiseId + "/" + seq + "/" + pageNumber + ".pdf");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentDispositionFormData("attachment", "x.pdf");
         headers.setContentType(MediaType.APPLICATION_PDF);
@@ -297,6 +305,7 @@ public class TreatiseController extends ABaseController {
     /*
             统计量信息，点击量、阅读量
      */
+
     /**
      * 返回点击量的页面
      */
@@ -306,6 +315,7 @@ public class TreatiseController extends ABaseController {
         ModelAndView mv = new ModelAndView("admin/statistics/hits");
         return mv;
     }
+
     /**
      * 返回阅读量的页面
      */
@@ -315,8 +325,10 @@ public class TreatiseController extends ABaseController {
         ModelAndView mv = new ModelAndView("admin/statistics/reading");
         return mv;
     }
+
     /**
      * 点击量分页查询
+     *
      * @param basicSearchReq 基本搜索条件
      * @return JSON
      * @date 2016年8月30日 下午5:30:18
@@ -328,8 +340,10 @@ public class TreatiseController extends ABaseController {
         Page<HitsDTO> page = treatiseService.findHitsPage(hitsSearchReq, basicSearchReq);
         return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
     }
+
     /**
      * 阅读量分页查询
+     *
      * @param basicSearchReq 基本搜索条件
      * @return JSON
      * @date 2016年8月30日 下午5:30:18

@@ -62,8 +62,8 @@ public class ChapterService extends ABaseService<Chapter, Long> {
         return chapters.stream().map(this::getChapterDTO).collect(Collectors.toList());
     }
 
-    public Chapter findByTreatiseAndSeq(Long treatise,Integer seq){
-        return chapterDAO.findByTreatiseIdAndSeq(treatise,seq);
+    public List<Chapter> getByTreatiseId(Long treatise){
+        return chapterDAO.findByTreatiseIdOrderBySeqAsc(treatise);
     }
 
     public Long getCount() {
@@ -167,6 +167,10 @@ public class ChapterService extends ABaseService<Chapter, Long> {
         chapterDAO.deleteByTreatiseId(treatiseId);
     }
 
+
+    public Integer getCountOfChaptersByTreatiseId(long treatiseId){
+        return chapterDAO.countChaptersByTreatiseId(treatiseId);
+    }
     /**
      * 保存章节信息
      * @param chapterReqList List<ChapterReq>
