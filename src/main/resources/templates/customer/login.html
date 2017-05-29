@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>会员登陆</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <!--common-->
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/style-responsive.css" rel="stylesheet">
+    <script src="/js/jquery-1.12.4.js" type="text/javascript"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container">
+
+    <form class="form-signin" action="/customer/login" method="POST">
+        <div class="form-signin-heading text-center">
+            <h1 class="sign-title">会员登陆</h1>
+            <img src="/images/logo.png"  alt="LOGO" style="max-height: 150px;"/>
+        </div>
+
+        <div class="login-wrap">
+            <input type="text" name="username" class="form-control" placeholder="登录名" autofocus
+                   required minlength="6" maxlength="16" th:value="${loginReq} ? ${loginReq.username}">
+                <label class="error-label" th:text="${errorMap} ? ${errorMap['username']}"></label>
+
+            <input type="password" name="password" class="form-control" placeholder="密码"
+                   required minlength="6" maxlength="16" th:value="${loginReq} ? ${loginReq.password}">
+                <label class="error-label" th:text="${errorMap} ? ${errorMap['password']}"></label>
+
+            <div class="row">
+                <div class="col-xs-7">
+                    <input type="text" name="validateCode" class="form-control" placeholder="验证码"
+                           required minlength="4" maxlength="4">
+                </div>
+                <div class="col-xs-5">
+                    <img src="/validateCode?_customer" onclick="changeCode(this)">
+                </div>
+                <label class="error-label" th:text="${errorMap} ? ${errorMap['validateCodeError']}"></label>
+            </div>
+
+            <input type="hidden" name="loginType" value="CUSTOMER" >
+            
+            <button class="btn btn-lg btn-login btn-block" type="submit">
+                <i class="fa fa-check"></i>
+            </button>
+        </div>
+
+        <div class="text-center">
+            <a href="/customer/register"> 会员申请</a>
+            <span>/</span>
+            <a data-toggle="modal" href="#retrievePwdModal"> 找回密码</a>
+        </div>
+    </form>
+
+
+
+</div>
+<!-- Modal -->
+<div id="retrievePwdModal" class="modal fade" aria-hidden="true"
+     aria-labelledby="retrievePwdModalLabel" role="dialog" tabindex="-1" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title">找回密码</h4>
+            </div>
+            <div class="modal-body">
+                <p>请输入您的邮箱地址找回密码。</p>
+                <form id="retrievePwdForm">
+                    <input id="email" type="email" name="email" placeholder="邮箱"
+                           autocomplete="off" class="form-control placeholder-no-fix">
+                    <input type="hidden" name="type" value="CUSTOMER" >
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                <button class="btn btn-primary" type="button">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal -->
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<script src="/tools/bootstrap-3.3.7/js/bootstrap.js" type="text/javascript"></script>
+<script src="/js/modernizr.js"></script>
+<script src="/js/myModal.js" type="text/javascript"></script>
+<p class="msg-block" th:if="${errorMap}">
+    <script th:if="${errorMap['msg']}" th:inline="javascript">
+        /*<![CDATA[*/
+        var msg = [[${errorMap['msg']}]] ;
+        $(function () {
+            myModalWarning(msg);
+        });
+        /*]]>*/
+    </script>
+</p>
+<script type="text/javascript">
+    function changeCode(img){
+        $(img).attr("src","/validateCode?_" + new Date().getTime());
+    }
+
+    function isEmail(str){
+        var reg=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+        return reg.test(str);
+    }
+
+    $(function () {
+        var modal = $("#retrievePwdModal");
+        var btn = modal.find('.modal-footer .btn-primary');
+        $(btn).unbind();
+        $(btn).on("click", function () {
+            var email = modal.find('#email').val();
+            console.log("email:" + email);
+            var type = modal.find("input[name='type']:checked").val();
+            console.log("type:" + type);
+
+            var formData = modal.find('#retrievePwdForm').serialize();
+            console.log("formData:" + formData);
+
+            if (isEmail(email)){
+                modal.modal("hide");
+
+                $.post("/retrievePwd", formData, function(result){
+                    if(result.success){
+                        myModalSuccess(result.message);
+                    }else {
+                        myModalFail(result.message);
+                    }
+                });
+            }else {
+                alert("请输入正确的邮箱")
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

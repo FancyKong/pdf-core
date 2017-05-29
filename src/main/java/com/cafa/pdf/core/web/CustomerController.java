@@ -59,7 +59,8 @@ public class CustomerController extends ABaseController {
         // 查询个人信息
         Customer customer = SessionUtil.getCustomer();
         if (customer == null) {
-            mv.setViewName("redirect:/");
+            mv.setViewName("redirect:/customer/login");
+            mv.addObject("url", MStringUtils.getRequestURLWithQueryString(RequestHolder.getRequest()));
         }else {
             mv.addObject("customer", customer);
         }
@@ -345,42 +346,62 @@ public class CustomerController extends ABaseController {
      * @return ResponseBody
      */
     @PostMapping("/login")
-    @ResponseBody
-    public Response login(LoginReq loginReq, HttpServletRequest request) {
+    public ModelAndView login(@Validated LoginReq loginReq, BindingResult bindingResult, HttpServletRequest request) {
         log.info("【会员登陆】 {}", loginReq);
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("customer/login");
+        Map<String, Object> errorMap = new HashMap<>();
+        mv.addObject("errorMap", errorMap);
 
         String code = (String) request.getSession().getAttribute("validateCode");
         String submitCode = WebUtils.getCleanParam(request, "validateCode");
         log.debug("code: {}  submitCode: {}", code, submitCode);
+
         //判断验证码
         if (StringUtils.isBlank(submitCode) || !StringUtils.equalsIgnoreCase(code, submitCode.toLowerCase())) {
             log.debug("验证码不正确");
-            return buildResponse(Boolean.FALSE, "验证码不正确", Boolean.FALSE);
+            errorMap.put("validateCodeError", "验证码不正确");
+            return mv;
+        }
+        //表单验证是否通过
+        if (bindingResult.hasErrors()) {
+            errorMap.putAll(getErrors(bindingResult));
+            return mv;
         }
 
         Customer customer = customerService.findByUsername(loginReq.getUsername());
         if (customer == null) {
-            return buildResponse(Boolean.FALSE, "账号或密码错误", Boolean.FALSE);
+            errorMap.put("username", "账户或密码错误，请重新输入");
+            return mv;
         }
         
         String password = CryptographyUtil.cherishSha1(loginReq.getPassword());
         if (!StringUtils.equals(password, customer.getPassword())) {
             log.debug("密码不正确");
             log.debug("输入的密码：{} 真实密码：{}", password, customer.getPassword());
-            return buildResponse(Boolean.FALSE, "账号或密码错误", Boolean.FALSE);
+            errorMap.put("username", "账户或密码错误，请重新输入");
+            return mv;
         }
         
         // 被禁用
         if (!Objects.equals(ActiveEnum.ACTIVE.getNum(), customer.getActive())) {
             log.debug("账号被禁用");
-            return buildResponse(Boolean.FALSE, "账号被禁用", Boolean.FALSE);
+            errorMap.put("username", "账号被禁用");
+            return mv;
         }
         
         // 登陆成功
         SessionUtil.addCustomer(customer);
         SessionUtil.add("isLogin", true);
         SessionUtil.add("nickname", customer.getNickname());
-        return buildResponse(Boolean.TRUE, "登陆成功", customer.getNickname());
+
+        String url = (String)SessionUtil.get("url");
+        if (url != null) {
+            mv.setViewName("redirect:" + url);
+        }else {
+            mv.setViewName("redirect:/customer");
+        }
+        return mv;
     }
 
     /**
@@ -396,10 +417,17 @@ public class CustomerController extends ABaseController {
         }
         return buildResponse(Boolean.TRUE, "已登陆", customer.getNickname());
     }
-
+    /**
+     * 登录页面
+     * @return ModelAndView
+     */
+    @GetMapping("/login")
+    public ModelAndView login() {
+        return new ModelAndView("customer/login");
+    }
     /**
      * 登出
-     * @return ResponseBody
+     * @return ModelAndView
      */
     @GetMapping("/logout")
     public ModelAndView logout() {

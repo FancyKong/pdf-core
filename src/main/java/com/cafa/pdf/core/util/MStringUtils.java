@@ -31,6 +31,19 @@ public class MStringUtils {
     }
 
     /**
+     * 获取网站发送请求的页面完整路径
+     * @param request HttpServletRequest
+     * @return String：请求发起页的完整路径
+     */
+    public static String getRequestURLWithQueryString(HttpServletRequest request) {
+        StringBuffer requestURL = request.getRequestURL();
+        if (request.getQueryString() != null) {
+            requestURL.append("?").append(request.getQueryString());
+        }
+        return requestURL.toString();
+    }
+
+    /**
      * 获取访问者ip地址
      * @param request HttpServletRequest
      * @return ip string
