@@ -41,11 +41,15 @@
 			},
 			"columns" : [
 			    CONSTANT.DATA_TABLES.COLUMN.NO,
-			    {
-					"data" : 'bookName'
-				}, {
-					"data" : 'count'
-				}
+                {
+                    "data" : 'isbn'
+                }, {
+                    "data" : 'bookName'
+                },{
+                    "data" : 'keywords'
+                }, {
+                    "data" : 'count'
+                }
 				],
 			"columnDefs" : [ {
 					"searchable" : false,
@@ -53,7 +57,30 @@
 					"targets" : "_all"
 				}]
 		}));//end $('#otable').DataTable($.extend({
-		
+
+
+        //查询
+        $("#btn_search").click(function(){
+            oTable.draw();
+        });
+        //刷新
+        $("#btn_fresh").click(function(){
+            oTable.draw(false);
+        });
+
+        // 回车键事件
+        $("#ISBN").keypress(function(e) {
+            if(e.keyCode == 13) {
+                $("#btn_search").click();
+            }
+            return;
+        });
+        $("#keyword").keypress(function(e) {
+            if(e.keyCode == 13) {
+                $("#btn_search").click();
+            }
+            return;
+        });
 	});
 
 	//表格的管理机制
@@ -79,6 +106,8 @@
 			if (hitsManage.fuzzySearch) {//模糊查询
 				param.fuzzy = $("#fuzzy-search").val();
 			} else {//非模糊查询
+                param.ISBN = $("#ISBN").val();
+                param.keyword = $("#keyword").val();
 			}
 			//组装分页参数
 			param.startIndex = data.start;

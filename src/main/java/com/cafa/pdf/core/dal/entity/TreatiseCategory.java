@@ -15,7 +15,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @AllArgsConstructor
 @Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "treatise_category")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "treatise_categories")
 public class TreatiseCategory implements java.io.Serializable {
 
 	private static final long serialVersionUID = -5196023570569388721L;

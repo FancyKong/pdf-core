@@ -1,7 +1,6 @@
 package com.cafa.pdf.core.service;
 
 import com.cafa.pdf.core.dal.dao.IBaseDAO;
-import com.cafa.pdf.core.dal.entity.Chapter;
 import com.cafa.pdf.core.util.DynamicSpecifications;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
 import com.cafa.pdf.core.util.Reflections;
@@ -183,7 +182,6 @@ public abstract class ABaseService<E, PK extends Serializable> {
      */
     public Page<E> findAllBySearchParams(Map<String, Object> searchParams, PageRequest pageRequest) {
         Specification<E> spec = buildSpecification(searchParams);
-        log.debug("findAllBySearchParams:{}",searchParams.toString());
         return this.getEntityDAO().findAll(spec, pageRequest);
     }
 

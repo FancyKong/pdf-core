@@ -9,6 +9,7 @@ import com.cafa.pdf.core.commom.enums.PublicationMode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,6 +27,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "treatises")
 public class Treatise implements java.io.Serializable {
 
     private static final long serialVersionUID = 2855297224736248527L;

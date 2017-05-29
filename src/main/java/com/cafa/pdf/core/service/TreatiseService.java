@@ -23,6 +23,7 @@ import com.cafa.pdf.core.web.request.statistics.ReadingSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSaveCoreReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseSearchReq;
 import com.cafa.pdf.core.web.request.treatise.TreatiseUpdateReq;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +32,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -196,8 +199,16 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         }
 
         //有了其它搜索条件，先搜索出著作，再查询对应著作的点击量
-        Page<Treatise> treatisePage = super.findAllBySearchParams(
-                buildSearchParams(hitsSearchReq), pageNumber, basicSearchReq.getPageSize());
+        Map<String, Object> searchParams = new HashMap<>();
+        if (StringUtils.isNotBlank(hitsSearchReq.getISBN())) {
+            searchParams.put("EQ_ISBN", hitsSearchReq.getISBN());
+        }
+        if (StringUtils.isNotBlank(hitsSearchReq.getKeyword())) {
+            searchParams.put("LIKE_keywords", hitsSearchReq.getKeyword());
+        }
+
+        log.debug("【搜索著作点击量】 SearchParams: {}", searchParams.toString());
+        Page<Treatise> treatisePage = super.findAllBySearchParams(searchParams, pageNumber, basicSearchReq.getPageSize());
 
         return treatisePage.map(treatise -> {
             TreatiseHits hits = hitsDAO.findOne(treatise.getId());
@@ -207,6 +218,11 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
     private HitsDTO getHitsDTO(TreatiseHits source) {
         HitsDTO hitsDTO = new HitsDTO();
         ObjectConvertUtil.objectCopy(hitsDTO, source);
+        Treatise treatise = treatiseDAO.findOne(source.getId());
+        if (treatise != null) {
+            hitsDTO.setISBN(treatise.getISBN());
+            hitsDTO.setKeywords(treatise.getKeywords());
+        }
         return hitsDTO;
     }
     /**
@@ -227,8 +243,16 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         }
 
         //有了其它搜索条件，先搜索出著作，再查询对应著作的点击量
-        Page<Treatise> treatisePage = super.findAllBySearchParams(
-                buildSearchParams(readingSearchReq), pageNumber, basicSearchReq.getPageSize());
+        Map<String, Object> searchParams = new HashMap<>();
+        if (StringUtils.isNotBlank(readingSearchReq.getISBN())) {
+            searchParams.put("EQ_ISBN", readingSearchReq.getISBN());
+        }
+        if (StringUtils.isNotBlank(readingSearchReq.getKeyword())) {
+            searchParams.put("LIKE_keywords", readingSearchReq.getKeyword());
+        }
+
+        log.debug("【搜索著作阅读量】 SearchParams: {}", searchParams.toString());
+        Page<Treatise> treatisePage = super.findAllBySearchParams(searchParams, pageNumber, basicSearchReq.getPageSize());
 
         return treatisePage.map(treatise -> {
             TreatiseReading reading = readingDAO.findOne(treatise.getId());
@@ -238,6 +262,11 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
     private ReadingDTO getReadingDTO(TreatiseReading source) {
         ReadingDTO readingDTO = new ReadingDTO();
         ObjectConvertUtil.objectCopy(readingDTO, source);
+        Treatise treatise = treatiseDAO.findOne(source.getId());
+        if (treatise != null) {
+            readingDTO.setISBN(treatise.getISBN());
+            readingDTO.setKeywords(treatise.getKeywords());
+        }
         return readingDTO;
     }
 

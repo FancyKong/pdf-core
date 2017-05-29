@@ -27,35 +27,35 @@ public class DynamicSpecifications {
 
 						// logic operator
 						switch (filter.operator) {
-						case IN:
-							Collection collention =(List) filter.value;
-							predicates.add(expression.in(collention));
-							break;
-						case EQ:
-							predicates.add(builder.equal(expression, filter.value));
-							break;
-						case NEQ:
-							predicates.add(builder.notEqual(expression, filter.value));
-							break;
-						case LIKE:
-							predicates.add(builder.like(expression, "%" + filter.value + "%"));
-							break;
-						case LLIKE:
-							predicates.add(builder.like(expression, filter.value + "%"));
-							break;
-						case GT:
-							predicates.add(builder.greaterThan(expression, (Comparable) filter.value));
-							break;
-						case LT:
-							predicates.add(builder.lessThan(expression, (Comparable) filter.value));
-							break;
-						case GTE:
-							predicates.add(builder.greaterThanOrEqualTo(expression, (Comparable) filter.value));
-							break;
-						case LTE:
-							predicates.add(builder.lessThanOrEqualTo(expression, (Comparable) filter.value));
-							
-							break;
+							case IN:
+								Collection collection =(List) filter.value;
+								predicates.add(expression.in(collection));
+								break;
+							case EQ:
+								predicates.add(builder.equal(expression, filter.value));
+								break;
+							case NEQ:
+								predicates.add(builder.notEqual(expression, filter.value));
+								break;
+							case LIKE:
+								predicates.add(builder.like(expression, "%" + filter.value + "%"));
+								break;
+							case LLIKE:
+								predicates.add(builder.like(expression, filter.value + "%"));
+								break;
+							case GT:
+								predicates.add(builder.greaterThan(expression, (Comparable) filter.value));
+								break;
+							case LT:
+								predicates.add(builder.lessThan(expression, (Comparable) filter.value));
+								break;
+							case GTE:
+								predicates.add(builder.greaterThanOrEqualTo(expression, (Comparable) filter.value));
+								break;
+							case LTE:
+								predicates.add(builder.lessThanOrEqualTo(expression, (Comparable) filter.value));
+
+								break;
 						}
 					}
 

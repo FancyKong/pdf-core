@@ -14,6 +14,10 @@ public class HitsDTO implements java.io.Serializable{
     private Long id;
     private String ISBN;
     private String bookName;
+    /**
+     * 关键词
+     */
+    private String keywords;
     private Long count;
 
 }
