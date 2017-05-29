@@ -417,13 +417,16 @@ public class CustomerController extends ABaseController {
         }
         return buildResponse(Boolean.TRUE, "已登陆", customer.getNickname());
     }
+
     /**
      * 登录页面
      * @return ModelAndView
      */
     @GetMapping("/login")
-    public ModelAndView login() {
-        return new ModelAndView("customer/login");
+    public ModelAndView login(@RequestParam(required=false) String msg) {
+        ModelAndView mv = new ModelAndView("customer/login");
+        mv.addObject("msg", msg);
+        return mv;
     }
     /**
      * 登出

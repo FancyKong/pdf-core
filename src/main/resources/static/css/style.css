@@ -12,6 +12,9 @@ Author: Cherish
 .error{
     border: #e9151c;
 }
+.help-block{
+    color: #e9151c;
+}
 .field-error{
     border: #e9151c;
 }

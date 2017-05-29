@@ -60,31 +60,15 @@
                                 <ul class="p-info">
                                     <li>
                                         <div class="title">呢称</div>
-                                        <div class="desk" th:text="${#session.getAttribute('nickname')}">Cherish</div>
+                                        <div class="desk" th:text="${user.nickname}">Cherish</div>
                                     </li>
                                     <li>
-                                        <div class="title">性别</div>
-                                        <div class="desk">男</div>
-                                    </li>
-                                    <li>
-                                        <div class="title">职位</div>
-                                        <div class="desk">管理员</div>
-                                    </li>
-                                    <li>
-                                        <div class="title">生日</div>
-                                        <div class="desk">1970-7-7</div>
-                                    </li>
-                                    <li>
-                                        <div class="title">年龄</div>
-                                        <div class="desk">60</div>
-                                    </li>
-                                    <li>
-                                        <div class="title">政治面貌</div>
-                                        <div class="desk">中共党员</div>
+                                        <div class="title">手机号码</div>
+                                        <div class="desk" th:text="${user.telephone}">18888888888</div>
                                     </li>
                                     <li>
                                         <div class="title">邮箱</div>
-                                        <div class="desk">823382133@qq.com</div>
+                                        <div class="desk" th:text="${user.email}">823382133@qq.com</div>
                                     </li>
                                 </ul>
                             </div>
@@ -153,7 +137,7 @@
                             </div>
                         </div>
                     </a>
-                    <a th:href="@{/statistics/list}" style="color: #fff">
+                    <a th:href="@{/statistics/hits/list}" style="color: #fff">
                         <div class="col-md-6 col-xs-12 col-sm-6">
                             <div class="panel green">
                                 <div class="symbol">

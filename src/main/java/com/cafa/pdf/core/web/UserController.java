@@ -131,7 +131,13 @@ public class UserController extends ABaseController {
         }
 
         try {
-            if (userService.existEmail(userUpdateReq.getEmail())){
+            User old = userService.findById(userUpdateReq.getId());
+            if (old == null) {
+                errorMap.put("msg", "数据错误");
+                return mv;
+            }
+            if (!StringUtils.equals(old.getEmail(), userUpdateReq.getEmail()) &&
+                    userService.existEmail(userUpdateReq.getEmail())){
                 errorMap.put("msg", "该邮箱已注册");
                 mv.addObject("user", userUpdateReq);
                 return mv;

@@ -56,7 +56,7 @@
                                                 <label for="ISBN" class="control-label col-md-2 col-sm-2">ISBN：</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <input type="text" id="ISBN" name="ISBN" class="form-control"
-                                                           placeholder="ISBN" required autofocus
+                                                           placeholder="ISBN" minlength="1" maxlength="32" required autofocus
                                                            th:value="${treatise} ? ${treatise.ISBN}"/>
                                                 </div>
                                             </div>
@@ -65,7 +65,7 @@
                                                 <label for="no" class="control-label col-md-2 col-sm-2">编号：</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <input type="text" id="no" name="no" class="form-control"
-                                                           placeholder="编号" required
+                                                           placeholder="编号" minlength="1" maxlength="32" required
                                                            th:value="${treatise} ? ${treatise.no}"/>
                                                 </div>
                                             </div>
@@ -138,7 +138,7 @@
                                                        class="control-label col-md-2 col-sm-2">出版社：</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <input type="text" id="publishHouse" name="publishHouse"
-                                                           class="form-control"
+                                                           class="form-control" minlength="1" maxlength="32"
                                                            placeholder="出版社" required/>
                                                 </div>
                                             </div>
@@ -148,7 +148,7 @@
                                                        class="control-label col-md-2 col-sm-2">出版地：</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <input type="text" id="publishPlace" name="publishPlace"
-                                                           class="form-control"
+                                                           class="form-control" minlength="1" maxlength="32"
                                                            placeholder="出版地" required/>
                                                 </div>
                                             </div>
@@ -170,7 +170,7 @@
                                                        class="control-label col-md-2 col-sm-2">关键词集合：</label>
                                                 <div class="col-md-8 col-sm-8">
                                                     <input type="text" id="keywords" name="keywords"
-                                                           class="form-control"
+                                                           class="form-control" required
                                                            placeholder="多个关键词用';'隔开,如: 数据挖掘;搜索引擎;聚类算法"
                                                            />
                                                 </div>
@@ -182,7 +182,7 @@
                                                 <div class="col-md-8 col-sm-8">
                                                         <textarea id="description" name="description"
                                                                   class="form-control"
-                                                                  placeholder="简介/描述"
+                                                                  placeholder="简介/描述" required
                                                                   style="height: 150px"></textarea>
                                                 </div>
                                             </div>
@@ -278,8 +278,8 @@
                                                    class="control-label col-md-2 col-sm-2">定价：</label>
                                             <div class="col-md-8 col-sm-8">
                                                 <input type="number" id="price" name="price"
-                                                       class="form-control"
-                                                       placeholder="定价" minlength="1" maxlength="32"
+                                                       class="form-control" required
+                                                       placeholder="定价" min="0"
                                                        />
                                             </div>
                                         </div>
@@ -289,8 +289,8 @@
                                                    class="control-label col-md-2 col-sm-2">总页数：</label>
                                             <div class="col-md-8 col-sm-8">
                                                 <input type="number" id="pageNumber" name="pageNumber"
-                                                       class="form-control"
-                                                       placeholder="总页数" minlength="1" maxlength="32"
+                                                       class="form-control" required
+                                                       placeholder="总页数" min="0"
                                                        />
                                             </div>
                                         </div>
@@ -300,8 +300,8 @@
                                                    class="control-label col-md-2 col-sm-2">字数(单位千字)：</label>
                                             <div class="col-md-8 col-sm-8">
                                                 <input type="number" id="words" name="words"
-                                                       class="form-control"
-                                                       placeholder="字数" minlength="1" maxlength="32"
+                                                       class="form-control" required
+                                                       placeholder="字数" min="0"
                                                        />
                                             </div>
                                         </div>
@@ -310,9 +310,9 @@
                                             <label for="impression"
                                                    class="control-label col-md-2 col-sm-2">印次：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <input type="text" id="impression" name="impression"
+                                                <input type="number" id="impression" name="impression"
                                                        class="form-control"
-                                                       placeholder="印次" minlength="1" maxlength="32"
+                                                       placeholder="印次" min="1"
                                                        />
                                             </div>
                                         </div>
@@ -321,9 +321,9 @@
                                             <label for="edition"
                                                    class="control-label col-md-2 col-sm-2">版次：</label>
                                             <div class="col-md-8 col-sm-8">
-                                                <input type="text" id="edition" name="edition"
+                                                <input type="number" id="edition" name="edition"
                                                        class="form-control"
-                                                       placeholder="版次" minlength="1" maxlength="32"
+                                                       placeholder="版次" min="1"
                                                        />
                                             </div>
                                         </div>
@@ -527,6 +527,45 @@
             });
         }
         $(function () {
+            $('#treatiseForm').validate({
+                rules: {},
+                messages: {},
+                errorElement: "em",
+                errorPlacement: function ( error, element ) {
+                    error.addClass( "help-block" );
+                    if ( element.prop( "type" ) === "checkbox" ) {
+                        error.insertAfter( element.parent( "label" ) );
+                    } else {
+                        error.insertAfter( element );
+                    }
+                },
+                highlight: function ( element, errorClass, validClass ) {
+                    $( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+                }
+            });
+            $('#extraInfoForm').validate({
+                rules: {},
+                messages: {},
+                errorElement: "em",
+                errorPlacement: function ( error, element ) {
+                    error.addClass( "help-block" );
+                    if ( element.prop( "type" ) === "checkbox" ) {
+                        error.insertAfter( element.parent( "label" ) );
+                    } else {
+                        error.insertAfter( element );
+                    }
+                },
+                highlight: function ( element, errorClass, validClass ) {
+                    $( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+                }
+            });
+            //
             $('.form_datetime').datetimepicker({
                 format: 'yyyy-mm-dd',
                 language: 'zh-CN',
@@ -535,6 +574,10 @@
             });
             // 基本的操作
             $("#next-0").click(function () {
+                var valid = $("#treatiseForm").valid();// 表单验证
+                if (!valid){
+                    return;
+                }
                 var treatiseData = $("#treatiseForm").serialize();
                 console.log("treatiseData: " + treatiseData);
                 if(treatiseId !== 0){
@@ -775,6 +818,10 @@
 
             // 额外信息保存
             $("#persist").click(function () {
+                var valid = $("#extraInfoForm").valid();
+                if (!valid){
+                    return;
+                }
                 var extraInfoData = $("#extraInfoForm").serialize();
                 extraInfoData += "&id=" + treatiseId;// 附带上著作ID
                 console.log("extraInfoData: " + extraInfoData);
