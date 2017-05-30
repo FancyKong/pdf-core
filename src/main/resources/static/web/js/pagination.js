@@ -134,7 +134,7 @@ jQuery.fn.pagination = function (maxentries, opts) {
             if (opts.display_msg) {
                 if (!maxentries) {
                     panel
-                        .append('<div class="pxofy">暂时无数据可以显示</div>');
+                        .append('<div class="pxofy">暂时没有相关的著作被收录</div>');
                 } else {
                     panel
                         .append('<div class="pxofy">显示第&nbsp;'
@@ -180,7 +180,7 @@ jQuery.fn.pagination = function (maxentries, opts) {
         };
 
         if (maxentries == 0) {
-            panel.append('<span class="current prev">' + opts.prev_text + '</span><span class="current next">' + opts.next_text + '</span><div class="pxofy">暂时无数据可以显示</div>');
+            panel.append('<span class="current prev">' + opts.prev_text + '</span><span class="current next">' + opts.next_text + '</span><div class="pxofy">暂时没有相关的著作被收录</div>');
         } else {
             drawLinks();
         }
