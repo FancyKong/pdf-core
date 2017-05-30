@@ -16,6 +16,7 @@ import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.util.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.query.SolrPageRequest;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
@@ -103,9 +104,12 @@ public class PortalController {
     @GetMapping("/result")
     public ModelAndView result(
             @RequestParam(value = "t",required = false,defaultValue = "") String type,
-            @RequestParam(value = "q") String query,
+            @RequestParam(value = "q",required = false) String query,
             @RequestParam(value = "s",required = false,defaultValue = "10") Integer size,
             @RequestParam(value = "p",required = false,defaultValue = "1") Integer page){
+        if (StringUtils.isBlank(query)) { //如果没有搜索内容，则跳转回首页
+            return new ModelAndView("redirect:/");
+        }
         ModelAndView mv = new ModelAndView("result");
         if("".equals(type)){
             //关键字检索

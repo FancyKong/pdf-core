@@ -132,7 +132,6 @@ public class BasicController extends ABaseController {
             subject.login(token);
 
             Session session = subject.getSession();
-            session.setAttribute("msg", "登陆成功");
             session.setAttribute("username", ShiroUserUtil.getUsername());
             session.setAttribute("nickname", ShiroUserUtil.getNickname());
 

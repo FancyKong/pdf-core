@@ -401,7 +401,7 @@ public class CustomerController extends ABaseController {
         // 登陆成功
         SessionUtil.addCustomer(customer);
         SessionUtil.add("isLogin", true);
-        SessionUtil.add("nickname", customer.getNickname());
+        SessionUtil.add("customerName", customer.getNickname());
 
         String url = (String)SessionUtil.get("url");
         if (url != null) {

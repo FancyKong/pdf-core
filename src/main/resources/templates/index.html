@@ -28,7 +28,7 @@
     <div id="hd" class="ue-clear">
         <div class="" style="float:right;padding-top: 15px;padding-right: 100px;">
             <a th:if="${#session} ? ${#session.getAttribute('isLogin')}" href="/customer" target="_blank">
-                <span style="color:#4b8dde;font-size: 16px;" th:text="'欢迎您，'+${#session.getAttribute('nickname')}">欢迎您，小明</span>
+                <span style="color:#4b8dde;font-size: 16px;" th:text="'欢迎您，'+${#session.getAttribute('customerName')}">欢迎您，小明</span>
                 &nbsp;&nbsp;&nbsp;<img src="/web/img/personal.png"/>
             </a>
             <a th:unless="${#session} ? ${#session.getAttribute('isLogin')}" href="/customer" target="_blank">

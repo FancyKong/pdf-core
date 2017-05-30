@@ -161,5 +161,19 @@ public class TreatiseCategoryController extends ABaseController {
         return mv;
     }
 
+    @GetMapping("parent")
+    @ResponseBody
+    public List<TreatiseCategory> findParent() {
+        return treatiseCategoryService.findParent();
+    }
+
+    @GetMapping("{pid}/children")
+    @ResponseBody
+    public List<TreatiseCategory> children(@PathVariable("pid") Long pid) {
+        if (0 >= pid) {
+            return null;
+        }
+        return treatiseCategoryService.findChildren(pid);
+    }
 
 }
