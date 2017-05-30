@@ -9,10 +9,12 @@ import com.cafa.pdf.core.commom.dto.TreatiseShowDTO;
 import com.cafa.pdf.core.commom.enums.Language;
 import com.cafa.pdf.core.commom.exception.ServiceException;
 import com.cafa.pdf.core.dal.entity.*;
-import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
 import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
-import com.cafa.pdf.core.service.*;
+import com.cafa.pdf.core.service.AuthorService;
+import com.cafa.pdf.core.service.ChapterService;
+import com.cafa.pdf.core.service.TreatiseCategoryService;
+import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.util.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +59,9 @@ public class PortalController {
         ModelAndView modelAndView = new ModelAndView("detail");
         Treatise treatise = treatiseService.findById(id);
         treatise.setDescription(treatise.getDescription().replaceAll("\\r\n","<br/>"));
+
+        // 该著作点击量加一
+        treatiseService.addHitsForTreatise(id, 1);
 
         modelAndView.addObject("treatise",treatise);
         modelAndView.addObject("language", Language.valueOf(treatise.getLanguage()));
@@ -222,6 +226,9 @@ public class PortalController {
         mv.addObject("totalPage",totalPage);
         mv.addObject("publicPage",publicPage);
         mv.addObject("lastSeq",chapters.size());
+
+        // 该著作阅读量加一
+        treatiseService.addReadingForTreatise(treatiseId, 1);
         return mv;
     }
 
@@ -233,10 +240,11 @@ public class PortalController {
         List<Chapter> chapters = chapterService.getByTreatiseId(treatiseId);
         Chapter chapter = chapters.get(chapterSeq-1);
         Customer customer = SessionUtil.getCustomer();
-        if(chapter.getPrivacy()== 0 && customer == null){
-            //改章节加密并且 未登录
+        if (0 == chapter.getPrivacy() && customer == null) {
+            // 该章节加密并且 未登录
             ModelAndView loginMv = new ModelAndView("redirect:/customer/login");
-            SessionUtil.add("url","/reading/"+treatise+"/"+chapterSeq);
+            SessionUtil.add("url", "/reading/" + treatise.getId() + "/" + chapterSeq);
+            SessionUtil.add("msg", "该章节需要登陆的会员才能阅读，请登录或注册");
             return loginMv;
         }
         mv.addObject("treatise",treatise);
@@ -253,6 +261,9 @@ public class PortalController {
         mv.addObject("basePage",page);
         mv.addObject("totalPage",totalPage);
         mv.addObject("lastSeq",chapters.size());
+
+        // 该著作阅读量加一
+        treatiseService.addReadingForTreatise(treatiseId, 1);
         return mv;
     }
 }

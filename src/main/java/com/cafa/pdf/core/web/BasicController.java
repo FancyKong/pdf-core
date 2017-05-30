@@ -5,6 +5,7 @@ import com.cafa.pdf.core.commom.shiro.ShiroUserUtil;
 import com.cafa.pdf.core.dal.entity.Check;
 import com.cafa.pdf.core.service.CheckService;
 import com.cafa.pdf.core.service.SysConfigService;
+import com.cafa.pdf.core.service.UserService;
 import com.cafa.pdf.core.util.MStringUtils;
 import com.cafa.pdf.core.util.SessionUtil;
 import com.cafa.pdf.core.util.ValidateCode;
@@ -49,11 +50,13 @@ public class BasicController extends ABaseController {
 
     private final SysConfigService sysConfigService;
     private final CheckService checkService;
+    private final UserService userService;
 
     @Autowired
-    public BasicController(SysConfigService sysConfigService, CheckService checkService) {
+    public BasicController(SysConfigService sysConfigService, CheckService checkService, UserService userService) {
         this.sysConfigService = sysConfigService;
         this.checkService = checkService;
+        this.userService = userService;
     }
 
     /**
@@ -74,6 +77,7 @@ public class BasicController extends ABaseController {
     @GetMapping(value = "admin")
     public ModelAndView admin() {
         ModelAndView mv = new ModelAndView("admin/introduce");
+        mv.addObject("user", userService.findById(ShiroUserUtil.getUserId()));
         mv.addObject("customerAmount", sysConfigService.findCustomerAmount());
         mv.addObject("treatiseAmount", sysConfigService.findTreatiseAmount());
         return mv;

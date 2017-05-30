@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 首页访问量拦截器
@@ -22,6 +23,8 @@ public class VisitInterceptor implements HandlerInterceptor {
 
     @Autowired
     private SysConfigService sysConfigService;
+    private static Object NULL = new Object();
+    public static ConcurrentHashMap<Integer, Object> ipMap = new ConcurrentHashMap<>();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -33,7 +36,14 @@ public class VisitInterceptor implements HandlerInterceptor {
         log.info("【访问量拦截器】 ipStr: {}", ipStr);
         log.info("【访问量拦截器】 ipInt: {}", ipInt);
 
-        Long visit = sysConfigService.addVisit();
+        Long visit;
+        Object o = ipMap.putIfAbsent(ipInt, NULL);
+        if (o == null) {
+            visit = sysConfigService.addVisit();
+        }else {
+            log.info("【访问量拦截器】 该ip已经被计算在内，不再加一");
+            visit = sysConfigService.findVisit();
+        }
         log.info("【访问量拦截器】 访问量: {}", visit);
         return true;
     }

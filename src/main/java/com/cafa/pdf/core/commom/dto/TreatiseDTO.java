@@ -59,7 +59,7 @@ public class TreatiseDTO implements java.io.Serializable {
     /**
      * 出版日期
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GTM+8")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date publishDate;
     /**
      * 总页数,单位:页
@@ -68,11 +68,11 @@ public class TreatiseDTO implements java.io.Serializable {
     /**
      * 字数,单位:千字
      */
-    private int words;
+    private Integer words;
     /**
      * 定价,单位:分
      */
-    private int price;
+    private Integer price;
     /**
      * 序
      */
@@ -139,4 +139,12 @@ public class TreatiseDTO implements java.io.Serializable {
      * @see com.cafa.pdf.core.commom.enums.Language
      */
     private String language;
+    /**
+     * 点击量
+     */
+    private Long hits;
+    /**
+     * 阅读量
+     */
+    private Long reading;
 }

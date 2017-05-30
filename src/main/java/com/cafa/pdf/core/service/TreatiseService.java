@@ -48,17 +48,11 @@ import java.util.stream.Collectors;
 public class TreatiseService extends ABaseService<Treatise, Long> {
 
     private final TreatiseDAO treatiseDAO;
-
     private final AuthorDAO authorDAO;
-
     private final TreatiseCategoryDAO categoryDAO;
-
     private final ReadingDAO readingDAO;
-
     private final HitsDAO hitsDAO;
-
     private final ChapterService chapterService;
-
     private final TreatiseSolrRepository treatiseSolrRepository;
 
     @Autowired
@@ -95,7 +89,7 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
     }
 
     public List<TreatiseReading> treatisesHot(){
-        return readingDAO.findTop10ByOrderByCount();
+        return readingDAO.findTop10ByOrderByCountDesc();
     }
     @Transactional
     public TreatiseDTO update(TreatiseUpdateReq treatiseUpdateReq) {
@@ -270,4 +264,17 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         return readingDTO;
     }
 
+    @Transactional
+    public void addHitsForTreatise(Long id, int x) {
+        TreatiseHits hits = hitsDAO.findOne(id);
+        hits.setCount(hits.getCount() + x);
+        hitsDAO.save(hits);
+    }
+
+    @Transactional
+    public void addReadingForTreatise(Long treatiseId, int x) {
+        TreatiseReading reading = readingDAO.findOne(treatiseId);
+        reading.setCount(reading.getCount() + x);
+        readingDAO.save(reading);
+    }
 }

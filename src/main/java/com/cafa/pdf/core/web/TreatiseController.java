@@ -11,10 +11,7 @@ import com.cafa.pdf.core.dal.entity.Author;
 import com.cafa.pdf.core.dal.entity.Chapter;
 import com.cafa.pdf.core.dal.entity.Treatise;
 import com.cafa.pdf.core.dal.entity.TreatiseCategory;
-import com.cafa.pdf.core.service.AuthorService;
-import com.cafa.pdf.core.service.ChapterService;
-import com.cafa.pdf.core.service.TreatiseCategoryService;
-import com.cafa.pdf.core.service.TreatiseService;
+import com.cafa.pdf.core.service.*;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.statistics.HitsSearchReq;
 import com.cafa.pdf.core.web.request.statistics.ReadingSearchReq;
@@ -53,21 +50,20 @@ import java.util.List;
 public class TreatiseController extends ABaseController {
 
     private final TreatiseService treatiseService;
-
     private final TreatiseCategoryService treatiseCategoryService;
-
     private final ChapterService chapterService;
-
     private final AuthorService authorService;
+    private final SysConfigService sysConfigService;
 
     @Autowired
     public TreatiseController(TreatiseService treatiseService,
                               TreatiseCategoryService treatiseCategoryService,
-                              ChapterService chapterService, AuthorService authorService) {
+                              ChapterService chapterService, AuthorService authorService, SysConfigService sysConfigService) {
         this.treatiseService = treatiseService;
         this.treatiseCategoryService = treatiseCategoryService;
         this.chapterService = chapterService;
         this.authorService = authorService;
+        this.sysConfigService = sysConfigService;
     }
 
     /**
@@ -183,7 +179,6 @@ public class TreatiseController extends ABaseController {
 
     /**
      * 删除
-     *
      * @param treatiseId ID
      * @return JSON
      * @see com.cafa.pdf.core.web.aop.ControllerAspect
@@ -200,7 +195,6 @@ public class TreatiseController extends ABaseController {
 
     /**
      * 更改著作信息
-     *
      * @param treatiseUpdateReq 更新信息
      * @return ModelAndView
      */
@@ -215,7 +209,6 @@ public class TreatiseController extends ABaseController {
 
     /**
      * 更改著作核心信息
-     *
      * @param treatiseUpdateReq 更新信息
      * @return ModelAndView
      */
@@ -230,7 +223,6 @@ public class TreatiseController extends ABaseController {
 
     /**
      * 保存核心信息
-     *
      * @param treatiseSaveReq 保存的信息
      * @return ModelAndView
      * @see com.cafa.pdf.core.web.aop.ControllerAspect
@@ -241,12 +233,13 @@ public class TreatiseController extends ABaseController {
     public Response saveCore(TreatiseSaveCoreReq treatiseSaveReq) {
         log.info("【保存核心信息】 {}", treatiseSaveReq);
         TreatiseDTO treatise = treatiseService.saveCore(treatiseSaveReq);
+        // 专著收录量加一
+        sysConfigService.addTreatiseAmount();
         return buildResponse(Boolean.TRUE, "保存成功", treatise);
     }
 
     /**
      * 保存章节信息
-     *
      * @param treatiseId 保存的著作id
      * @return ModelAndView
      * @see com.cafa.pdf.core.web.aop.ControllerAspect

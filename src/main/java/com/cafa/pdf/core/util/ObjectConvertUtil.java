@@ -1,5 +1,7 @@
 package com.cafa.pdf.core.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -13,6 +15,7 @@ import java.util.Map;
  *
  * @author yangyufa
  */
+@Slf4j
 public class ObjectConvertUtil {
     /**
      * 把map 转换成对象
@@ -135,6 +138,7 @@ public class ObjectConvertUtil {
             try {
                 Method methodGet = cls.getDeclaredMethod(strGet);
                 Object object = methodGet.invoke(sourceObject);
+                log.debug("【objectCopy】 原字段与值 {} -> {}", name, object);
                 if (object != null) {
                     String strSet = "set" + method;
                     Method methodSet;

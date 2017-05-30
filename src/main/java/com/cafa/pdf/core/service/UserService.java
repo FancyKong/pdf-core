@@ -55,11 +55,11 @@ public class UserService extends ABaseService<User, Long> {
         return userDAO.count();
     }
 
-    @Transactional(readOnly = false)
-    public void delete(Long id) {
-        // 并不是真正的删除，只是冻结账户
-        User user = findById(id);
-        user.setActive(0);
+    @Transactional
+    public void freezeOrActive(Long userId) {
+        User user = findById(userId);
+        Integer active = user.getActive();
+        user.setActive(1 - active);
         update(user);
     }
 
@@ -119,5 +119,7 @@ public class UserService extends ABaseService<User, Long> {
         userDTO.setActiveStr(ActiveEnum.getDesc(source.getActive()));
         return userDTO;
     }
+
+
 
 }

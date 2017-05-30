@@ -83,6 +83,7 @@ public class AuthorService extends ABaseService<Author, Long> {
         Author author = findById(authorUpdateReq.getId());
         ObjectConvertUtil.objectCopy(author, authorUpdateReq);
         author.setModifiedTime(new Date());
+        log.info("【更改后】 {}", author);
         this.update(author);
     }
 

@@ -66,8 +66,9 @@ public class AuthorController extends ABaseController {
         // 总点击量
         long sumHits = 0L;
         for (TreatiseDTO treatise : treatises) {
-
-            sumHits += treatiseService.getHitsOfTreatise(treatise.getId());
+            Long hitsOfTreatise = treatiseService.getHitsOfTreatise(treatise.getId());
+            treatise.setHits(hitsOfTreatise);
+            sumHits += hitsOfTreatise;
         }
         mv.addObject("sumHits", sumHits);
         return mv;
@@ -137,8 +138,13 @@ public class AuthorController extends ABaseController {
     @DeleteMapping("/{authorId}/delete")
     @ResponseBody
     public Response delete(@PathVariable("authorId") Long authorId){
-        authorService.delete(authorId);
-        return buildResponse(Boolean.TRUE, "删除成功", null);
+        List<TreatiseDTO> treatiseDTOS = treatiseService.findByAuthorId(authorId);
+        if (treatiseDTOS == null || treatiseDTOS.isEmpty()) {
+            authorService.delete(authorId);
+            return buildResponse(Boolean.TRUE, "删除成功", null);
+        }else {
+            return buildResponse(Boolean.FALSE, "删除失败，该著作者拥有著作，请勿删除，可冻结该账户", "该著作者拥有著作，请勿删除，可冻结该账户");
+        }
     }
     /**
      * 冻结或激活
@@ -219,6 +225,17 @@ public class AuthorController extends ABaseController {
             return mv;
         }
         try {
+            Author old = authorService.findById(updateReq.getId());
+            if (old == null) {
+                errorMap.put("msg", "数据错误");
+                return mv;
+            }
+            if (!StringUtils.equals(old.getEmail(), updateReq.getEmail()) &&
+                    authorService.existEmail(updateReq.getEmail())){
+                errorMap.put("msg", "该邮箱已注册");
+                mv.addObject("author", updateReq);
+                return mv;
+            }
             authorService.update(updateReq);
             mv.addObject("author", authorService.findById(updateReq.getId()));
             errorMap.put("msg", "修改成功");
