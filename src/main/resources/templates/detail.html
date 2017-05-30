@@ -27,7 +27,7 @@
                 <div class="subfield">专著分类</div>
                 <ul class="subfieldContext">
                     <li th:each="category:*{categories}">
-                        <a th:href="'/result?q='+${category.id}+'&t=category'"><span class="name" th:text="${category.name}">数据挖掘</span></a>
+                        <a th:href="'/result?q='+${category.id}+'&t=pc'"><span class="name" th:text="${category.name}">数据挖掘</span></a>
                     </li>
                     <li class="more">
                         <span class="text">更多</span>
@@ -57,7 +57,7 @@
                 </div>-->
                 <br/>
                 <div class="operators">
-                    <a th:href="'/reading/'+${treatise.id}"><input type="button" class="operator" value="在线阅读"/></a>
+                    <a th:href="'/reading/'+${treatise.id}" target="_blank"><input type="button" class="operator" value="在线阅读"/></a>
                 </div>
                 <br/>
                 <div class="digest">
@@ -117,8 +117,10 @@
                             <ul class="bookmark">
                                 <li th:each="chapter,status:${chapters}">
                                     <a th:href="'/reading/'+${treatise.id}+'/'+${chapter.seq}"
+                                       target="_blank"
                                        th:text="${chapter.title}">第一章 - 数据挖掘入门一</a>
-                                    <a th:href="'/reading/'+${treatise.id}+'/'+${chapter.seq}"><input type="button" class="operator_mini" value="阅读本章"/></a>
+                                    <!--<span th:if="${chapter.privacy eq 0}">&nbsp;&nbsp;[登录后可见]</span>-->
+                                    <a th:href="'/reading/'+${treatise.id}+'/'+${chapter.seq}" target="_blank"><input type="button" class="operator_mini" value="阅读本章"/></a>
                                 </li>
                             </ul>
                         </div>

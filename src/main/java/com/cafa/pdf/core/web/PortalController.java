@@ -7,6 +7,7 @@ package com.cafa.pdf.core.web;
 import com.cafa.pdf.core.commom.dto.ChapterDTO;
 import com.cafa.pdf.core.commom.dto.TreatiseShowDTO;
 import com.cafa.pdf.core.commom.enums.Language;
+import com.cafa.pdf.core.commom.exception.ServiceException;
 import com.cafa.pdf.core.dal.entity.*;
 import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
@@ -16,7 +17,6 @@ import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.service.TreatiseService;
 import com.cafa.pdf.core.util.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.query.SolrPageRequest;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
@@ -104,59 +104,99 @@ public class PortalController {
     @GetMapping("/result")
     public ModelAndView result(
             @RequestParam(value = "t",required = false,defaultValue = "") String type,
-            @RequestParam(value = "q",required = false) String query,
+            @RequestParam(value = "q") String query,
             @RequestParam(value = "s",required = false,defaultValue = "10") Integer size,
-            @RequestParam(value = "p",required = false,defaultValue = "1") Integer page){
-        if (StringUtils.isBlank(query)) { //如果没有搜索内容，则跳转回首页
-            return new ModelAndView("redirect:/");
-        }
+            @RequestParam(value = "p",required = false,defaultValue = "1") Integer page,
+            @RequestParam(value = "o",required = false,defaultValue = "relativity") String order){
         ModelAndView mv = new ModelAndView("result");
+        HighlightPage<TreatiseSolrDoc> docs = null;
+        List<TreatiseShowDTO> list = null;
         if("".equals(type)){
             //关键字检索
-            HighlightPage<TreatiseSolrDoc> docs =  treatiseSolrRepository.findByContentOrderById(query,new SolrPageRequest(page-1,size));
-            List<TreatiseShowDTO> list = new ArrayList<>();
-            List<TreatiseSolrDoc> treatiseSolrDocs = docs.getContent();
-            for(TreatiseSolrDoc d : treatiseSolrDocs) {
-                TreatiseShowDTO dto = new TreatiseShowDTO();
-                StringBuilder sb = new StringBuilder("...");
-                List<HighlightEntry.Highlight> hs = docs.getHighlights(d);
-                for(HighlightEntry.Highlight h  : hs) {
+            if(order.equals("relativity")){
+                docs  =  treatiseSolrRepository.findByContent(query,new SolrPageRequest(page-1,size));
+            }else if(order.equals("date")){
+                docs =  treatiseSolrRepository.findByContentOrderByPublishDateAsc(query,new SolrPageRequest(page-1,size));
+            }
+        }else if("keywords".equals(type)){
+            //查询关键词
+
+        }else if("author".equals(type)){
+            //查询作者
+            if(order.equals("relativity")){
+                docs  =  treatiseSolrRepository.findByAuthor(query,new SolrPageRequest(page-1,size));
+            }else if(order.equals("date")){
+                docs =  treatiseSolrRepository.findByAuthorOrderByPublishDateAsc(query,new SolrPageRequest(page-1,size));
+            }
+            query="作者:"+query;
+        }else if("title".equals(type)){
+            //查询书名
+            if(order.equals("relativity")){
+                docs = treatiseSolrRepository.findByTitle(query,new SolrPageRequest(page-1,size));
+            }else if(order.equals("date")){
+                docs = treatiseSolrRepository.findByTitleOrderByPublishDateAsc(query,new SolrPageRequest(page-1,size));
+            }
+            query="著作名:"+query;
+        }else if("category".equals(type)){
+            if(order.equals("relativity")){
+                docs = treatiseSolrRepository.findByCategoryId(Long.parseLong(query),new SolrPageRequest(page-1,size));
+            }else if(order.equals("date")){
+                docs = treatiseSolrRepository.findByCategoryIdOrderByPublishDateAsc(Long.parseLong(query),new SolrPageRequest(page-1,size));
+            }
+            query="";
+        }
+        else if("pc".equals(type)){
+            if(order.equals("relativity")){
+                docs = treatiseSolrRepository.findByPCategoryId(Long.parseLong(query),new SolrPageRequest(page-1,size));
+            }else if(order.equals("date")){
+                docs = treatiseSolrRepository.findByPCategoryIdOrderByPublishDateAsc(Long.parseLong(query),new SolrPageRequest(page-1,size));
+            }
+            query="";
+        }
+        if(docs == null){
+            throw new ServiceException("请传入查询参数");
+        }
+        list = new ArrayList<>();
+        List<TreatiseSolrDoc> treatiseSolrDocs = docs.getContent();
+        for(TreatiseSolrDoc d : treatiseSolrDocs) {
+            TreatiseShowDTO dto = new TreatiseShowDTO();
+            StringBuilder sb = new StringBuilder("...");
+            StringBuilder title = new StringBuilder();
+            List<HighlightEntry.Highlight> hs = docs.getHighlights(d);
+            for(HighlightEntry.Highlight h  : hs) {
+                if("title".equals(h.getField().getName())){
+                    for(String s  : h.getSnipplets()) {
+                        title.append(s);
+                    }
+                }else{
                     for(String s  : h.getSnipplets()) {
                         sb.append(s).append("...");
                     }
                 }
-                sb.append(d.getDescription());
-                int end = sb.length()>500?500:sb.length();
-                dto.setHighlighted(sb.toString().substring(0,end)+"...");
-                dto.setAuthor(d.getAuthor());
-                dto.setCategoryName(d.getCategoryName());
-                dto.setTitle(d.getTitle());
-                dto.setPublishDate(d.getPublishDate());
-                dto.setId(Long.parseLong(d.getId()));
-                list.add(dto);
             }
-            mv.addObject("typeName",query);
-            mv.addObject("total",docs.getTotalElements());//总个数
-            mv.addObject("totalPage",docs.getTotalPages());//总页数
-            mv.addObject("treatises",list);
-        }else if("keywords".equals(type)){
-            //查询关键词
-            mv.addObject("typeName","关键词:"+query);
-            mv.addObject("total",100);
-        }else if("author".equals(type)){
-            //查询作者
-            //Long categoryId = Long.parseLong(query);
-            mv.addObject("typeName","作者:"+query);
-            mv.addObject("total",10);
-        }else if("title".equals(type)){
-            //查询书名
-            mv.addObject("typeName","著作名:"+query);
-            mv.addObject("total",10);
+            sb.append(d.getDescription());
+            if(title.length() < 1){
+                title.append(d.getTitle());
+            }
+            int end = sb.length()>500?500:sb.length();
+            dto.setHighlighted(sb.toString().substring(0,end)+"...");
+            dto.setAuthor(d.getAuthor());
+            dto.setCategoryName(d.getCategoryName());
+            dto.setTitle(title.toString());
+            dto.setPublishDate(d.getPublishDate());
+            dto.setId(Long.parseLong(d.getId()));
+            list.add(dto);
         }
+        mv.addObject("typeName",query);
+        mv.addObject("total",docs.getTotalElements());//总个数
+        mv.addObject("totalPage",docs.getTotalPages());//总页数
+        mv.addObject("treatises",list);
+
         mv.addObject("current",page);//当前页数，总是为1
         mv.addObject("size",size);
         mv.addObject("query",query);
         mv.addObject("type",type);
+        mv.addObject("order",order);
         return mv;
     }
 

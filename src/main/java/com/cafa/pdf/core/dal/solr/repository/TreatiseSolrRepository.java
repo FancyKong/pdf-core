@@ -7,6 +7,7 @@ package com.cafa.pdf.core.dal.solr.repository;
 import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
 import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.solr.core.query.SolrPageRequest;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.data.solr.repository.Highlight;
 import org.springframework.data.solr.repository.Query;
@@ -22,5 +23,41 @@ public interface TreatiseSolrRepository extends SolrCrudRepository<TreatiseSolrD
 
     @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
     @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
-    HighlightPage<TreatiseSolrDoc> findByContentOrderById(String content, Pageable pageable);
+    HighlightPage<TreatiseSolrDoc> findByContent(String content, Pageable pageable);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByContentOrderByPublishDateAsc(String content, Pageable pageable);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByAuthor(String content, Pageable pageable);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByAuthorOrderByPublishDateAsc(String content, Pageable pageable);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByTitleOrderByPublishDateAsc(String content, Pageable pageable);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByTitle(String content, Pageable pageable);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByCategoryId(Long query, Pageable solrPageRequest);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByCategoryIdOrderByPublishDateAsc(Long query, Pageable solrPageRequest);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByPCategoryId(Long query, Pageable solrPageRequest);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByPCategoryIdOrderByPublishDateAsc(Long query, Pageable solrPageRequest);
 }
