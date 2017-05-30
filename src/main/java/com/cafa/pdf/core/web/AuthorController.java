@@ -138,8 +138,13 @@ public class AuthorController extends ABaseController {
     @DeleteMapping("/{authorId}/delete")
     @ResponseBody
     public Response delete(@PathVariable("authorId") Long authorId){
-        authorService.delete(authorId);
-        return buildResponse(Boolean.TRUE, "删除成功", null);
+        List<TreatiseDTO> treatiseDTOS = treatiseService.findByAuthorId(authorId);
+        if (treatiseDTOS == null || treatiseDTOS.isEmpty()) {
+            authorService.delete(authorId);
+            return buildResponse(Boolean.TRUE, "删除成功", null);
+        }else {
+            return buildResponse(Boolean.FALSE, "删除失败，该著作者拥有著作，请勿删除，可冻结该账户", "该著作者拥有著作，请勿删除，可冻结该账户");
+        }
     }
     /**
      * 冻结或激活

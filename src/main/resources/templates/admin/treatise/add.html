@@ -576,6 +576,7 @@
             $("#next-0").click(function () {
                 var valid = $("#treatiseForm").valid();// 表单验证
                 if (!valid){
+                    myModalWarning("存在不符合格式的数据，请更正");
                     return;
                 }
                 var treatiseData = $("#treatiseForm").serialize();
@@ -820,6 +821,7 @@
             $("#persist").click(function () {
                 var valid = $("#extraInfoForm").valid();
                 if (!valid){
+                    myModalWarning("存在不符合格式的数据，请更正");
                     return;
                 }
                 var extraInfoData = $("#extraInfoForm").serialize();

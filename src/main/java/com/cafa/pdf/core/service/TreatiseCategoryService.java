@@ -56,8 +56,8 @@ public class TreatiseCategoryService extends ABaseService<TreatiseCategory, Long
         this.update(treatiseCategory);
     }
 
-    public boolean exist(String name) {
-        return treatiseCategoryDAO.findByName(name) != null;
+    public boolean exist(String classifiedNum) {
+        return treatiseCategoryDAO.findByClassifiedNum(classifiedNum) != null;
     }
 
     @Transactional

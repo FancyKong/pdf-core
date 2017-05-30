@@ -12,7 +12,7 @@ public interface TreatiseCategoryDAO extends IBaseDAO<TreatiseCategory,Long> {
 
     List<TreatiseCategory> findAll();
 
-    TreatiseCategory findByName(String name);
+    TreatiseCategory findByClassifiedNum(String classifiedNum);
 
     List<TreatiseCategory> findByPid(Long pid);
 

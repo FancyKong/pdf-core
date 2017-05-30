@@ -309,7 +309,7 @@
 
         // 密码更改
         $("#btn_modifyPwd").click(function () {
-            var valid = $("#updateForm").valid();
+            var valid = $("#modifyPwdForm").valid();
             if (valid) {
                 var data = $("#modifyPwdForm").serialize();
                 var result = postForm("/customer/modifyPwd", data);

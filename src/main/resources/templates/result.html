@@ -29,11 +29,11 @@
 <body>
 <div id="container">
     <div id="hd" class="ue-clear">
-        <a href="/index"><div class="logo"></div></a>
+        <a href="/"><div class="logo"></div></a>
         <div class="inputArea">
             <input type="text" class="searchInput" th:value="${typeName}" id="searchInput"/>
             <input type="hidden" id="query" th:value="'q='+${query}+'&t='+${type}">
-            <input type="button" class="searchButton" value="搜索"/>
+            <input type="button" class="searchButton" value="搜索" onclick="search()"/>
             <a class="advanced" href="/advanced">高级搜索</a>
         </div>
     </div>
@@ -97,7 +97,7 @@
                     <h6>专著阅读热度排行榜</h6>
                     <ul class="historyList">
                         <li th:each="treatise,status:${treatisesTop}">
-                            <a th:href="${treatise.id}+'/detail'" th:text="${treatise.bookName}"></a>
+                            <a th:href="'/'+${treatise.id}+'/detail'" th:text="${treatise.bookName}"></a>
                         </li>
                     </ul>
                 </div>
@@ -113,6 +113,22 @@
 <script type="text/javascript" src="/web/js/global.js"></script>
 <script type="text/javascript" src="/web/js/pagination.js"></script>
 <script type="text/javascript">
+    // 搜索
+    function search(){
+        var searchContent = $("#searchInput").val();
+        if (null == searchContent || "" == searchContent) {
+            myModalWarning("请输入检索内容");
+            return;
+        }
+        window.open("/result?q=" + searchContent,"_self");
+    }
+    $("body").keypress(function(e) {
+        if(e.keyCode == 13) {
+            search();
+        }
+        return;
+    });
+
     $('.searchList').on('click', '.searchItem', function () {
         $('.searchList .searchItem').removeClass('current');
         $(this).addClass('current');

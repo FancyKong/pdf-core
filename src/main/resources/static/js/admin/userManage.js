@@ -4,6 +4,25 @@
 	 * @date 2016年8月21日 下午9:10:05
 	 */
 	var oTable;
+    var column = { //操作
+        "className": "td_operation",
+        "orderable": false,
+        //"width": "200px",
+        "data": null,
+        "render": function (data, type, row, meta) {// btn-group-justified
+            console.log(data);
+            var btn_group = "<div class='btn-group btn-group-sm' role='group' aria-label='操作'>";
+            if("激活" == data.activeStr){
+                btn_group += "<a href='#' class='op_freezeOrActive btn btn-warning' role='button'>冻结</a>"
+            }else{
+                btn_group+= "<a href='#' class='op_freezeOrActive btn btn-success' role='button'>激活</a>";
+            }
+            btn_group += "<a href='#' class='op_edit btn btn-info' role='button'>编辑</a>"
+                + "<a href='#' class='op_delete btn btn-danger' role='button'>删除</a>"
+                + "</div>";
+            return btn_group;
+        }
+    };
 	$(document).ready(function() {
 		oTable = $('#otable').DataTable(
 			//拼接options参数
@@ -51,7 +70,7 @@
 				}, {
 					"data" : 'activeStr'
 				},
-				CONSTANT.DATA_TABLES.COLUMN.OPERATION
+                column
 				],
 			"columnDefs" : [ {
 					"searchable" : false,
@@ -171,4 +190,22 @@
         var id = oTable.row(nRow).id();
         var url = "/user/" + id + "/update";
         window.open(url, "_self");
+    });
+
+    //冻结激活
+    $('#otable').on('click', 'a.op_freezeOrActive', function (e) {
+        e.preventDefault();
+        /* Get the row as a parent of the link that was clicked on */
+        var nRow = $(this).parents('tr')[0];
+        var id = oTable.row(nRow).id();
+        var url = "/user/" + id + "/freezeOrActive";
+        $.get(url, function(result){
+            if (result.success) {
+                myModalSuccess(result.message);
+                //删除页面中的原有行
+                oTable.row(nRow).remove().draw(false);
+            } else {
+                myModalFail(result.message);
+            }
+        });
     });

@@ -5,6 +5,7 @@ import com.cafa.pdf.core.commom.enums.ActiveEnum;
 import com.cafa.pdf.core.commom.shiro.CryptographyUtil;
 import com.cafa.pdf.core.dal.entity.Customer;
 import com.cafa.pdf.core.service.CustomerService;
+import com.cafa.pdf.core.service.SysConfigService;
 import com.cafa.pdf.core.util.IPv4Util;
 import com.cafa.pdf.core.util.MStringUtils;
 import com.cafa.pdf.core.util.RequestHolder;
@@ -43,10 +44,12 @@ import java.util.Objects;
 public class CustomerController extends ABaseController {
 
     private final CustomerService customerService;
+    private final SysConfigService sysConfigService;
 
     @Autowired
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, SysConfigService sysConfigService) {
         this.customerService = customerService;
+        this.sysConfigService = sysConfigService;
     }
 
     /**
@@ -60,7 +63,7 @@ public class CustomerController extends ABaseController {
         Customer customer = SessionUtil.getCustomer();
         if (customer == null) {
             mv.setViewName("redirect:/customer/login");
-            mv.addObject("url", MStringUtils.getRequestURLWithQueryString(RequestHolder.getRequest()));
+            SessionUtil.add("url", MStringUtils.getRequestURLWithQueryString(RequestHolder.getRequest()));
         }else {
             mv.addObject("customer", customer);
         }
@@ -182,6 +185,9 @@ public class CustomerController extends ABaseController {
             customerSaveReq.setPassword(CryptographyUtil.cherishSha1(customerSaveReq.getPassword()));
             customerSaveReq.setIp(IPv4Util.ipToInt(MStringUtils.getIpAddress(RequestHolder.getRequest())));
             customerService.save(customerSaveReq);
+
+            // 会员注册量加一
+            sysConfigService.addCustomerAmount();
             errorMap.put("msg", "添加成功");
         } catch (Exception e) {
             errorMap.put("msg", "系统繁忙");
@@ -264,6 +270,8 @@ public class CustomerController extends ABaseController {
            customerService.register(customerRegisterReq);
             errorMap.put("msg", "信息提交成功，请登录您的邮箱激活账号");
             mv.setViewName("index");
+            // 会员注册量加一
+            sysConfigService.addCustomerAmount();
         } catch (Exception e) {
             errorMap.put("msg", "系统繁忙");
             log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
@@ -398,6 +406,7 @@ public class CustomerController extends ABaseController {
         String url = (String)SessionUtil.get("url");
         if (url != null) {
             mv.setViewName("redirect:" + url);
+            SessionUtil.del("url");
         }else {
             mv.setViewName("redirect:/customer");
         }
@@ -423,9 +432,11 @@ public class CustomerController extends ABaseController {
      * @return ModelAndView
      */
     @GetMapping("/login")
-    public ModelAndView login(@RequestParam(required=false) String msg) {
+    public ModelAndView login() {
         ModelAndView mv = new ModelAndView("customer/login");
+        String msg = (String)SessionUtil.get("msg");
         mv.addObject("msg", msg);
+        SessionUtil.del("msg");
         return mv;
     }
     /**

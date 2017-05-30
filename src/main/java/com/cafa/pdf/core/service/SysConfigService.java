@@ -38,7 +38,6 @@ public class SysConfigService extends ABaseService<SysConfig, Long> {
 
     /**
      * 获取访问量
-     *
      * @return Long 访问量
      */
     public Long findVisit() {

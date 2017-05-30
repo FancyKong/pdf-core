@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>按章阅读</title>
+    <title th:text="${chapter.title}">按章阅读</title>
     <link href="/web/css/style.css" rel="stylesheet" type="text/css"/>
     <link href="/web/css/read.css" rel="stylesheet" type="text/css"/>
     <link href="/tools/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
@@ -11,11 +11,11 @@
 <body>
 <div id="container">
     <div id="hd" class="ue-clear">
-        <div class="logo"></div>
+        <a href="/"><div class="logo"></div></a>
         <div class="inputArea">
             <input type="text" class="searchInput"/>
             <input type="button" class="searchButton" value="搜索"/>
-            <a class="advanced" href="advanced">高级搜索</a>
+            <a class="advanced" href="/advanced">高级搜索</a>
         </div>
     </div>
     <div class="nav" style="margin-bottom: 24px;">

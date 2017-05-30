@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +36,15 @@ public class TreatiseCategoryController extends ABaseController {
     @Autowired
     public TreatiseCategoryController(TreatiseCategoryService treatiseCategoryService) {
         this.treatiseCategoryService = treatiseCategoryService;
+    }
+
+    /**
+     * 全局返回著作类别
+     * @return List<TreatiseCategory>
+     */
+    @ModelAttribute("parent")
+    public List<TreatiseCategory> parent() {
+        return treatiseCategoryService.findParent();
     }
 
     @GetMapping({"","/list"})
@@ -58,8 +68,7 @@ public class TreatiseCategoryController extends ABaseController {
     @GetMapping("/{treatiseCategoryId}/update")
     public ModelAndView updateForm(@PathVariable("treatiseCategoryId") Long treatiseCategoryId){
         ModelAndView mv = new ModelAndView("admin/treatiseCategory/edit");
-        TreatiseCategory treatiseCategory = treatiseCategoryService.findById(treatiseCategoryId);
-        mv.addObject(treatiseCategory);
+        mv.addObject("treatiseCategory", treatiseCategoryService.findById(treatiseCategoryId));
         return mv;
     }
 
@@ -72,13 +81,8 @@ public class TreatiseCategoryController extends ABaseController {
     @GetMapping("/page")
     @ResponseBody
     public Response toPage(BasicSearchReq basicSearchReq, TreatiseCategorySearchReq treatiseCategorySearchReq){
-        try {
-            Page<TreatiseCategoryDTO> page = treatiseCategoryService.findAll(basicSearchReq, treatiseCategorySearchReq);
-            return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
-        } catch (Exception e) {
-            log.error("获取列表失败: {}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, BUSY_MSG, null);
-        }
+        Page<TreatiseCategoryDTO> page = treatiseCategoryService.findAll(basicSearchReq, treatiseCategorySearchReq);
+        return buildResponse(Boolean.TRUE, basicSearchReq.getDraw(), page);
     }
 
     /**
@@ -89,13 +93,8 @@ public class TreatiseCategoryController extends ABaseController {
     @DeleteMapping("/{treatiseCategoryId}/delete")
     @ResponseBody
     public Response delete(@PathVariable("treatiseCategoryId") Long treatiseCategoryId){
-        try {
-            treatiseCategoryService.delete(treatiseCategoryId);
-            return buildResponse(Boolean.TRUE, "删除成功", null);
-        } catch (Exception e) {
-            log.error("删除失败:{}", Throwables.getStackTraceAsString(e));
-            return buildResponse(Boolean.FALSE, "删除失败", null);
-        }
+        treatiseCategoryService.delete(treatiseCategoryId);
+        return buildResponse(Boolean.TRUE, "删除成功", null);
     }
 
     /**
@@ -105,7 +104,7 @@ public class TreatiseCategoryController extends ABaseController {
      */
     @PostMapping("/update")
     public ModelAndView update(@Validated TreatiseCategoryUpdateReq treatiseCategoryUpdateReq, BindingResult bindingResult){
-
+        log.info("【更改信息】 {}", treatiseCategoryUpdateReq);
         ModelAndView mv = new ModelAndView("admin/treatiseCategory/edit");
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);
@@ -114,19 +113,18 @@ public class TreatiseCategoryController extends ABaseController {
             errorMap.put("msg", "数据错误");
             return mv;
         }
-
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("treatiseCategory", treatiseCategoryUpdateReq);
-        }else {
-            try {
-                treatiseCategoryService.update(treatiseCategoryUpdateReq);
-                mv.addObject("treatiseCategory", treatiseCategoryService.findById(treatiseCategoryUpdateReq.getId()));
-                errorMap.put("msg", "修改成功");
-            } catch (Exception e) {
-                errorMap.put("msg", "系统繁忙");
-                log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
-            }
+            return mv;
+        }
+        try {
+            treatiseCategoryService.update(treatiseCategoryUpdateReq);
+            mv.addObject("treatiseCategory", treatiseCategoryService.findById(treatiseCategoryUpdateReq.getId()));
+            errorMap.put("msg", "修改成功");
+        } catch (Exception e) {
+            errorMap.put("msg", "系统繁忙");
+            log.error("修改错误:{}", Throwables.getStackTraceAsString(e));
         }
         return mv;
     }
@@ -138,7 +136,7 @@ public class TreatiseCategoryController extends ABaseController {
      */
     @PostMapping("/save")
     public ModelAndView save(@Validated TreatiseCategorySaveReq treatiseCategorySaveReq, BindingResult bindingResult){
-
+        log.info("【更改信息】 {}", treatiseCategorySaveReq);
         ModelAndView mv = new ModelAndView("admin/treatiseCategory/add");
         Map<String, Object> errorMap = new HashMap<>();
         mv.addObject("errorMap", errorMap);
@@ -146,19 +144,19 @@ public class TreatiseCategoryController extends ABaseController {
         if (bindingResult.hasErrors()) {
             errorMap.putAll(getErrors(bindingResult));
             mv.addObject("treatiseCategory", treatiseCategorySaveReq);
-        }else {
-            try {
-                if (treatiseCategoryService.exist(treatiseCategorySaveReq.getName())){
-                    errorMap.put("msg", "该类别已存在，请更换再试");
-                    mv.addObject("treatiseCategory", treatiseCategorySaveReq);
-                }else {
-                    treatiseCategoryService.save(treatiseCategorySaveReq);
-                    errorMap.put("msg", "添加成功");
-                }
-            } catch (Exception e) {
-                errorMap.put("msg", "系统繁忙");
-                log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
+            return mv;
+        }
+        try {
+            if (treatiseCategoryService.exist(treatiseCategorySaveReq.getClassifiedNum())){
+                errorMap.put("msg", "该分类号已存在，请更换再试");
+                mv.addObject("treatiseCategory", treatiseCategorySaveReq);
+            }else {
+                treatiseCategoryService.save(treatiseCategorySaveReq);
+                errorMap.put("msg", "添加成功");
             }
+        } catch (Exception e) {
+            errorMap.put("msg", "系统繁忙");
+            log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
         }
         return mv;
     }

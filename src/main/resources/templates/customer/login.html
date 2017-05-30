@@ -105,6 +105,16 @@
         /*]]>*/
     </script>
 </p>
+<p class="msg-block" th:if="${msg}">
+    <script th:if="${msg}" th:inline="javascript">
+        /*<![CDATA[*/
+        var msg = [[${msg}]] ;
+        $(function () {
+            myModalWarning(msg);
+        });
+        /*]]>*/
+    </script>
+</p>
 <script type="text/javascript">
     function changeCode(img){
         $(img).attr("src","/validateCode?_" + new Date().getTime());

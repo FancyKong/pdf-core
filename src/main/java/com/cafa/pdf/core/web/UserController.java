@@ -15,6 +15,7 @@ import com.google.common.base.Throwables;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -106,7 +107,18 @@ public class UserController extends ABaseController {
         userService.delete(userId);
         return buildResponse(Boolean.TRUE, "删除成功", null);
     }
-
+    /**
+     * 冻结或激活
+     * @param userId ID
+     * @return JSON
+     */
+    @RequiresRoles("admin")
+    @GetMapping("/{userId}/freezeOrActive")
+    @ResponseBody
+    public Response freezeOrActive(@PathVariable("userId") Long userId){
+        userService.freezeOrActive(userId);
+        return buildResponse(Boolean.TRUE, "操作成功", null);
+    }
     /**
      * 更改用户信息
      * @param userUpdateReq 更新信息
