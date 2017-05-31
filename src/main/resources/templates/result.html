@@ -36,6 +36,16 @@
             <input type="button" class="searchButton" value="搜索" onclick="search()"/>
             <a class="advanced" href="/advanced">高级搜索</a>
         </div>
+        <div class="user-logo2" style="float:right;padding-top: 15px;padding-right: 100px;">
+            <a th:if="${#session} ? ${#session.getAttribute('isLogin')}" href="/customer" target="_blank">
+                <span style="color:#4b8dde;font-size: 16px;" th:text="'欢迎您，'+${#session.getAttribute('customerName')}+' '">欢迎您，小明&nbsp;&nbsp;&nbsp;</span>
+                <img src="/web/img/personal.png"/>
+            </a>
+            <a th:unless="${#session} ? ${#session.getAttribute('isLogin')}" href="/customer" target="_blank">
+                <span style="color:#4b8dde;font-size: 16px;">请登陆&nbsp;&nbsp;&nbsp;</span>
+                <img src="/web/img/personal.png"/>
+            </a>
+        </div>
     </div>
     <div class="nav" style="margin-bottom: 24px;">
     </div>
@@ -109,6 +119,7 @@
 <div id="foot">Copyright &copy;cafa.com 版权所有</div>
 </body>
 <script src="/js/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="/js/myModal.js" type="text/javascript"></script>
 <script src="/tools/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/web/js/global.js"></script>
 <script type="text/javascript" src="/web/js/pagination.js"></script>
@@ -120,7 +131,23 @@
             myModalWarning("请输入检索内容");
             return;
         }
-        window.open("/result?q=" + searchContent,"_self");
+        var url;
+        if (searchContent.indexOf(":") > -1) {
+            var arr = searchContent.split(":", 2);
+            var type = arr[0];
+            var query = arr[1];
+            url = "/result?q=" + query;
+            if ("著作名"== type) {
+                url += "&t=title";
+            }else if ("作者"== type) {
+                url += "&t=author";
+            }else if("简介"== type) {
+                url += "&t=description";
+            }
+        }else {
+            url = "/result?q=" + searchContent;
+        }
+        window.open(url, "_self");
     }
     $("body").keypress(function(e) {
         if(e.keyCode == 13) {

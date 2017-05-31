@@ -12,10 +12,20 @@
 <div id="container">
     <div id="hd" class="ue-clear">
         <a href="/"><div class="logo"></div></a>
-        <div class="inputArea">
-            <input type="text" class="searchInput"/>
-            <input type="button" class="searchButton" value="搜索"/>
-            <a class="advanced" href="/advanced">高级搜索</a>
+        <!--<div class="inputArea">-->
+            <!--<input type="text" class="searchInput"/>-->
+            <!--<input type="button" class="searchButton" value="搜索"/>-->
+            <!--<a class="advanced" href="/advanced">高级搜索</a>-->
+        <!--</div>-->
+        <div class="user-logo2" style="float:right;padding-top: 15px;padding-right: 100px;">
+            <a th:if="${#session} ? ${#session.getAttribute('isLogin')}" href="/customer" target="_blank">
+                <span style="color:#4b8dde;font-size: 16px;" th:text="'欢迎您，'+${#session.getAttribute('customerName')}+' '">欢迎您，小明&nbsp;&nbsp;&nbsp;</span>
+                <img src="/web/img/personal.png"/>
+            </a>
+            <a th:unless="${#session} ? ${#session.getAttribute('isLogin')}" href="/customer" target="_blank">
+                <span style="color:#4b8dde;font-size: 16px;">请登陆&nbsp;&nbsp;&nbsp;</span>
+                <img src="/web/img/personal.png"/>
+            </a>
         </div>
     </div>
     <div class="nav" style="margin-bottom: 24px;">

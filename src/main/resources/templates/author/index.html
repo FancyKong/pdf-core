@@ -254,6 +254,7 @@
                     <tr><td>页码</td><td class="pageNumber">666</td></tr>
                     <tr><td>语种</td><td class="language">中文</td></tr>
                     <tr><td>版次</td><td class="edition">第二版</td></tr>
+                    <tr><td colspan="2" class="text-center"><a class="more" href="/100/detail">查看更多信息...</a></td></tr>
                 </table>
             </div>
             <div class="modal-footer">
@@ -296,6 +297,7 @@
                     $(modal).find('.pageNumber').text(treatise.pageNumber);
                     $(modal).find('.language').text(treatise.language);
                     $(modal).find('.edition').text(treatise.edition);
+                    $(modal).find('.more').attr("href", "/"+treatiseId+"/detail");
                 }else {
                     alert(result.message);
                 }

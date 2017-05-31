@@ -26,7 +26,7 @@
 <body>
 <div id="container">
     <div id="hd" class="ue-clear">
-        <div class="" style="float:right;padding-top: 15px;padding-right: 100px;">
+        <div class="user-logo" style="float:right;padding-top: 15px;padding-right: 100px;">
             <a th:if="${#session} ? ${#session.getAttribute('isLogin')}" href="/customer" target="_blank">
                 <span style="color:#4b8dde;font-size: 16px;" th:text="'欢迎您，'+${#session.getAttribute('customerName')}">欢迎您，小明</span>
                 &nbsp;&nbsp;&nbsp;<img src="/web/img/personal.png"/>
@@ -46,9 +46,9 @@
             <div class="inputArea">
             	<input type="text" id="searchInput" class="searchInput" placeholder="默认为全文关键字检索"/>
                 <input type="button" class="searchButton" value="搜索" onclick="search()" />
-                <a class="advanced" href="advanced">高级搜索</a>
+                <a class="advanced" href="/advanced">高级搜索</a>
                 <ul class="dataList">
-                	<li>标题</li>
+                	<li>著作名</li>
                     <li>作者</li>
                     <li>简介</li>
                 </ul>
@@ -108,7 +108,23 @@
             myModalWarning("请输入检索内容");
             return;
         }
-        window.open("/result?q=" + searchContent,"_self");
+        var url;
+        if (searchContent.indexOf(":") > -1) {
+            var arr = searchContent.split(":", 2);
+            var type = arr[0];
+            var query = arr[1];
+            url = "/result?q=" + query;
+            if ("著作名"== type) {
+                url += "&t=title";
+            }else if ("作者"== type) {
+                url += "&t=author";
+            }else if("简介"== type) {
+                url += "&t=description";
+            }
+        }else {
+            url = "/result?q=" + searchContent;
+        }
+        window.open(url, "_self");
     }
     $("body").keypress(function(e) {
         if(e.keyCode == 13) {
