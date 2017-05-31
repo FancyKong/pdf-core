@@ -201,7 +201,6 @@
     });
     function pageselectCallback(page_id, jq) {
         //alert("当前页id(由0开始)：" + page_id + "，\n每页显示：" + this.items_per_page + "条数据");
-        alert(window.location.href);
         window.location.href = "/result?"+"p="+(page_id+1)+"&s="+this.items_per_page+"&q=[[${query}]]&t=[[${type}]]&o=[[${order}]]";
     }
     function getQueryString(name)
