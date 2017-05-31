@@ -111,6 +111,7 @@ public class PortalController {
         ModelAndView mv = new ModelAndView("result");
         HighlightPage<TreatiseSolrDoc> docs = null;
         List<TreatiseShowDTO> list = null;
+        String typeName="";
         if("".equals(type)){
             //关键字检索
             if(order.equals("relativity")){
@@ -118,9 +119,13 @@ public class PortalController {
             }else if(order.equals("date")){
                 docs =  treatiseSolrRepository.findByContentOrderByPublishDateAsc(query,new SolrPageRequest(page-1,size));
             }
-        }else if("keywords".equals(type)){
-            //查询关键词
-
+        }else if("description".equals(type)){
+            //查询简介
+            if(order.equals("relativity")){
+                docs  =  treatiseSolrRepository.findByDescription(query,new SolrPageRequest(page-1,size));
+            }else if(order.equals("date")){
+                docs =  treatiseSolrRepository.findByDescriptionOrderByPublishDateAsc(query,new SolrPageRequest(page-1,size));
+            }
         }else if("author".equals(type)){
             //查询作者
             if(order.equals("relativity")){
@@ -128,7 +133,7 @@ public class PortalController {
             }else if(order.equals("date")){
                 docs =  treatiseSolrRepository.findByAuthorOrderByPublishDateAsc(query,new SolrPageRequest(page-1,size));
             }
-            query="作者:"+query;
+            typeName="作者:"+query;
         }else if("title".equals(type)){
             //查询书名
             if(order.equals("relativity")){
@@ -136,14 +141,14 @@ public class PortalController {
             }else if(order.equals("date")){
                 docs = treatiseSolrRepository.findByTitleOrderByPublishDateAsc(query,new SolrPageRequest(page-1,size));
             }
-            query="著作名:"+query;
+            typeName="著作名:"+query;
         }else if("category".equals(type)){
             if(order.equals("relativity")){
                 docs = treatiseSolrRepository.findByCategoryId(Long.parseLong(query),new SolrPageRequest(page-1,size));
             }else if(order.equals("date")){
                 docs = treatiseSolrRepository.findByCategoryIdOrderByPublishDateAsc(Long.parseLong(query),new SolrPageRequest(page-1,size));
             }
-            query="";
+            typeName="";
         }
         else if("pc".equals(type)){
             if(order.equals("relativity")){
@@ -151,7 +156,7 @@ public class PortalController {
             }else if(order.equals("date")){
                 docs = treatiseSolrRepository.findByPCategoryIdOrderByPublishDateAsc(Long.parseLong(query),new SolrPageRequest(page-1,size));
             }
-            query="";
+            typeName="";
         }
         if(docs == null){
             throw new ServiceException("请传入查询参数");
@@ -187,7 +192,7 @@ public class PortalController {
             dto.setId(Long.parseLong(d.getId()));
             list.add(dto);
         }
-        mv.addObject("typeName",query);
+        mv.addObject("typeName",typeName);
         mv.addObject("total",docs.getTotalElements());//总个数
         mv.addObject("totalPage",docs.getTotalPages());//总页数
         mv.addObject("treatises",list);

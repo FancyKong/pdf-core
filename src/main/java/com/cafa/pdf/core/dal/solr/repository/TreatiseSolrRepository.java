@@ -31,6 +31,14 @@ public interface TreatiseSolrRepository extends SolrCrudRepository<TreatiseSolrD
 
     @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
     @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByDescription(String content, Pageable pageable);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    HighlightPage<TreatiseSolrDoc> findByDescriptionOrderByPublishDateAsc(String content, Pageable pageable);
+
+    @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
+    @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
     HighlightPage<TreatiseSolrDoc> findByAuthor(String content, Pageable pageable);
 
     @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content","title"},snipplets = 3,fragsize = 150)
