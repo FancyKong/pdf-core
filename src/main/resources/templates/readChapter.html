@@ -73,7 +73,7 @@
                     <input type="button" value="下一章" class="operator seq-down" />
                 </div>
                 <div class="pdf">
-                    <iframe th:src="'/pdf/web/viewer.html?file=/treatise/page/'+${treatise.id}+'/1'" width="100%" height="" id="pdf-reader"></iframe>
+                    <iframe th:src="'/pdf/web/viewer.html?file=/treatise/page/'+${treatise.id}+'/'+${basePage+1}" width="100%" height="" id="pdf-reader"></iframe>
                 </div>
 
                 <div class="read">

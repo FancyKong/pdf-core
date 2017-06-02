@@ -58,6 +58,7 @@ public abstract class ABaseService<E, PK extends Serializable> {
     @Transactional(readOnly = false)
     public void delete(PK id) {
         getEntityDAO().delete(id);
+
     }
 
     @Transactional(readOnly = false)

@@ -56,7 +56,7 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
     private final TreatiseSolrRepository treatiseSolrRepository;
 
     @Autowired
-    public TreatiseService(TreatiseDAO treatiseDAO, AuthorDAO authorDAO, TreatiseCategoryDAO categoryDAO, ReadingDAO readingDAO, HitsDAO hitsDAO, ChapterService chapterService, TreatiseSolrRepository treatiseSolrRepository) {
+    public TreatiseService(TreatiseDAO treatiseDAO, AuthorDAO authorDAO, TreatiseCategoryDAO categoryDAO, ReadingDAO readingDAO, HitsDAO hitsDAO, ChapterService chapterService, TreatiseSolrRepository treatiseSolrRepository, TreatiseSolrRepository solrRepository, ChapterFileInfoDAO fileInfoDAO) {
         this.treatiseDAO = treatiseDAO;
         this.authorDAO = authorDAO;
         this.categoryDAO = categoryDAO;
@@ -64,6 +64,8 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         this.hitsDAO = hitsDAO;
         this.chapterService = chapterService;
         this.treatiseSolrRepository = treatiseSolrRepository;
+        this.solrRepository = solrRepository;
+        this.fileInfoDAO = fileInfoDAO;
     }
 
     @Override
@@ -97,6 +99,19 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         ObjectConvertUtil.objectCopy(treatise, treatiseUpdateReq);
         Treatise update = update(treatise);
         return getTreatiseDTO(update);
+    }
+
+    private final TreatiseSolrRepository solrRepository;
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        chapterService.deleteAllByTreatiseId(id);
+        solrRepository.delete(String.valueOf(id));
+        fileInfoDAO.deleteAllByTreatiseId(id);
+        readingDAO.delete(id);
+        hitsDAO.delete(id);
+        super.delete(id);
     }
 
     @Transactional
@@ -143,8 +158,7 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         saveTreatiseInSolr(treatise);
         return treatise;
     }
-    @Autowired
-    private ChapterFileInfoDAO fileInfoDAO;
+    private final ChapterFileInfoDAO fileInfoDAO;
     private void saveTreatiseInSolr(Treatise treatise){
         TreatiseSolrDoc treatiseSolrDoc = new TreatiseSolrDoc();
         StringBuilder sb = new StringBuilder();

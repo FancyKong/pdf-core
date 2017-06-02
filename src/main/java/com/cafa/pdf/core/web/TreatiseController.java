@@ -187,8 +187,6 @@ public class TreatiseController extends ABaseController {
     @ResponseBody
     @RequiresPermissions("treatise:delete")
     public Response delete(@PathVariable("treatiseId") Long treatiseId) {
-        //TODO 级联删除，著作章节，solr等, 应该放在同一个事务下
-        chapterService.deleteAllByTreatiseId(treatiseId);
         treatiseService.delete(treatiseId);
         return buildResponse(Boolean.TRUE, "删除成功", null);
     }
