@@ -103,7 +103,7 @@
 
     // 搜索
     function search(){
-        var searchContent = $("#searchInput").val();
+        var searchContent = $("#searchInput").val().trim();
         if (null == searchContent || "" == searchContent) {
             myModalWarning("请输入检索内容");
             return;
