@@ -56,7 +56,7 @@ public class Treatise implements java.io.Serializable {
      * 定价,单位:分
      */
     @Column(nullable = false)
-    private Integer price = 0;
+    private String price = "0";
     /**
      * 出版日期
      */

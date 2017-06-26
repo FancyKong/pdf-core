@@ -72,29 +72,29 @@
                 <br/>
                 <div class="digest">
                     <span style="font-weight: bold">摘要：</span>
-                    <span id="description">
-                    </span>
+                    <span id="description" th:text="${treatise.description}"></span>
                 </div>
                 <br/>
                 <ul class="baseInfo">
                     <li>
                         <div class="info_left">ISBN：</div>
-                        <div class="info_right author"><a href="javascript:void(0);" th:text="${treatise.ISBN}"></a>
+                        <div class="info_right author" th:text="${treatise.ISBN}">
                         </div>
                     </li>
                     <li>
                         <div class="info_left">作者：</div>
-                        <div class="info_right author"><a href="javascript:void(0);" th:text="${author.nickname}">小明</a>
+                        <div class="info_right author" th:text="${author.nickname}">
                         </div>
                     </li>
                     <li>
                         <div class="info_left">出版社：</div>
-                        <div class="info_right author"><a href="javascript:void(0);" th:text="${treatise.publishHouse}">清华大学出版社</a>
+                        <div class="info_right author" th:text="${treatise.publishHouse}">
                         </div>
                     </li>
                     <li>
                         <div class="info_left">分类：</div>
-                        <div class="info_right author"><a href="javascript:void(0);" th:text="${category.name}">计算机技术与应用</a>
+                        <div class="info_right author" th:text="${category.name}">
+
                         </div>
                     </li>
                     <li>
@@ -125,12 +125,14 @@
                         <div class="info_left">目录：</div>
                         <div class="info_right author">
                             <ul class="bookmark">
-                                <li th:each="chapter,status:${chapters}">
+                                <li th:each="chapter,status:${chapters}" style="margin-bottom: 5px;">
                                     <a th:href="'/reading/'+${treatise.id}+'/'+${chapter.seq}"
                                        target="_blank"
                                        th:text="${chapter.title}">第一章 - 数据挖掘入门一</a>
                                     <!--<span th:if="${chapter.privacy eq 0}">&nbsp;&nbsp;[登录后可见]</span>-->
-                                    <a th:href="'/reading/'+${treatise.id}+'/'+${chapter.seq}" target="_blank"><input type="button" class="operator_mini" value="阅读本章"/></a>
+                                    <a th:href="'/reading/'+${treatise.id}+'/'+${chapter.seq}" target="_blank">
+                                        <input type="button" class="operator_mini" value="阅读本章"/>
+                                    </a>
                                 </li>
                             </ul>
                         </div>

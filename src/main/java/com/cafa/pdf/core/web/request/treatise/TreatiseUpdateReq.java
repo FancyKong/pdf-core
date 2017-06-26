@@ -4,8 +4,6 @@
  */
 package com.cafa.pdf.core.web.request.treatise;
 
-import com.cafa.pdf.core.commom.enums.Language;
-import com.cafa.pdf.core.commom.enums.PublicationMode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,7 +36,7 @@ public class TreatiseUpdateReq implements java.io.Serializable {
     /**
      * 定价,单位:分
      */
-    private Integer price;
+    private String price;
     /**
      * 出版日期
      */

@@ -173,8 +173,8 @@ public class TreatiseController extends ABaseController {
 
     @ResponseBody
     @RequestMapping("/{treatiseId}/jsonInfo")
-    public Treatise getTreatiseById(@PathVariable("treatiseId") Long treatiseId) {
-        return treatiseService.findById(treatiseId);
+    public TreatiseDTO getTreatiseById(@PathVariable("treatiseId") Long treatiseId) {
+        return treatiseService.findOne(treatiseId);
     }
 
     /**

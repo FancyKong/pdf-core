@@ -58,7 +58,7 @@ public class PortalController {
     public ModelAndView detail(@PathVariable("id") Long id){
         ModelAndView modelAndView = new ModelAndView("detail");
         Treatise treatise = treatiseService.findById(id);
-        treatise.setDescription(treatise.getDescription().replaceAll("\\r\n","<br/>"));
+//        treatise.setDescription(treatise.getDescription().replaceAll("\\r\n","<br/>"));
 
         // 该著作点击量加一
         treatiseService.addHitsForTreatise(id, 1);
