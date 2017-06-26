@@ -17,10 +17,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @EnableScheduling
 public class SchedulingConfig {
 
-    @Scheduled(cron = "0 0/2 * * * ?") // 每2分钟执行一次
-    public void scheduler() {
-        log.debug("【每2分钟执行一次】>>>>>>>>>>>>> 定时任务测试");
-    }
+//    @Scheduled(cron = "0 0/2 * * * ?") // 每2分钟执行一次
+//    public void scheduler() {
+//        log.debug("【每2分钟执行一次】>>>>>>>>>>>>> 定时任务测试");
+//    }
 
     @Scheduled(cron = "0 0 0 * * ?") // 每天凌晨清空访问量的ipMap
     public void clearIpMap() {

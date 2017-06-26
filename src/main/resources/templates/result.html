@@ -67,12 +67,12 @@
                 </div>
             </div>
             <div class="resultArea">
-                <p class="resultTotal">
-                    <span class="orderOpt">
-                        <a th:href="'/result?q='+${query}+'&o=relativity&t='+${type}" class="byDependence">按相关度排序</a>
-                    	<a th:href="'/result?q='+${query}+'&o=date&t='+${type}" class="byTime">按时间排序</a>
-                    </span>
-                </p>
+                <!--<p class="resultTotal">-->
+                    <!--<span class="orderOpt">-->
+                        <!--<a th:href="'/result?q='+${query}+'&o=relativity&t='+${type}" class="byDependence">按相关度排序</a>-->
+                    	<!--<a th:href="'/result?q='+${query}+'&o=date&t='+${type}" class="byTime">按时间排序</a>-->
+                    <!--</span>-->
+                <!--</p>-->
                 <div class="resultList">
                     <div class="resultItem" th:each="treatise:*{treatises}">
                         <div class="itemHead">
@@ -94,7 +94,7 @@
                                 <span class="value">百度搜索</span>
                             </span>-->
                             <span class="info">
-                            	<label>发布时间：</label>
+                            	<label>出版日期：</label>
                                 <span class="value" th:text="${#dates.format(treatise.publishDate, 'yyyy-MM-dd')}"></span>
                             </span>
                         </div>
