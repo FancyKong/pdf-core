@@ -799,7 +799,7 @@
                 var thisTr = $(this).closest('tr');
                 var chapterId = $(thisTr).attr("id");
                 console.log("chapterId: " + chapterId);
-                if (chapterId === null || chapterId === ""){
+                if (chapterId == null || chapterId == ""){
                     //删除页面中的原有行
                     $(thisTr).remove();
                 }else {
@@ -838,6 +838,16 @@
                     }
                 });
             });
+
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            //菜单的active
+            $('.custom-nav .nav-active').removeClass('nav-active');
+            $('.custom-nav .active').removeClass('active');
+            $("#treatiseMenu").addClass("nav-active");
+            $("#treatiseLi").addClass("active");
 
         });
     </script>

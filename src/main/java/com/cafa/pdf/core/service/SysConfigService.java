@@ -46,7 +46,7 @@ public class SysConfigService extends ABaseService<SysConfig, Long> {
 
     @Transactional
     public Long addVisit() {
-        return incrementAndGetKeywordLong(VISIT);
+        return incrementAndGetKeywordLong(VISIT, 1L);
     }
 
     /**
@@ -58,7 +58,7 @@ public class SysConfigService extends ABaseService<SysConfig, Long> {
 
     @Transactional
     public Long addCustomerAmount() {
-        return incrementAndGetKeywordLong(CUSTOMER_AMOUNT);
+        return incrementAndGetKeywordLong(CUSTOMER_AMOUNT, 1L);
     }
 
     /**
@@ -71,7 +71,12 @@ public class SysConfigService extends ABaseService<SysConfig, Long> {
 
     @Transactional
     public Long addTreatiseAmount() {
-        return incrementAndGetKeywordLong(TREATISE_AMOUNT);
+        return incrementAndGetKeywordLong(TREATISE_AMOUNT, 1L);
+    }
+
+    @Transactional
+    public Long decreaseTreatiseAmount() {
+        return incrementAndGetKeywordLong(TREATISE_AMOUNT, -1L);
     }
 
     /**
@@ -89,14 +94,15 @@ public class SysConfigService extends ABaseService<SysConfig, Long> {
     /**
      * 加一并获取
      * @param keyword 关键字
+     * @param delta 增量，正负值
      * @return Long
      */
-    private Long incrementAndGetKeywordLong(String keyword) {
+    private Long incrementAndGetKeywordLong(String keyword, Long delta) {
         SysConfig treatiseAmount = sysConfigDAO.findByKeyword(keyword);
         if (treatiseAmount == null) {
             treatiseAmount = new SysConfig(0L, keyword, "", 0, 0L, "");
         }
-        treatiseAmount.setLongValue(treatiseAmount.getLongValue() + 1);
+        treatiseAmount.setLongValue(treatiseAmount.getLongValue() + delta);
         treatiseAmount = sysConfigDAO.save(treatiseAmount);
         return treatiseAmount.getLongValue();
     }

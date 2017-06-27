@@ -188,6 +188,8 @@ public class TreatiseController extends ABaseController {
     @RequiresPermissions("treatise:delete")
     public Response delete(@PathVariable("treatiseId") Long treatiseId) {
         treatiseService.delete(treatiseId);
+        // 专著收录量减一
+        sysConfigService.decreaseTreatiseAmount();
         return buildResponse(Boolean.TRUE, "删除成功", null);
     }
 

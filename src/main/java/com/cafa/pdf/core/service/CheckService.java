@@ -112,7 +112,7 @@ public class CheckService extends ABaseService<Check, Long> {
 
         String subject = "成功修改密码 - 广东科技著作出版服务平台";
         StringBuilder sb = new StringBuilder();
-        sb.append("您的密码修改成功，可以去登陆啦！<br><br>");
+        sb.append("您的密码修改成功，请去登陆！<br><br>");
         sb.append("<br><br><b>广东科技著作出版服务平台</b><br><br>");
 
         mailComponent.sendHtmlMail(email, subject, sb.toString());
