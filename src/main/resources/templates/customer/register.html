@@ -17,6 +17,9 @@
         body{
             background-color: #fff;
         }
+        .color_red{
+            color: red;
+        }
         .error{
             border: #e9151c;
         }
@@ -53,22 +56,19 @@
 
                         <div class="form-group">
                             <div class="col-sm-4">
-                                <label for="nickname">姓名：</label>
+                                <label for="nickname"><span class="color_red">* </span>呢称：</label>
                                 <input type="text" id="nickname" name="nickname" class="form-control"
-                                       placeholder="姓名" minlength="1" maxlength="32" required
+                                       placeholder="呢称" minlength="1" maxlength="32" required
                                        th:value="${customer} ? ${customer.nickname}"/>
                             </div>
-
                             <div class="col-sm-4">
-                                <label for="birthYear">出生年份：</label>
-                                <input type="number" id="birthYear" name="birthYear" class="form-control"
-                                       placeholder="出生年份" data-mask="9999-99-99" required
-                                       min="1901" max="2037"
-                                       th:value="${customer} ? ${customer.birthYear}"/>
+                                <label for="study"><span class="color_red">* </span>研究领域：</label>
+                                <input type="text" id="study" name="study" class="form-control"
+                                       placeholder="研究领域" required
+                                       th:value="${customer} ? ${customer.study}"/>
                             </div>
-
                             <div class="col-sm-4">
-                                <label for="birthPlace">籍贯：</label>
+                                <label for="birthPlace"><span class="color_red">* </span>籍贯：</label>
                                 <input type="text" id="birthPlace" name="birthPlace" class="form-control"
                                        placeholder="籍贯" required
                                        th:value="${customer} ? ${customer.birthPlace}"/>
@@ -77,6 +77,13 @@
 
                         <div class="form-group">
                             <div class="col-sm-4">
+                                <label for="birthYear">出生年份：</label>
+                                <input type="number" id="birthYear" name="birthYear" class="form-control"
+                                       placeholder="出生年份" data-mask="9999-99-99"
+                                       min="1901" max="2037"
+                                       th:value="${customer} ? ${customer.birthYear}"/>
+                            </div>
+                            <div class="col-sm-4">
                                 <label for="gender">性别：</label>
                                 <select id="gender" name="gender" class="form-control"
                                         th:value="${customer} ? ${customer.gender}">
@@ -84,7 +91,6 @@
                                     <option value="女">女</option>
                                 </select>
                             </div>
-
                             <div class="col-sm-4">
                                 <label for="education">学历：</label>
                                 <select id="education" name="education" class="form-control"
@@ -94,22 +100,6 @@
                                     <option value="BACHELOR">学士</option>
                                     <option value="OTHER">其它</option>
                                 </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-4">
-                                <label for="telephone">手机：</label>
-                                <input type="text" id="telephone" name="telephone" class="form-control"
-                                       placeholder="手机号码" minlength="11" maxlength="11" required
-                                       th:value="${customer} ? ${customer.telephone}"/>
-                            </div>
-
-                            <div class="col-sm-4">
-                                <label for="email">邮箱：</label>
-                                <input type="email" id="email" name="email" class="form-control"
-                                       placeholder="个人邮箱（用于找回密码）" required
-                                       th:value="${customer} ? ${customer.email}"/>
                             </div>
                         </div>
 
@@ -136,25 +126,41 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <label for="telephone"><span class="color_red">* </span>手机：</label>
+                                <input type="text" id="telephone" name="telephone" class="form-control"
+                                       placeholder="手机号码" minlength="11" maxlength="11" required
+                                       th:value="${customer} ? ${customer.telephone}"/>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="email"><span class="color_red">* </span>邮箱：</label>
+                                <input type="email" id="email" name="email" class="form-control"
+                                       placeholder="个人邮箱（用于找回密码）" required
+                                       th:value="${customer} ? ${customer.email}"/>
+                            </div>
+                        </div>
+
                     </fieldset>
 
                     <fieldset title="登录信息">
 
                         <div class="form-group">
                             <div class="col-sm-4">
-                                <label for="username">登录账号：</label>
+                                <label for="username"><span class="color_red">* </span>登录账号：</label>
                                 <input type="text" id="username" name="username" class="form-control" placeholder="登录账号，长度介于6~16之间"
                                        required minlength="6" maxlength="16" th:value="${customer} ? ${customer.username}">
                             </div>
 
                             <div class="col-sm-4">
-                                <label for="password">密码：</label>
+                                <label for="password"><span class="color_red">* </span>密码：</label>
                                 <input type="password" id="password" name="password" class="form-control" placeholder="密码，长度介于6~16之间"
                                        required minlength="6" maxlength="16" th:value="${customer} ? ${customer.password}">
                             </div>
 
                             <div class="col-sm-4">
-                                <label for="repeatPwd">确认密码：</label>
+                                <label for="repeatPwd"><span class="color_red">* </span>确认密码：</label>
                                 <input type="password" id="repeatPwd" name="repeatPwd" class="form-control" placeholder="请重复输入密码"
                                        required minlength="6" maxlength="16" th:value="${customer} ? ${customer.repeatPwd}">
                             </div>
@@ -162,7 +168,7 @@
 
                         <div class="form-group">
                             <div class="col-sm-4">
-                                <label for="validateCode">验证码：</label>
+                                <label for="validateCode"><span class="color_red">* </span>验证码：</label>
                                 <input type="text" id="validateCode" name="validateCode" class="form-control" placeholder="验证码"
                                        required minlength="4" maxlength="4">
                             </div>
@@ -178,7 +184,7 @@
                                     <label>
                                         <input type="checkbox" id="agree" name="agree" value="agree" />
                                         我同意
-                                        <a data-toggle="modal" href="#agreementModal">《会员协议》</a>
+                                        <a data-toggle="modal" href="#agreementModal">《广东科技著作出版服务平台会员注册协议》</a>
                                     </label>
                                 </div>
                             </div>
@@ -208,7 +214,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">&times;</button>
-                <h4 class="modal-title">会员协议</h4>
+                <h4 class="modal-title">广东科技著作出版服务平台会员注册协议</h4>
             </div>
             <div class="modal-body">
                 <p>请认真阅读一下内容</p>

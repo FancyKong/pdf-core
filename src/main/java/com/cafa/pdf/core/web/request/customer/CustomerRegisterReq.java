@@ -45,6 +45,10 @@ public class CustomerRegisterReq implements java.io.Serializable {
      */
     private Integer active;
     /**
+     * 研究领域
+     */
+    private String study;
+    /**
      * 出生年、籍贯、学历、单位、职称、职务
      */
     private Integer birthYear;

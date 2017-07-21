@@ -50,10 +50,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="study" class="control-label col-md-2 col-sm-2">研究领域:</label>
+                                    <div class="col-md-8 col-sm-8">
+                                        <input type="text" id="study" name="study" class="form-control"
+                                               placeholder="研究领域" required
+                                               th:value="${customer} ? ${customer.study}" />
+                                        <p class="help-block">
+                                            <label class="error-label"
+                                                   th:text="${errorMap} ? ${errorMap['study']}"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="birthYear" class="control-label col-md-2 col-sm-2">出生年:</label>
                                     <div class="col-md-8 col-sm-8">
                                         <input type="number" id="birthYear" name="birthYear" class="form-control"
-                                               placeholder="会员出生年份" min="1901" maxlength="2037" required
+                                               placeholder="会员出生年份" min="1901" maxlength="2037"
                                                th:value="${customer} ? ${customer.birthYear}" />
                                         <p class="help-block">
                                             <label class="error-label"
@@ -88,7 +100,7 @@
                                     <label for="company" class="control-label col-md-2 col-sm-2">单位:</label>
                                     <div class="col-md-8 col-sm-8">
                                         <input type="text" id="company" name="company" class="form-control"
-                                               placeholder="单位/工作单位" required
+                                               placeholder="单位/工作单位"
                                                th:value="${customer} ? ${customer.company}" />
                                         <p class="help-block">
                                             <label class="error-label"
@@ -99,7 +111,7 @@
                                 <div class="form-group">
                                     <label for="job" class="control-label col-md-2 col-sm-2">职称:</label>
                                     <div class="col-md-8 col-sm-8">
-                                        <input type="text" id="job" name="job" class="form-control" required
+                                        <input type="text" id="job" name="job" class="form-control"
                                                th:value="${customer} ? ${customer.job}" />
                                         <p class="help-block">
                                             <label class="error-label"
@@ -110,7 +122,7 @@
                                 <div class="form-group">
                                     <label for="duties" class="control-label col-md-2 col-sm-2">职务:</label>
                                     <div class="col-md-8 col-sm-8">
-                                        <input type="text" id="duties" name="duties" class="form-control" required
+                                        <input type="text" id="duties" name="duties" class="form-control"
                                                th:value="${customer} ? ${customer.duties}" />
                                         <p class="help-block">
                                             <label class="error-label"

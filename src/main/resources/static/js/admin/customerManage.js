@@ -67,6 +67,8 @@ $(document).ready(function () {
                 }, {
                     "data": 'createdTime'
                 }, {
+                    "data": 'modifiedTime'
+                }, {
                     "data": 'activeStr'
                 },
                 column

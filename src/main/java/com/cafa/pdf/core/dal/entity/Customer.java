@@ -54,6 +54,11 @@ public class Customer implements java.io.Serializable {
     @Column(name = "is_active", nullable = false)
     private Integer active;
     /**
+     * 研究领域
+     */
+    @Column(name = "study", nullable = false)
+    private String study;
+    /**
      * 出生年
      */
     @Column(name = "birth_year")
