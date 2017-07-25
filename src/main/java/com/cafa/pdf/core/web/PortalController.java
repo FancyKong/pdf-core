@@ -4,6 +4,7 @@
  */
 package com.cafa.pdf.core.web;
 
+import com.cafa.pdf.core.commom.dto.AdvanceForm;
 import com.cafa.pdf.core.commom.dto.ChapterDTO;
 import com.cafa.pdf.core.commom.dto.TreatiseShowDTO;
 import com.cafa.pdf.core.commom.enums.Language;
@@ -15,9 +16,11 @@ import com.cafa.pdf.core.service.AuthorService;
 import com.cafa.pdf.core.service.ChapterService;
 import com.cafa.pdf.core.service.TreatiseCategoryService;
 import com.cafa.pdf.core.service.TreatiseService;
+import com.cafa.pdf.core.util.DateUtils;
 import com.cafa.pdf.core.util.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.solr.core.query.SolrPageRequest;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
@@ -25,8 +28,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author FancyKong
@@ -149,14 +156,63 @@ public class PortalController {
                 docs = treatiseSolrRepository.findByCategoryIdOrderByPublishDateAsc(Long.parseLong(query),new SolrPageRequest(page-1,size));
             }
             typeName="";
-        }
-        else if("pc".equals(type)){
+        }else if("pc".equals(type)){
             if(order.equals("relativity")){
                 docs = treatiseSolrRepository.findByPCategoryId(Long.parseLong(query),new SolrPageRequest(page-1,size));
             }else if(order.equals("date")){
                 docs = treatiseSolrRepository.findByPCategoryIdOrderByPublishDateAsc(Long.parseLong(query),new SolrPageRequest(page-1,size));
             }
             typeName="";
+        }else if("advance".equals(type)){
+
+            AdvanceForm form = getFormFormQuery(query);
+
+            if(form.getAuthor() == null ||form.getAuthor().equals("")) form.setAuthor("*");
+            if(form.getBookName() == null || form.getBookName().equals("")) form.setBookName("*");
+            if(form.getPublishHouse() == null || form.getPublishHouse().equals("")) form.setPublishHouse("*");
+            if(form.getLanguage() == null || form.getLanguage().equals("")) form.setLanguage("*");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String start = form.getPublishYear() == null ? "1970-01-01" :format.format(DateUtils.getYearFirst(form.getPublishYear()));
+            String end = form.getPublishYear() == null ? "2017-12-31" :format.format(DateUtils.getYearLast(form.getPublishYear()));
+            Page<TreatiseSolrDoc> normaldocs = treatiseSolrRepository.advance(
+                    form.getBookName(),
+                    form.getAuthor(),
+                    form.getPublishHouse(),
+                    start,end,
+                    form.getLanguage(),
+                    String.valueOf(form.getCategory()),new SolrPageRequest(page-1,size));
+            List<TreatiseSolrDoc> docList = normaldocs.getContent();
+            if(order.equals("relativity")){
+                list = docList.stream()
+                        .map(a-> new TreatiseShowDTO(
+                                Long.parseLong(a.getId()),
+                                a.getTitle(),
+                                a.getCategoryName(),
+                                a.getDescription(),
+                                a.getAuthor(),
+                                a.getPublishDate()
+                        )).collect(Collectors.toList());
+            }else if(order.equals("date")){
+                list = docList.stream().sorted((a,b)->(int)(a.getPublishDate().getTime()-b.getPublishDate().getTime()))
+                .map(a->new TreatiseShowDTO(
+                        Long.parseLong(a.getId()),
+                        a.getTitle(),
+                        a.getCategoryName(),
+                        a.getDescription(),
+                        a.getAuthor(),
+                        a.getPublishDate()
+                )).collect(Collectors.toList());
+            }
+            mv.addObject("typeName",typeName);
+            mv.addObject("total",normaldocs.getTotalElements());//总个数
+            mv.addObject("totalPage",normaldocs.getTotalPages());//总页数
+            mv.addObject("treatises",list);
+            mv.addObject("current",page);//当前页数，总是为1
+            mv.addObject("size",size);
+            mv.addObject("query",query);
+            mv.addObject("type",type);
+            mv.addObject("order",order);
+            return mv;
         }
         if(docs == null){
             throw new ServiceException("请传入查询参数");
@@ -203,6 +259,24 @@ public class PortalController {
         mv.addObject("type",type);
         mv.addObject("order",order);
         return mv;
+    }
+
+    private AdvanceForm getFormFormQuery(String query) {
+        AdvanceForm form = new AdvanceForm();
+        String[] params = query.split("AND");
+        Map<String,String> map = new HashMap<>();
+        for(String p : params) {
+            String[] param = p.split(":");
+            if(param.length > 1)
+            map.put(param[0],param[1]);
+        }
+        form.setLanguage(map.get("language"));
+        form.setPublishHouse(map.get("publishHouse"));
+        form.setBookName(map.get("title"));
+        form.setCategory(Long.parseLong(map.get("categoryId")==null?"0":map.get("categoryId")));
+        form.setAuthor(map.get("author"));
+        form.setPublishYear(Integer.parseInt(map.get("publishYear")==null?"2017":map.get("publishYear")));
+        return form;
     }
 
     @RequestMapping("/reading/{treatiseId}")

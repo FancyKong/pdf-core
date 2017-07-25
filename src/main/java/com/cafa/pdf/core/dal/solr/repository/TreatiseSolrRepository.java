@@ -6,12 +6,15 @@ package com.cafa.pdf.core.dal.solr.repository;
 
 import com.cafa.pdf.core.dal.solr.document.ChapterSolrDoc;
 import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.core.query.SolrPageRequest;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.data.solr.repository.Highlight;
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
+
+import java.util.Date;
 
 /**
  * @author FancyKong
@@ -68,4 +71,8 @@ public interface TreatiseSolrRepository extends SolrCrudRepository<TreatiseSolrD
     @Highlight(prefix = "<span style='color:red'>", postfix = "</span>" , fields = {"content"},snipplets = 3,fragsize = 150)
     @Query(fields = {"id","title","description","keywords","author","publishDate","categoryName"})
     HighlightPage<TreatiseSolrDoc> findByPCategoryIdOrderByPublishDateAsc(Long query, Pageable solrPageRequest);
+
+    @Query(value = "title:?0 AND author:?1 AND publishHouse:?2 AND publishDate>?3 AND publishDate<?4 AND language:?5 AND categoryId:?6",
+            fields = {"id","title","description","keywords","author","publishDate","categoryName"})
+    Page<TreatiseSolrDoc> advance(String title,String author,String house,String start,String end,String language,String category, Pageable page);
 }

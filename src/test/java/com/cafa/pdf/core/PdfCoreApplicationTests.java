@@ -8,17 +8,21 @@ import com.cafa.pdf.core.dal.solr.repository.ArticleRepository;
 import com.cafa.pdf.core.dal.solr.repository.ChapterSolrRepository;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.service.TreatiseService;
-import com.sun.codemodel.internal.JForEach;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.br.TituloEleitoral;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.solr.core.query.SolrPageRequest;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -93,6 +97,12 @@ public class PdfCoreApplicationTests {
         treatiseSolrRepository.save(treatiseSolrDoc);
     }
 
+    @Test
+    public void query2(){
+        Page<TreatiseSolrDoc> docs = treatiseSolrRepository.advance("*","*",
+                "*","2017-1-1","2017-12-31","*","2",new PageRequest(0,10));
+
+    }
     @Test
     public void queryChapter(){
         HighlightPage<ChapterSolrDoc> pages = chapterSolrRepository.findByContentOrderById("apache",new SolrPageRequest(0,10));

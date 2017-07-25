@@ -40,7 +40,7 @@
             <div id="main">
                 <div class="subfield">高级搜索</div>
                 <div class="subfieldContent">
-                    <form action="/result">
+                    <form id="form">
                         <!--搜索范围-->
                         <dl class="ue-clear advanceItem">
                             <dd>
@@ -49,14 +49,14 @@
                             </dd>
                             <dt class="fillInArea">
                             <span class="choose">
-                                <input name="language" type="radio" checked="checked">
+                                <input name="language" type="radio" checked="checked" value="CHN">
                                 <span class="text">中文</span>
                             </span>
                                 <span class="choose">
-                            <input type="radio" name="language">
+                            <input type="radio" name="language" value="ENG">
                                 <span class="text">英文</span>
                             </span>
-                                <input type="radio" name="language">
+                                <input type="radio" name="language" value="OTH">
                                 <span class="text">其他</span>
                                 </span>
                             </dt>
@@ -73,9 +73,9 @@
                                 </div>
                             </dd>
                             <dt class="fillInArea">
-                            <p><input type="text" name="bookName"/></p>
-                            <p><input type="text" name="author"/></p>
-                            <p><input type="text" name="publishHouse"/></p>
+                            <p><input type="text" name="title"/></p>
+                            <p><input type="text" id="author"/></p>
+                            <p><input type="text" id="publishHouse"/></p>
                             </dt>
                         </dl>
 
@@ -91,7 +91,7 @@
                                     <!--<option>马恩列斯毛邓理论</option>-->
                                     <!--<option>哲学、宗教</option>-->
                                 </select>
-                                <select id="childCat" name="category" style="width: 150px;">
+                                <select id="childCat" name="categoryId" style="width: 250px;" th:value="0">
                                     <!--<option>请选择</option>-->
                                     <!--<option>毛泽东思想</option>-->
                                     <!--<option>邓小平理论</option>-->
@@ -107,11 +107,11 @@
                                 <span>选择要指定的出版年份</span>
                             </dd>
                             <dt class="fillInArea">
-                                <input class="form_datetime" type="text" name="publishYear" style="width: 200px">
+                                <input class="form_datetime" type="number" name="publishYear" th:value="2017" style="width: 200px">
                             </dt>
                         </dl>
                         <div class="button">
-                            <input type="submit" class="search" value="立刻搜索"/>
+                            <a class="btn btn-primary" href="#" style="margin-left: 20%;margin-top: 60px;" onclick="advance()">立刻搜索</a>
                         </div>
                     </form>
                 </div>
@@ -128,7 +128,13 @@
                 $('.define').show();
             }
         });
-
+        function advance() {
+            var query = $("#form").serialize();
+            var q = query.replace(/&/g,"AND").replace(/=/g,":");
+            alert(q);
+            var type = "advance";
+            window.location.href = "/result?q="+q+"&t="+type;
+        }
         $('.time input[type=radio]').click(function () {
             if (!$(this).parent().hasClass('defineRadio')) {
                 $('.define').hide();

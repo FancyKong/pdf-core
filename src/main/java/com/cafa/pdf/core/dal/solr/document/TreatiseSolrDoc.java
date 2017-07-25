@@ -55,4 +55,10 @@ public class TreatiseSolrDoc {
     @Field
     private String description;
 
+    @Field
+    private String publishHouse;
+
+    @Field
+    private String language;
+
 }

@@ -175,6 +175,8 @@ public class TreatiseService extends ABaseService<Treatise, Long> {
         treatiseSolrDoc.setCategoryName(categoryDAO.findById(treatise.getCategoryId()).getName());
         treatiseSolrDoc.setTitle(treatise.getBookName());
         treatiseSolrDoc.setContent(sb.toString());
+        treatiseSolrDoc.setPublishHouse(treatise.getPublishHouse());
+        treatiseSolrDoc.setLanguage(treatise.getLanguage());
         log.info("sent to solr treatiseSolrDoc = {}",treatiseSolrDoc);
         treatiseSolrRepository.save(treatiseSolrDoc);
     }

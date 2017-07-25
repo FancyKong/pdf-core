@@ -29,6 +29,34 @@ public class DateUtils {
     public static final String TIME_FORMAT = "HH:mm:ss";
     public static final String HM = "HH:mm";
 
+
+    /**
+     * 获取某年第一天日期
+     * @param year 年份
+     * @return Date
+     */
+    public static Date getYearFirst(int year){
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(Calendar.YEAR, year);
+        return calendar.getTime();
+    }
+
+
+    /**
+     * 获取某年最后一天日期
+     * @param year 年份
+     * @return Date
+     */
+    public static Date getYearLast(int year){
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(Calendar.YEAR, year);
+        calendar.roll(Calendar.DAY_OF_YEAR, -1);
+
+        return calendar.getTime();
+    }
+
     public static Long strDateToNum(String param) throws Exception {
         if (param == null)
             return null;
