@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Transient;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +21,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TreatiseDTO implements java.io.Serializable {
+public class TreatisePortalDTO implements java.io.Serializable {
 
     private static final long serialVersionUID = 5687645651510183078L;
     private Long id;
@@ -78,7 +77,7 @@ public class TreatiseDTO implements java.io.Serializable {
     /**
      * 序
      */
-    private String introductory;
+    private List<String> introductory;
     /**
      * 前言
      */
@@ -90,7 +89,7 @@ public class TreatiseDTO implements java.io.Serializable {
     /**
      * 书评
      */
-    private String review;
+    private List<String> review;
     /**
      * 跋
      */
@@ -149,7 +148,4 @@ public class TreatiseDTO implements java.io.Serializable {
      * 阅读量
      */
     private Long reading;
-
-    private List<String> introductoryList;
-    private List<String> reviewList;
 }

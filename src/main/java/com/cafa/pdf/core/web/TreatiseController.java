@@ -22,6 +22,7 @@ import com.cafa.pdf.core.web.response.Response;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.solr.common.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +50,7 @@ import java.util.List;
 @RequestMapping("treatise")
 @RequiresAuthentication
 public class TreatiseController extends ABaseController {
-
+    private static final String SPLITER = "`/`/`/`/`/`";
     private final TreatiseService treatiseService;
     private final TreatiseCategoryService treatiseCategoryService;
     private final ChapterService chapterService;
@@ -143,6 +145,8 @@ public class TreatiseController extends ABaseController {
         ModelAndView mv = new ModelAndView("admin/treatise/edit");
         Treatise treatise = treatiseService.findById(treatiseId);
         mv.addObject("treatise", treatise);
+        treatise.setIntroductoryList(getStringList(treatise.getIntroductory()));
+        treatise.setReviewList(getStringList(treatise.getReview()));
         TreatiseCategory category = treatiseCategoryService.findById(treatise.getCategoryId());
         mv.addObject("thisCategory", category);
         mv.addObject("categories", treatiseCategoryService.findParent());
@@ -151,6 +155,15 @@ public class TreatiseController extends ABaseController {
         mv.addObject("chapters", chapters);
         mv.addObject("lastSeq", chapters.get(chapters.size() - 1).getSeq());
         return mv;
+    }
+
+    private static List<String> getStringList(String review) {
+        List<String> list = new ArrayList<>();
+        String[] strings = review.split(SPLITER);
+        for(String s : strings) {
+            if(!StringUtils.isEmpty(s)) list.add(s);
+        }
+        return list;
     }
 
     /**
@@ -174,7 +187,10 @@ public class TreatiseController extends ABaseController {
     @ResponseBody
     @RequestMapping("/{treatiseId}/jsonInfo")
     public TreatiseDTO getTreatiseById(@PathVariable("treatiseId") Long treatiseId) {
-        return treatiseService.findOne(treatiseId);
+        TreatiseDTO dto = treatiseService.findOne(treatiseId);
+        dto.setIntroductoryList(getStringList(dto.getIntroductory()));
+        dto.setReviewList(getStringList(dto.getReview()));
+        return dto;
     }
 
     /**

@@ -17,6 +17,7 @@ import com.cafa.pdf.core.dal.entity.TreatiseReading;
 import com.cafa.pdf.core.dal.solr.document.TreatiseSolrDoc;
 import com.cafa.pdf.core.dal.solr.repository.TreatiseSolrRepository;
 import com.cafa.pdf.core.util.ObjectConvertUtil;
+import com.cafa.pdf.core.web.TreatiseController;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.statistics.HitsSearchReq;
 import com.cafa.pdf.core.web.request.statistics.ReadingSearchReq;

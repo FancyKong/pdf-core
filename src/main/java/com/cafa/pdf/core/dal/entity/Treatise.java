@@ -13,6 +13,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -185,4 +186,10 @@ public class Treatise implements java.io.Serializable {
      */
     @Column(nullable = false)
     private String language = Language.CHN.getCode();
+
+    @Transient
+    private List<String> introductoryList;
+
+    @Transient
+    private List<String> reviewList;
 }

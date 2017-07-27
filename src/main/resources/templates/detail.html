@@ -181,10 +181,7 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="introductory">
-                            <h3>序</h3>
-                            <div id="introductory-content">
 
-                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="preface">
                             <h3>前言</h3>
@@ -199,10 +196,7 @@
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="review">
-                            <h3>书评</h3>
-                            <div id="review-content">
 
-                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="postscript">
                             <h3>跋</h3>
@@ -295,11 +289,20 @@
             $("#referenceBooks")[0].innerText = result.referenceBooks;
             $("#recommends")[0].innerText = result.recommends;
             $("#appendix-content")[0].innerText = result.appendix;
-            $("#review-content")[0].innerText = result.review;
+            //$("#review-content")[0].innerText = result.review;
             $("#postscript-content")[0].innerText = result.postscript;
             $("#exordium-content")[0].innerText = result.exordium;
             $("#preface-content")[0].innerText = result.preface;
-            $("#introductory-content")[0].innerText = result.introductory;
+            //$("#introductory-content")[0].innerText = result.introductory;
+            $.each(result.introductoryList,function (i, n) {
+                $("#introductory").append("<h3>序</h3><div id='introductory-content"+i+"'></div>");
+                $("#introductory-content"+i)[0].innerText = n;
+            })
+            $.each(result.reviewList,function (i, n) {
+                $("#review").append("<h3>书评</h3><div id='review-content"+i+"'></div>");
+                $("#review-content"+i)[0].innerText = n;
+            })
+
 
         })
     });

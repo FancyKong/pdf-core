@@ -18,6 +18,14 @@
         }
     </style>
     <script src="/js/ajaxfileupload.js" type="text/javascript"></script>
+    <script>
+        function addIntroductory() {
+            $("#introductoryContainer").append('<textarea class="form-control introductory" placeholder="序" style="height: 150px" ></textarea>');
+        }
+        function addReview() {
+            $("#reviewContainer").append('<textarea class="form-control review" placeholder="书评" style="height: 150px" ></textarea>');
+        }
+    </script>
 </head>
 <body>
 <div layout:fragment="content">
@@ -470,22 +478,25 @@
                                         <div class="form-group">
                                             <label for="introductory"
                                                    class="control-label col-md-2 col-sm-2">序：</label>
-                                            <div class="col-md-8 col-sm-8">
-                                                <textarea id="introductory" name="introductory"
-                                                          class="form-control"
-                                                          placeholder="序" style="height: 150px"
-                                                          th:text="${treatise} ? ${treatise.introductory}"></textarea>
+                                            <div class="col-md-8 col-sm-8" id="introductoryContainer">
+                                                <textarea id="introductory"
+                                                          class="form-control introductory"
+                                                          placeholder="序" style="height: 150px;margin-top: 10px;"
+                                                          th:each="introductory:*{treatise.introductoryList}" th:text="${introductory}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['introductory']}"></label>
                                                 </p>
+                                            </div>
+                                            <div class="col-md-2 col-sm-2">
+                                                <a role="button" href="javascript:void(0)" class="btn btn-primary" id="addIntroductory" onclick="addIntroductory()">添加</a>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="preface"
                                                    class="control-label col-md-2 col-sm-2">前言：</label>
-                                            <div class="col-md-8 col-sm-8">
+                                            <div class="col-md-8 col-sm-8" >
                                                 <textarea id="preface" name="preface"
                                                           class="form-control"
                                                           placeholder="前言" style="height: 150px"
@@ -515,15 +526,18 @@
                                         <div class="form-group">
                                             <label for="review"
                                                    class="control-label col-md-2 col-sm-2">书评：</label>
-                                            <div class="col-md-8 col-sm-8">
-                                                <textarea id="review" name="review"
-                                                          class="form-control"
-                                                          placeholder="书评" style="height: 150px"
-                                                          th:text="${treatise} ? ${treatise.review}"></textarea>
+                                            <div class="col-md-8 col-sm-8" id="reviewContainer">
+                                                <textarea id="review"
+                                                          class="form-control review"
+                                                          placeholder="书评" style="height: 150px;margin-top: 10px;"
+                                                          th:each="review:*{treatise.reviewList}" th:text="${review}"></textarea>
                                                 <p class="help-block">
                                                     <label class="error-label"
                                                            th:text="${errorMap} ? ${errorMap['review']}"></label>
                                                 </p>
+                                            </div>
+                                            <div class="col-md-2 col-sm-2">
+                                                <a href="javascript:void(0)" role="button" class="btn btn-primary" id="addReview" onclick="addReview()">添加</a>
                                             </div>
                                         </div>
 
@@ -789,7 +803,19 @@
                 }
                 var extraInfoData = $("#extraInfoForm").serialize();
                 extraInfoData += "&id=" + treatiseId;// 附带上著作ID
-                console.log("extraInfoData: " + extraInfoData);
+                var introductory = "";
+                $.each($(".introductory"),function (i,n) {
+                    introductory += $(n).val();
+                    introductory += "`/`/`/`/`/`";
+                });
+                var review = "";
+                $.each($(".review"),function (i,n) {
+                    review += $(n).val();
+                    review += "`/`/`/`/`/`";
+                });
+                extraInfoData +="&introductory="+introductory;
+                extraInfoData +="&review=" +review;
+                console.log(extraInfoData);
                 $.post("/treatise/update", extraInfoData, function (result) {
                     if (result.success) {
                         myModalSuccess(result.message);

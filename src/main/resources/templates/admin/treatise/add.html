@@ -20,7 +20,16 @@
     <link rel="stylesheet" href="/tools/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css">
     <script src="/tools/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
     <script src="/tools/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-
+    <script>
+        function addIntroductory() {
+            alert(1)
+            $("#introductoryContainer").append('<textarea name="introductory" class="form-control" placeholder="序" style="height: 150px" ></textarea>');
+        }
+        function addReview() {
+            alert(1)
+            $("#reviewContainer").append('<textarea name="review" class="form-control" placeholder="书评" style="height: 150px" ></textarea>');
+        }
+    </script>
 </head>
 <body>
 <div layout:fragment="content">
@@ -386,11 +395,14 @@
                                         <div class="form-group">
                                             <label for="introductory"
                                                    class="control-label col-md-2 col-sm-2">序：</label>
-                                            <div class="col-md-8 col-sm-8">
-                                                <textarea id="introductory" name="introductory"
-                                                          class="form-control"
-                                                          placeholder="序" style="height: 150px"
+                                            <div class="col-md-8 col-sm-8" id="introductoryContainer">
+                                                <textarea id="introductory"
+                                                          class="form-control introductory"
+                                                          placeholder="序" style="height: 150px;margin-top: 10px;"
                                                           ></textarea>
+                                            </div>
+                                            <div class="col-md-2 col-sm-2">
+                                                <a role="button" href="javascript:void(0)" class="btn btn-primary" id="addIntroductory" onclick="addIntroductory()">添加</a>
                                             </div>
                                         </div>
 
@@ -419,11 +431,13 @@
                                         <div class="form-group">
                                             <label for="review"
                                                    class="control-label col-md-2 col-sm-2">书评：</label>
-                                            <div class="col-md-8 col-sm-8">
-                                                <textarea id="review" name="review"
-                                                          class="form-control"
-                                                          placeholder="书评" style="height: 150px"
-                                                          ></textarea>
+                                            <div class="col-md-8 col-sm-8" id="reviewContainer">
+                                                <textarea id="review"
+                                                          class="form-control review"
+                                                          placeholder="书评" style="height: 150px;margin-top: 10px;"></textarea>
+                                            </div>
+                                            <div class="col-md-2 col-sm-2">
+                                                <a href="javascript:void(0)" role="button" class="btn btn-primary" id="addReview" onclick="addReview()">添加</a>
                                             </div>
                                         </div>
 
