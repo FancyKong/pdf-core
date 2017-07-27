@@ -163,6 +163,7 @@ public class TreatiseController extends ABaseController {
         for(String s : strings) {
             if(!StringUtils.isEmpty(s)) list.add(s);
         }
+        if(list.size() == 0) list.add("");
         return list;
     }
 

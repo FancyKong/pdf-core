@@ -22,12 +22,10 @@
     <script src="/tools/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script>
         function addIntroductory() {
-            alert(1)
-            $("#introductoryContainer").append('<textarea name="introductory" class="form-control" placeholder="序" style="height: 150px" ></textarea>');
+            $("#introductoryContainer").append('<textarea class="form-control introductory" placeholder="序" style="height: 150px" ></textarea>');
         }
         function addReview() {
-            alert(1)
-            $("#reviewContainer").append('<textarea name="review" class="form-control" placeholder="书评" style="height: 150px" ></textarea>');
+            $("#reviewContainer").append('<textarea class="form-control review" placeholder="书评" style="height: 150px" ></textarea>');
         }
     </script>
 </head>
@@ -840,7 +838,19 @@
                 }
                 var extraInfoData = $("#extraInfoForm").serialize();
                 extraInfoData += "&id=" + treatiseId;// 附带上著作ID
-                console.log("extraInfoData: " + extraInfoData);
+                var introductory = "";
+                $.each($(".introductory"),function (i,n) {
+                    introductory += $(n).val();
+                    introductory += "`/`/`/`/`/`";
+                });
+                var review = "";
+                $.each($(".review"),function (i,n) {
+                    review += $(n).val();
+                    review += "`/`/`/`/`/`";
+                });
+                extraInfoData +="&introductory="+introductory;
+                extraInfoData +="&review=" +review;
+                console.log(extraInfoData);
                 $.post("/treatise/update", extraInfoData, function (result) {
                     if (result.success) {
                         myModalSuccess(result.message);
