@@ -12,7 +12,6 @@ import com.cafa.pdf.core.util.MStringUtils;
 import com.cafa.pdf.core.util.RequestHolder;
 import com.cafa.pdf.core.web.request.BasicSearchReq;
 import com.cafa.pdf.core.web.request.ModifyPasswordReq;
-import com.cafa.pdf.core.web.request.author.AuthorRegisterReq;
 import com.cafa.pdf.core.web.request.author.AuthorSaveReq;
 import com.cafa.pdf.core.web.request.author.AuthorSearchReq;
 import com.cafa.pdf.core.web.request.author.AuthorUpdateReq;
@@ -77,11 +76,11 @@ public class AuthorController extends ABaseController {
      * 著作者注册页面
      * @return ModelAndView
      */
-    @GetMapping("/register")
+    /*@GetMapping("/register")
     public ModelAndView register(){
         ModelAndView mv = new ModelAndView("author/register");
         return mv;
-    }
+    }*/
     /**
      * 管理员所看的 著作者列表页面
      * @return ModelAndView
@@ -252,7 +251,7 @@ public class AuthorController extends ABaseController {
      * @param bindingResult 验证
      * @return ModelAndView
      */
-    @PostMapping("/register")
+    /*@PostMapping("/register")
     public ModelAndView register(@Validated AuthorRegisterReq authorRegisterReq, BindingResult bindingResult) {
         log.info("【注册著作者】 {}",authorRegisterReq);
         ModelAndView mv = new ModelAndView("author/register");
@@ -292,7 +291,7 @@ public class AuthorController extends ABaseController {
             log.error("添加失败:{}", Throwables.getStackTraceAsString(e));
         }
         return mv;
-    }
+    }*/
 
     /**
      * 发送到邮箱的链接激活
